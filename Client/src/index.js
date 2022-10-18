@@ -8,8 +8,10 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 
 // Screen view
 import OnBoarding from './views/OnBoarding/OnBoarding';
-import SignIn from './views/Authentication/SignIn';
-import SignUp from './views/Authentication/SignUp';
+// import SignIn from './views/Authentication/SignIn';
+import SignInScreen from './views/Authentication/SignInScreen';
+import SignUpScreen from './views/Authentication/SignUpScreen';
+// import SignUp from './views/Authentication/SignUp';
 import ForgotPass from './views/Authentication/ForgotPass';
 import HomeScreen from './views/Home/HomeScreen';
 // import MapScreen from './views/Map/MapScreen';
@@ -20,7 +22,7 @@ import SearchScreen from './views/Search/Search';
 import DetailsScreen2 from './views/TourList/DetailTour/DetailTour2';
 import ProfileDetail from './views/Profile/ProfileDetail';
 // import {icons} from './constants/index';
-import Bookings from './views/Bookings/Bookings';
+// import Bookings from './views/Bookings/Bookings';
 import Bookings2 from './views/Bookings/Bookings1';
 import PaymentScreen from './views/Payment/PaymentScreen';
 import BillScreen from './views/Payment/BillScreen';
@@ -124,8 +126,8 @@ const RootPage = () => {
         initialRouteName="OnBoarding"
         screenOptions={{headerShown: false}}>
         <Stack.Screen name="OnBoarding" component={OnBoarding} />
-        <Stack.Screen name="SignIn" component={SignIn} />
-        <Stack.Screen name="SignUp" component={SignUp} />
+        <Stack.Screen name="SignIn" component={SignInScreen} />
+        <Stack.Screen name="SignUp" component={SignUpScreen} />
         <Stack.Screen name="ForgotPass" component={ForgotPass} />
         <Stack.Screen name="DetailsScreen2" component={DetailsScreen2} />
         <Stack.Screen name="ProfileDetail" component={ProfileDetail} />

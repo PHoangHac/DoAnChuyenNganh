@@ -1,9 +1,7 @@
-'use strict';
-const {
-  Model
-} = require('sequelize');
+"use strict";
+const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
-  class Viewroom extends Model {
+  class Role extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -11,17 +9,19 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      Role.belongsTo(models.User, {
+        foreignKey: "roleId",
+      });
     }
   }
-  Viewroom.init({
-    address: DataTypes.STRING,
-    description: DataTypes.TEXT,
-    image: DataTypes.STRING,
-    statusId: DataTypes.STRING
-
-  }, {
-    sequelize,
-    modelName: 'Viewroom',
-  });
-  return Viewroom;
+  Role.init(
+    {
+      nameRole: DataTypes.STRING,
+    },
+    {
+      sequelize,
+      modelName: "Role",
+    }
+  );
+  return Role;
 };

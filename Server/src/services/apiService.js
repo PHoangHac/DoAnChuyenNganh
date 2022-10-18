@@ -1,7 +1,7 @@
-import db from '../models/index';
-var crypto = require('crypto-js');
+import db from "../models/index";
+var crypto = require("crypto-js");
 import bcrypt from "bcrypt";
-const jwt = require('jsonwebtoken')
+const jwt = require("jsonwebtoken");
 
 //////Thu vien//////
 
@@ -9,148 +9,146 @@ let UserLogin = (email, password, body) => {
   return new Promise(async (resolve, rejct) => {
     try {
       let userData = {};
-      let check = await checkMail(email)
+      let check = await checkMail(email);
       if (check) {
         let user = await db.User.findOne({
-          attributes: ['email', 'roleId', 'password', 'firstname', 'lastname', 'gender', 'address', 'SDT'],
+          attributes: [
+            "email",
+            "roleId",
+            "password",
+            "firstname",
+            "lastname",
+            "gender",
+            "address",
+            "phone",
+          ],
           where: { email: email },
-          raw: true
-        })
+          raw: true,
+        });
         if (user) {
           //Check lai pass
           let check = await bcrypt.compareSync(password, user.password);
           if (check) {
             //Update token cho database
             let User = await db.User.findOne({
-              where: { email: email }
-            })
+              where: { email: email },
+            });
             let token = await Token(body);
-            console.log(token)
+            // console.log(token);
             User.token = token;
             let update = await User.save();
             //Dua du lieu
             userData.errCode = 0;
-            userData.errMessage = 'Login Success!'
+            userData.errMessage = "Login Success!";
             userData.token = User.token;
             delete user.password;
             userData.user = user;
-          }
-          else {
+          } else {
             userData.errCode = 3;
-            userData.errMessage = 'Sai Password!'
+            userData.errMessage = "Sai Password!";
           }
-        }
-        else {
+        } else {
           userData.errCode = 2;
-          userData.errMessage = 'Khong co email nay!!'
+          userData.errMessage = "Khong co email nay!!";
         }
-      }
-      else {
+      } else {
         userData.errCode = 1;
-        userData.errMessage = 'Khong co email nay!!'
+        userData.errMessage = "Khong co email nay!!";
       }
-      resolve(userData)
+      resolve(userData);
+    } catch (e) {
+      rejct(e);
     }
-    catch (e) {
-      rejct(e)
-    }
-  })
-}
+  });
+};
 
 //Check email
 let checkMail = (email) => {
   return new Promise(async (resolve, rejct) => {
     try {
       let User = await db.User.findOne({
-        where: { email: email }
-      })
+        where: { email: email },
+      });
       if (User) {
-        resolve(true)
+        resolve(true);
+      } else {
+        resolve(false);
       }
-      else {
-        resolve(false)
-      }
+    } catch (e) {
+      rejct(e);
     }
-    catch (e) {
-      rejct(e)
-    }
-  })
-}
+  });
+};
 
 //Check password
 let checkPass = () => {
   return new Promise(async (resolve, rejct) => {
     try {
-
       if (User) {
-        resolve(true)
+        resolve(true);
+      } else {
+        resolve(false);
       }
-      else {
-        resolve(false)
-      }
+    } catch (e) {
+      rejct(e);
     }
-    catch (e) {
-      rejct(e)
-    }
-  })
-}
+  });
+};
 //View Home
 let ViewTrangChu = () => {
   return new Promise(async (resolve, rejct) => {
     let data = await db.ViewTrangChu.findAll();
-    resolve(data)
-  })
-}
+    resolve(data);
+  });
+};
 //Get token
 let Token = (body) => {
   return new Promise(async (resolve, rejct) => {
-    const token = jwt.sign(body, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '30s' })
-    resolve(token)
-  })
-}
+    const token = jwt.sign(body, process.env.ACCESS_TOKEN_SECRET, {
+      expiresIn: "30s",
+    });
+    resolve(token);
+  });
+};
 //Check Them Transport
 let TransPort = (name) => {
   return new Promise(async (resolve, rejct) => {
     try {
       let userData = {};
-      let check = await checkNameTransPort(name)
+      let check = await checkNameTransPort(name);
       if (check == true) {
         userData.errCode = 1;
-        userData.errMessage = 'Da Ton Tai TransPort Nay!!!'
-      }
-      else {
+        userData.errMessage = "Da Ton Tai TransPort Nay!!!";
+      } else {
         let User = await db.TypeOfTransport.create({
-          imageTransport: name
-        })
+          imageTransport: name,
+        });
         userData.errCode = 0;
-        userData.errMessage = 'Add Succerss!!!'
+        userData.errMessage = "Add Succerss!!!";
       }
-      resolve(userData)
+      resolve(userData);
+    } catch (e) {
+      rejct(e);
     }
-    catch (e) {
-      rejct(e)
-    }
-  })
-}
+  });
+};
 //Check checkNameTransPort
 let checkNameTransPort = (name) => {
   return new Promise(async (resolve, rejct) => {
     try {
       let NameTransPort = await db.TypeOfTransport.findOne({
-        where: { imageTransport: name }
-      })
+        where: { imageTransport: name },
+      });
       if (NameTransPort) {
-        resolve(true)
+        resolve(true);
+      } else {
+        resolve(false);
       }
-      else {
-        resolve(false)
-      }
+    } catch (e) {
+      rejct(e);
     }
-    catch (e) {
-      rejct(e)
-    }
-  })
-}
+  });
+};
 //Booking
 let BookingInfo = (getInfo) => {
   return new Promise(async (resolve, rejct) => {
@@ -162,36 +160,34 @@ let BookingInfo = (getInfo) => {
         Adult: getInfo.Adult,
         Children: getInfo.Children,
         Status: getInfo.Status,
-        idTourInfo: getInfo.idTourInfo
-      })
+        idTourInfo: getInfo.idTourInfo,
+      });
       bookingData.errCode = 0;
-      bookingData.errMessage = 'Booking Success!!!'
+      bookingData.errMessage = "Booking Success!!!";
 
-      resolve(bookingData)
+      resolve(bookingData);
+    } catch (e) {
+      rejct(e);
     }
-    catch (e) {
-      rejct(e)
-    }
-  })
-}
+  });
+};
 //Create OneTour
 let OneTour = (getInfo) => {
   return new Promise(async (resolve, rejct) => {
     try {
       let tourData = {};
       let AllTour = await db.TourInfo.findOne({
-        where: { idRecommend: getInfo.idRecommend }
-      })
+        where: { idRecommend: getInfo.idRecommend },
+      });
       // console.log(AllTour)
       let Date = await db.TourInfo.findOne({
-        where: { date: getInfo.date }
-      })
+        where: { date: getInfo.date },
+      });
       // console.log(Date)
       if (AllTour != null && Date != null) {
         tourData.errCode = 1;
-        tourData.errMessage = 'Da ton tai truong nay khong the tao!!!'
-      }
-      else {
+        tourData.errMessage = "Da ton tai truong nay khong the tao!!!";
+      } else {
         let data = await db.TourInfo.create({
           TotalTime: getInfo.TotalTime,
           date: getInfo.date,
@@ -199,19 +195,18 @@ let OneTour = (getInfo) => {
           Description: getInfo.Description,
           idTypesOfTransport: getInfo.idTypesOfTransport,
           idRecommend: getInfo.idRecommend,
-          Price: getInfo.Price
-        })
+          Price: getInfo.Price,
+        });
         tourData.errCode = 0;
-        tourData.errMessage = 'Create Tour Success!!!'
+        tourData.errMessage = "Create Tour Success!!!";
       }
       /////
-      resolve(tourData)
+      resolve(tourData);
+    } catch (e) {
+      rejct(e);
     }
-    catch (e) {
-      rejct(e)
-    }
-  })
-}
+  });
+};
 
 //Create OneRecommend
 let OneRecommend = (getInfo) => {
@@ -222,17 +217,24 @@ let OneRecommend = (getInfo) => {
       let data = await db.Recommend.create({
         NameDiaDiem: getInfo.NameDiaDiem,
         LocalDiaDiem: getInfo.LocalDiaDiem,
-      })
+      });
       RData.errCode = 0;
-      RData.errMessage = 'Create Recomend Success!!!'
+      RData.errMessage = "Create Recomend Success!!!";
 
-      resolve(RData)
+      resolve(RData);
+    } catch (e) {
+      rejct(e);
     }
-    catch (e) {
-      rejct(e)
-    }
-  })
-}
+  });
+};
 module.exports = {
-  UserLogin, checkMail, checkPass, ViewTrangChu, Token, TransPort, BookingInfo, OneTour, OneRecommend
-}
+  UserLogin,
+  checkMail,
+  checkPass,
+  ViewTrangChu,
+  Token,
+  TransPort,
+  BookingInfo,
+  OneTour,
+  OneRecommend,
+};

@@ -7,8 +7,12 @@ import checkConnect from "./configs/ConnectDB";
 // var morgan = require('morgan')
 // import connection from "./configs/ConnectDB";
 
+//--------------change---------------//
+import AuthRouter from "./route/AuthRoute.js";
+import RoleRouter from "./route/RoleRoute.js";
+//--------------change---------------//
 
-const app = express()
+const app = express();
 dotenv.config();
 
 // app.use(morgan(`combined`))
@@ -23,12 +27,17 @@ initWebRoute(app);
 
 initapi(app);
 
+//--------------change---------------//
+AuthRouter(app);
+RoleRouter(app);
+//--------------change---------------//
+
 checkConnect();
 //bat loi trang
 app.use((req, res) => {
-  return res.render('404.ejs')
-})
+  return res.render("404.ejs");
+});
 
 app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`)
-})
+  console.log(`Example app listening on port ${port}`);
+});
