@@ -13,8 +13,8 @@ const { Sequelize } = require("sequelize");
 const sequelize = new Sequelize("booktour", "root", null, {
   host: "localhost",
   dialect: "mysql",
-  port: 1443,
   logging: false,
+  port: 1443,
 });
 
 let checkConnect = async () => {

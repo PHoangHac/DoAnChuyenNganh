@@ -9,21 +9,22 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      User.hasOne(models.Role, {
-        foreignKey: "roleId",
-      });
+      User.belongsTo(models.Role, { foreignKey: "roleId" });
+      User.hasMany(models.Booking, { foreignKey: "idUser" });
     }
   }
   User.init(
     {
       firstName: DataTypes.STRING,
+      password: DataTypes.STRING,
       lastName: DataTypes.STRING,
       email: DataTypes.STRING,
-      password: DataTypes.STRING,
-      gender: DataTypes.BOOLEAN,
-      phone: DataTypes.STRING,
       address: DataTypes.STRING,
+      gender: DataTypes.BOOLEAN,
       roleId: DataTypes.INTEGER,
+      SDT: DataTypes.STRING,
+      image: DataTypes.STRING,
+      token: DataTypes.STRING,
     },
     {
       sequelize,

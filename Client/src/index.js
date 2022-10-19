@@ -27,6 +27,9 @@ import Bookings2 from './views/Bookings/Bookings1';
 import PaymentScreen from './views/Payment/PaymentScreen';
 import BillScreen from './views/Payment/BillScreen';
 
+import {Provider} from 'react-redux';
+import {store} from './redux/store';
+
 // variable
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -121,22 +124,24 @@ const HomeTabs = () => {
 
 const RootPage = () => {
   return (
-    <NavigationContainer>
-      <Stack.Navigator
-        initialRouteName="OnBoarding"
-        screenOptions={{headerShown: false}}>
-        <Stack.Screen name="OnBoarding" component={OnBoarding} />
-        <Stack.Screen name="SignIn" component={SignInScreen} />
-        <Stack.Screen name="SignUp" component={SignUpScreen} />
-        <Stack.Screen name="ForgotPass" component={ForgotPass} />
-        <Stack.Screen name="DetailsScreen2" component={DetailsScreen2} />
-        <Stack.Screen name="ProfileDetail" component={ProfileDetail} />
-        <Stack.Screen name="HomeTabs" component={HomeTabs} />
-        <Stack.Screen name="Bookings" component={Bookings2} />
-        <Stack.Screen name="PaymentScreen" component={PaymentScreen} />
-        <Stack.Screen name="BillScreen" component={BillScreen} />
-      </Stack.Navigator>
-    </NavigationContainer>
+    <Provider store={store}>
+      <NavigationContainer>
+        <Stack.Navigator
+          initialRouteName="OnBoarding"
+          screenOptions={{headerShown: false}}>
+          <Stack.Screen name="OnBoarding" component={OnBoarding} />
+          <Stack.Screen name="SignIn" component={SignInScreen} />
+          <Stack.Screen name="SignUp" component={SignUpScreen} />
+          <Stack.Screen name="ForgotPass" component={ForgotPass} />
+          <Stack.Screen name="DetailsScreen2" component={DetailsScreen2} />
+          <Stack.Screen name="ProfileDetail" component={ProfileDetail} />
+          <Stack.Screen name="HomeTabs" component={HomeTabs} />
+          <Stack.Screen name="Bookings" component={Bookings2} />
+          <Stack.Screen name="PaymentScreen" component={PaymentScreen} />
+          <Stack.Screen name="BillScreen" component={BillScreen} />
+        </Stack.Navigator>
+      </NavigationContainer>
+    </Provider>
   );
 };
 

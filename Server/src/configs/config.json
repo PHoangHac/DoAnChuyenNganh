@@ -4,9 +4,9 @@
     "password": null,
     "database": "booktour",
     "host": "127.0.0.1",
-    "port":"1443",
     "dialect": "mysql",
-    "logging": false
+    "logging": false,
+    "port": "1443"
   },
   "test": {
     "username": "root",

@@ -1,4 +1,7 @@
-import React from 'react';
+// import React
+import React, {useState, useEffect} from 'react';
+
+// import core componet
 import {
   View,
   Text,
@@ -10,12 +13,17 @@ import {
   Image,
   TouchableOpacity,
 } from 'react-native';
+
+// import icons, images physical
 import {images, icons} from '../../constants/index';
+
+// variable get height and width device
 const WDwidth = Dimensions.get('window').width;
 const WDheight = Dimensions.get('window').height;
 
 const SignInScreen = ({navigation}) => {
   const [hasOpacity, setHasOpacity] = React.useState(false);
+
   return (
     <ImageBackground
       source={images.backgourndSigIn2}

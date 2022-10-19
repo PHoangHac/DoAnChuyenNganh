@@ -8,7 +8,7 @@ import checkConnect from "./configs/ConnectDB";
 // import connection from "./configs/ConnectDB";
 
 //--------------change---------------//
-import AuthRouter from "./route/AuthRoute.js";
+// import AuthRouter from "./route/AuthRoute.js";
 import RoleRouter from "./route/RoleRoute.js";
 //--------------change---------------//
 
@@ -28,7 +28,7 @@ initWebRoute(app);
 initapi(app);
 
 //--------------change---------------//
-AuthRouter(app);
+// AuthRouter(app);
 RoleRouter(app);
 //--------------change---------------//
 

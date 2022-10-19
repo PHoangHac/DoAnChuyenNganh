@@ -11,7 +11,7 @@ const roleController = {
     // let getRoles = req.body;
     try {
       const Roles = await db.Role.create({
-        nameRole: req.body.nameRole,
+        roleName: req.body.roleName,
       });
       return res.status(200).json(Roles);
     } catch (err) {
