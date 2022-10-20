@@ -6,6 +6,8 @@ import {
   StyleSheet,
   TextInput,
   TouchableOpacity,
+  ScrollView,
+  FlatList,
 } from 'react-native';
 
 import {images} from '../../constants/index';
@@ -17,6 +19,8 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {useDispatch, useSelector} from 'react-redux';
 
 import {updateEmail} from '../../redux/actions/updateAction';
+
+// const URL = `http://localhost:16225/api/v1/ViewTour`;
 
 // variable API
 const CallAPI = () => {
@@ -35,28 +39,92 @@ const getData = async setData => {
 };
 
 const ForgotPass = () => {
-  const [data, setData] = useState({data: null});
+  // const [data, setData] = useState({data: null});
   const info = useSelector(state => state.personalInfo);
   const [email, onchangeEmail] = useState('');
+
+  // check video 1
+  const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(true);
+  // check video 1
 
   const dispatch = useDispatch();
   // LIFECYCLE
   useEffect(() => {
-    console.log('Sign In screen');
+    console.log('VO MAN HINH');
     // GỌI
     // getData(setData);
 
-    console.log(info);
+    // console.log(info);
 
     // NGẮT LẮNG NGHE
     return () => {
-      console.log('Sign In screen out');
+      console.log('THOAT KHOI MAN HINH');
     };
   }, []);
 
   useEffect(() => {
-    // console.log('Data da lang nghe:', data);
+    console.log('Data da lang nghe:', data);
   });
+
+  // const URL = `https://jsonplaceholder.typicode.com/users`;
+
+  // // const test = () => {};
+
+  // useEffect(() => {
+  //   fetch(`http://localhost:9090/get-crud`, {
+  //     method: 'GET',
+  //   })
+  //     .then(response => response.json())
+  //     .then(json => setData(json))
+  //     .catch(err => console.error(err))
+  //     .finally(() => setLoading(false));
+  // }, []);
+
+  const CallGETUrl = async () => {
+    try {
+      const url = `http://192.168.249.122:9090/get-crud`;
+      const response = await fetch(url, {
+        method: 'GET',
+      })
+        .then(response => response.json())
+        .then(responseJson => console.log(responseJson));
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  console.log(data);
+
+  // CALL API
+  // const CallGETUrl = () => {
+  //   console.log('GET API RUN....');
+  //   fetch(`${URL}`)
+  //     .then(res => res.json())
+  //     .then(async res => {
+  //       console.log('RESPONE:', res);
+  //     })
+  //     .catch(err => console.log('ERROR:', err));
+  // };
+
+  // const CallGETUrl = () => {
+  //   console.log('GET API RUN ....');
+  // };
+
+  // CALL API WITH ID
+  const CallGETUrlID = () => {
+    console.log('GET API RUN WITH ID....');
+  };
+
+  // CALL API
+  const CallPOSTUrl = () => {
+    console.log('POST API RUN....');
+  };
+
+  // CALL API
+  const CallQUERYUrl = () => {
+    console.log('QUERY API RUN....');
+  };
 
   return (
     <ImageBackground
@@ -112,6 +180,84 @@ const ForgotPass = () => {
         </TouchableOpacity>
       </View>
       {/* END Test */}
+      {/*  */}
+      <View
+        style={{
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+        }}>
+        <TouchableOpacity
+          style={{
+            backgroundColor: 'blue',
+            borderRadius: 10,
+          }}
+          onPress={() => CallGETUrl()}>
+          <Text
+            style={{
+              color: 'white',
+              padding: 10,
+            }}>
+            GET
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={{
+            backgroundColor: 'blue',
+            borderRadius: 10,
+          }}
+          onPress={() => CallGETUrlID()}>
+          <Text
+            style={{
+              color: 'white',
+              padding: 10,
+            }}>
+            GET ID
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={{
+            backgroundColor: 'blue',
+            borderRadius: 10,
+          }}
+          onPress={() => CallPOSTUrl()}>
+          <Text
+            style={{
+              color: 'white',
+              padding: 10,
+            }}>
+            POST
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={{
+            backgroundColor: 'blue',
+            borderRadius: 10,
+          }}
+          onPress={() => CallQUERYUrl()}>
+          <Text
+            style={{
+              color: 'white',
+              padding: 10,
+            }}>
+            QUERY
+          </Text>
+        </TouchableOpacity>
+      </View>
+      <ScrollView
+        style={{
+          backgroundColor: '#A4D5DE',
+        }}>
+        <View
+          style={{
+            // height: 300,
+            // width: '100%',
+            backgroundColor: '#FEDE00',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}>
+          <Text numberOfLines={0}>Nam ho mang tinh</Text>
+        </View>
+      </ScrollView>
     </ImageBackground>
   );
 };

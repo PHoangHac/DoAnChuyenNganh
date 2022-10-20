@@ -10,11 +10,10 @@ const { Sequelize } = require("sequelize");
 //   database: 'apptour'
 // });
 //Connecte booktour
-const sequelize = new Sequelize("booktour", "root", null, {
+const sequelize = new Sequelize("travelapp", "root", null, {
   host: "localhost",
   dialect: "mysql",
   logging: false,
-  port: 1443,
 });
 
 let checkConnect = async () => {
