@@ -6,11 +6,18 @@
  * @flow strict-local
  */
 // import RootPage from './src';
-import RootPage from './src';
+import Navigation from './src';
 import React from 'react';
+// -----------------AuthContext----------------//
+import {AuthProvider} from './src/context/AuthContext';
+// -----------------AuthContext----------------//
 
 const App = () => {
-  return <RootPage />;
+  return (
+    <AuthProvider>
+      <Navigation />
+    </AuthProvider>
+  );
 };
 
 export default App;

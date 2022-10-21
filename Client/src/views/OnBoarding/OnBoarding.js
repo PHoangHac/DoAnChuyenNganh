@@ -130,7 +130,7 @@ const OnBoarding = ({navigation}) => {
                   alignSelf: 'center',
                   fontFamily: 'Inter-ExtraBold',
                 }}>
-                SIGN UP
+                SIGN IN
               </Text>
             </TouchableOpacity>
           </View>
@@ -158,7 +158,7 @@ const OnBoarding = ({navigation}) => {
                   alignSelf: 'center',
                   fontFamily: 'Inter-ExtraBold',
                 }}>
-                SIGN IN
+                SIGN UP
               </Text>
             </TouchableOpacity>
           </View>

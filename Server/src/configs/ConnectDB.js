@@ -14,6 +14,7 @@ const sequelize = new Sequelize("travelapp", "root", null, {
   host: "localhost",
   dialect: "mysql",
   logging: false,
+  port: 3307,
 });
 
 let checkConnect = async () => {

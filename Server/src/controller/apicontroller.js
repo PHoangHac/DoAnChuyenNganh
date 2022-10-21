@@ -1,66 +1,64 @@
-import ServiceApiService from '../services/apiService';
-const { resolve } = require('app-root-path');
-var crypto = require('crypto-js');
-const bcrypt = require('bcrypt');
+import ServiceApiService from "../services/apiService";
+const { resolve } = require("app-root-path");
+var crypto = require("crypto-js");
+const bcrypt = require("bcrypt");
 const saltRounds = 10;
-import db from '../models/index';
+import db from "../models/index";
 //////////////////Thu Vien//////////////////////
 //////////////////Dang ky
 let SignIn = async (req, res) => {
   let getInfo = req.body;
   if (getInfo.email == null) {
     return res.status(500).json({
-      message: 'Thieu Du Lieu Email De Dang Ky!!'
-    })
+      message: "Thieu Du Lieu Email De Dang Ky!!",
+    });
   }
   if (getInfo.password == null) {
     return res.status(500).json({
-      message: 'Quen Nhap Password!!'
-    })
+      message: "Quen Nhap Password!!",
+    });
   }
   if (getInfo.address == null) {
     return res.status(500).json({
-      message: 'Can Nhap Dia Chi!!'
-    })
+      message: "Can Nhap Dia Chi!!",
+    });
   }
   if (getInfo.gender == null) {
     return res.status(500).json({
-      message: 'Chua Chon Gioi Tinh!!'
-    })
+      message: "Chua Chon Gioi Tinh!!",
+    });
   }
   if (getInfo.sdt == null) {
     return res.status(500).json({
-      message: 'Can Nhap SDT!!'
-    })
+      message: "Can Nhap SDT!!",
+    });
   }
   const salt = bcrypt.genSaltSync(saltRounds);
   const hash = bcrypt.hashSync(getInfo.password, salt);
   let checkMail = await db.User.findOne({
-    where: { email: getInfo.email }
-  })
+    where: { email: getInfo.email },
+  });
   if (checkMail != null) {
     return res.status(500).json({
-      message: 'Email Da Ton Tai!!'
-    })
-  }
-  else {
+      message: "Email Da Ton Tai!!",
+    });
+  } else {
     let create = await db.User.create({
       firstName: getInfo.firstName,
       password: hash,
       lastName: getInfo.lastName,
       email: getInfo.email,
       address: getInfo.address,
-      gender: getInfo.gender === '1' ? true : false,
+      gender: getInfo.gender === "1" ? true : false,
       roleId: getInfo.role,
-      SDT: getInfo.sdt
-    })
+      SDT: getInfo.sdt,
+    });
     // console.log(create);
     return res.status(200).json({
-      message: 'Dang Ky Thanh Cong!!'
-    })
+      message: "Dang Ky Thanh Cong!!",
+    });
   }
-
-}
+};
 //////////////////Login
 let loginuser = async (req, res) => {
   let email = req.body.email;
@@ -70,11 +68,11 @@ let loginuser = async (req, res) => {
   if (!email || !password) {
     return res.status(500).json({
       errCode: 1,
-      message: 'Chua Truyen Gia Tri!!'
-    })
+      message: "Chua Truyen Gia Tri!!",
+    });
   }
 
-  let userData = await ServiceApiService.UserLogin(email, password, body)
+  let userData = await ServiceApiService.UserLogin(email, password, body);
   return res.status(200).json({
     // errCode: 0,
     // message: 'Ok!!',
@@ -83,186 +81,236 @@ let loginuser = async (req, res) => {
     errCode: userData.errCode,
     message: userData.errMessage,
     Token: userData.token,
-    user: userData.user ? userData.user : { 'message': 'Khong ton tai user nay!!!' }
-
-  })
-}
+    user: userData.user
+      ? userData.user
+      : { message: "Khong ton tai user nay!!!" },
+  });
+};
 //////////////////View trang chu
 let ViewHome = async (req, res) => {
-  let View = await ServiceApiService.ViewTrangChu()
+  let View = await ServiceApiService.ViewTrangChu();
   return res.status(200).json({
-    message: 'Check view Home!!',
-    Alltributes: View
-  })
-}
+    message: "Check view Home!!",
+    Alltributes: View,
+  });
+};
 //////////////////Tao Transport
 let CreateTransport = async (req, res) => {
-  let name = req.body.NameTransport;
+  let name = req.body.nameTransport;
+  console.log(name);
+  // let image = req.body.imageTransport;
   if (!name) {
     return res.status(500).json({
       errCode: 1,
-      message: 'Chua Truyen Gia Tri TransPort!!'
-    })
+      message: "Chua Truyen Gia Tri TransPort!!",
+    });
   }
-  let getTransPort = await ServiceApiService.TransPort(name)
+  let getTransPort = await ServiceApiService.TransPort(name);
   return res.status(200).json({
     errCode: getTransPort.errCode,
     message: getTransPort.errMessage,
-  })
-}
+  });
+};
 //////////////////View Transport
 let ViewTransport = async (req, res) => {
   let View = await db.TypeOfTransport.findAll();
   return res.status(200).json({
-    message: 'Check view TransPort!!',
-    TypeTransport: View
-  })
-}
+    message: "Check view TransPort!!",
+    TypeTransport: View,
+  });
+};
 //////////////////Booking
 let Booking = async (req, res) => {
   let getInfo = req.body;
-  if (getInfo.idUser == null || getInfo.idUser == "" || getInfo.idUser == undefined) {
+  if (
+    getInfo.idUser == null ||
+    getInfo.idUser == "" ||
+    getInfo.idUser == undefined
+  ) {
     return res.status(500).json({
       errCode: 1,
-      message: 'Chua Truyen Gia Tri idUser De Booking!!'
-    })
+      message: "Chua Truyen Gia Tri idUser De Booking!!",
+    });
   }
-  if (getInfo.Adult == null || getInfo.Adult == "" || getInfo.Adult == undefined) {
+  if (
+    getInfo.Adult == null ||
+    getInfo.Adult == "" ||
+    getInfo.Adult == undefined
+  ) {
     return res.status(500).json({
       errCode: 1,
-      message: 'Chua Truyen Gia Tri Adult De Booking!!'
-    })
+      message: "Chua Truyen Gia Tri Adult De Booking!!",
+    });
   }
-  if (getInfo.Children == null || getInfo.Children == "" || getInfo.Children == undefined) {
+  if (
+    getInfo.Children == null ||
+    getInfo.Children == "" ||
+    getInfo.Children == undefined
+  ) {
     return res.status(500).json({
       errCode: 1,
-      message: 'Chua Truyen Gia Tri Children De Booking!!'
-    })
+      message: "Chua Truyen Gia Tri Children De Booking!!",
+    });
   }
-  if (getInfo.idTourInfo == null || getInfo.idTourInfo == "" || getInfo.idTourInfo == undefined) {
+  if (
+    getInfo.idTourInfo == null ||
+    getInfo.idTourInfo == "" ||
+    getInfo.idTourInfo == undefined
+  ) {
     return res.status(500).json({
       errCode: 1,
-      message: 'Chua Truyen Gia Tri idTourInfo De Booking!!'
-    })
+      message: "Chua Truyen Gia Tri idTourInfo De Booking!!",
+    });
   }
   //checkIduser
   let checkIdUser = await db.User.findOne({
-    where: { id: getInfo.idUser }
+    where: { id: getInfo.idUser },
   });
   if (checkIdUser == null || checkIdUser == "" || checkIdUser == undefined) {
     return res.status(500).json({
       errCode: 1,
-      message: 'Khong ton tai id user nay de tham gia tour!!'
-    })
+      message: "Khong ton tai id user nay de tham gia tour!!",
+    });
   }
   //checkTourinfo
   let checkIdTourInfo = await db.TourInfo.findOne({
-    where: { id: getInfo.idTourInfo }
+    where: { id: getInfo.idTourInfo },
   });
-  if (checkIdTourInfo == null || checkIdTourInfo == "" || checkIdTourInfo == undefined) {
+  if (
+    checkIdTourInfo == null ||
+    checkIdTourInfo == "" ||
+    checkIdTourInfo == undefined
+  ) {
     return res.status(500).json({
       errCode: 1,
-      message: 'Khong ton tai id tour nay de tham gia!!'
-    })
+      message: "Khong ton tai id tour nay de tham gia!!",
+    });
   }
 
-  let getInfoBookingg = await ServiceApiService.BookingInfo(getInfo)
+  let getInfoBookingg = await ServiceApiService.BookingInfo(getInfo);
   return res.status(200).json({
-    message: 'Check view Booking!!',
+    message: "Check view Booking!!",
     errCode: getInfoBookingg.errCode,
     messageInfo: getInfoBookingg.errMessage,
-    Info: getInfoBookingg
-  })
-}
+    Info: getInfoBookingg,
+  });
+};
 
 //////////////////Create 1 tour
 let CreateTour = async (req, res) => {
   let getInfo = req.body;
-  if (getInfo.TotalTime == null || getInfo.TotalTime == "" || getInfo.TotalTime == undefined) {
+  if (
+    getInfo.TotalTime == null ||
+    getInfo.TotalTime == "" ||
+    getInfo.TotalTime == undefined
+  ) {
     return res.status(500).json({
       errCode: 1,
-      message: 'Chua Truyen Gia Tri TotalTime De Tao!!'
-    })
+      message: "Chua Truyen Gia Tri TotalTime De Tao!!",
+    });
   }
   if (getInfo.date == null || getInfo.date == "" || getInfo.date == undefined) {
     return res.status(500).json({
       errCode: 1,
-      message: 'Chua Truyen Gia Tri date De Tao!!'
-    })
+      message: "Chua Truyen Gia Tri date De Tao!!",
+    });
   }
   if (getInfo.Time == null || getInfo.Time == "" || getInfo.Time == undefined) {
     return res.status(500).json({
       errCode: 1,
-      message: 'Chua Truyen Gia Tri Time De Tao!!'
-    })
+      message: "Chua Truyen Gia Tri Time De Tao!!",
+    });
   }
-  if (getInfo.idTypesOfTransport == null || getInfo.idTypesOfTransport == "" || getInfo.idTypesOfTransport == undefined) {
+  if (
+    getInfo.idTypesOfTransport == null ||
+    getInfo.idTypesOfTransport == "" ||
+    getInfo.idTypesOfTransport == undefined
+  ) {
     return res.status(500).json({
       errCode: 1,
-      message: 'Chua Truyen Gia Tri idTypesOfTransport De Tao!!'
-    })
+      message: "Chua Truyen Gia Tri idTypesOfTransport De Tao!!",
+    });
   }
-  if (getInfo.idRecommend == null || getInfo.idRecommend == "" || getInfo.idRecommend == undefined) {
+  if (
+    getInfo.idRecommend == null ||
+    getInfo.idRecommend == "" ||
+    getInfo.idRecommend == undefined
+  ) {
     return res.status(500).json({
       errCode: 1,
-      message: 'Chua Truyen Gia Tri idRecommend De Tao!!'
-    })
+      message: "Chua Truyen Gia Tri idRecommend De Tao!!",
+    });
   }
-  if (getInfo.Price == null || getInfo.Price == "" || getInfo.Price == undefined) {
+  if (
+    getInfo.Price == null ||
+    getInfo.Price == "" ||
+    getInfo.Price == undefined
+  ) {
     return res.status(500).json({
       errCode: 1,
-      message: 'Chua Truyen Gia Tri Price De Tao!!'
-    })
+      message: "Chua Truyen Gia Tri Price De Tao!!",
+    });
   }
   //check id transport
   let checkIdTrans = await db.TypeOfTransport.findOne({
-    where: { id: getInfo.idTypesOfTransport }
+    where: { id: getInfo.idTypesOfTransport },
   });
   if (checkIdTrans == null || checkIdTrans == "" || checkIdTrans == undefined) {
     return res.status(500).json({
       errCode: 1,
-      message: 'Khong ton tai id transport nay de them vao tour!!'
-    })
+      message: "Khong ton tai id transport nay de them vao tour!!",
+    });
   }
   //check id recommend
   let checkRecommend = await db.Recommend.findOne({
-    where: { id: getInfo.idRecommend }
+    where: { id: getInfo.idRecommend },
   });
-  if (checkRecommend == null || checkRecommend == "" || checkRecommend == undefined) {
+  if (
+    checkRecommend == null ||
+    checkRecommend == "" ||
+    checkRecommend == undefined
+  ) {
     return res.status(500).json({
       errCode: 1,
-      message: 'Khong ton tai id recommend nay de them vao info tour!!'
-    })
+      message: "Khong ton tai id recommend nay de them vao info tour!!",
+    });
   }
-  let getTour = await ServiceApiService.OneTour(getInfo)
+  let getTour = await ServiceApiService.OneTour(getInfo);
   return res.status(200).json({
     errCode: getTour.errCode,
     message: getTour.errMessage,
-  })
-}
-
+  });
+};
 
 //////////////////Create 1 CreateRecommend
 let CreateRecommend = async (req, res) => {
   let getInfo = req.body;
-  if (getInfo.NameDiaDiem == null || getInfo.NameDiaDiem == "" || getInfo.NameDiaDiem == undefined) {
+  if (
+    getInfo.NameDiaDiem == null ||
+    getInfo.NameDiaDiem == "" ||
+    getInfo.NameDiaDiem == undefined
+  ) {
     return res.status(500).json({
       errCode: 1,
-      message: 'Chua Truyen Gia Tri NameDiaDiem De Tao!!'
-    })
+      message: "Chua Truyen Gia Tri NameDiaDiem De Tao!!",
+    });
   }
-  if (getInfo.LocalDiaDiem == null || getInfo.LocalDiaDiem == "" || getInfo.LocalDiaDiem == undefined) {
+  if (
+    getInfo.LocalDiaDiem == null ||
+    getInfo.LocalDiaDiem == "" ||
+    getInfo.LocalDiaDiem == undefined
+  ) {
     return res.status(500).json({
       errCode: 1,
-      message: 'Chua Truyen Gia Tri LocalDiaDiem De Tao!!'
-    })
+      message: "Chua Truyen Gia Tri LocalDiaDiem De Tao!!",
+    });
   }
-  let getRecommend = await ServiceApiService.OneRecommend(getInfo)
+  let getRecommend = await ServiceApiService.OneRecommend(getInfo);
   return res.status(200).json({
     errCode: getRecommend.errCode,
     message: getRecommend.errMessage,
-  })
-}
+  });
+};
 
 //////////////////View Booking
 let ViewBooking = async (req, res) => {
@@ -272,9 +320,9 @@ let ViewBooking = async (req, res) => {
     errCode: info.errCode,
     InfoBooking: info.errMessage,
     InfoTransport: info.AddInfo,
-    InfoRecommend: info.AddInfo2
-  })
-}
+    InfoRecommend: info.AddInfo2,
+  });
+};
 
 //////////////////View user
 let ViewUser = async (req, res) => {
@@ -284,8 +332,8 @@ let ViewUser = async (req, res) => {
   return res.status(200).json({
     errCode: info.errCode,
     InfoUser: info.errMessage,
-  })
-}
+  });
+};
 
 //////////////////ViewTour
 let ViewTour = async (req, res) => {
@@ -294,8 +342,8 @@ let ViewTour = async (req, res) => {
   return res.status(200).json({
     errCode: info.errCode,
     TourInfo: info.errMessage,
-  })
-}
+  });
+};
 
 //////////////////Tim kiem tour
 // let FindTour = async (req, res) => {
@@ -307,7 +355,6 @@ let ViewTour = async (req, res) => {
 //     TourInfo: info.errMessage
 //   })
 
-
 // }
 //////////////////Findtour
 let FindTourById = async (req, res) => {
@@ -315,17 +362,16 @@ let FindTourById = async (req, res) => {
   if (!getInfo.id) {
     return res.status(500).json({
       errCode: 0,
-      TourInfo: 'Chua Truyen id de tim tour!!',
-    })
-  }
-  else {
+      TourInfo: "Chua Truyen id de tim tour!!",
+    });
+  } else {
     let info = await ServiceApiService.FindTour(getInfo);
     return res.status(200).json({
       errCode: info.errCode,
       TourInfo: info.errMessage,
-    })
+    });
   }
-}
+};
 
 //////////////////Findtour
 let FindTourByNamelocal = async (req, res) => {
@@ -333,19 +379,28 @@ let FindTourByNamelocal = async (req, res) => {
   if (!getInfo.name) {
     return res.status(500).json({
       errCode: 0,
-      TourInfo: 'Chua Truyen gia tri name de tim tour!!',
-    })
-  }
-  else {
+      TourInfo: "Chua Truyen gia tri name de tim tour!!",
+    });
+  } else {
     let info = await ServiceApiService.FindTourByNamelocal(getInfo);
     return res.status(200).json({
       errCode: info.errCode,
       TourInfo: info.errMessage,
-    })
+    });
   }
-
-}
+};
 module.exports = {
-  SignIn, loginuser, ViewHome, CreateTransport, ViewTransport, Booking, CreateTour, CreateRecommend, ViewBooking, ViewUser,
-  ViewTour, FindTourById, FindTourByNamelocal
-}
+  SignIn,
+  loginuser,
+  ViewHome,
+  CreateTransport,
+  ViewTransport,
+  Booking,
+  CreateTour,
+  CreateRecommend,
+  ViewBooking,
+  ViewUser,
+  ViewTour,
+  FindTourById,
+  FindTourByNamelocal,
+};

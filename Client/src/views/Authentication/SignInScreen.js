@@ -1,5 +1,5 @@
 // import React
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useContext} from 'react';
 
 // import core componet
 import {
@@ -17,18 +17,28 @@ import {
 // import icons, images physical
 import {images, icons} from '../../constants/index';
 
+//------AuthContext-----//
+import {AuthContext} from '../../context/AuthContext';
+//------AuthContext-----//
+import Spinner from 'react-native-loading-spinner-overlay';
+
 // variable get height and width device
 const WDwidth = Dimensions.get('window').width;
 const WDheight = Dimensions.get('window').height;
 
 const SignInScreen = ({navigation}) => {
   const [hasOpacity, setHasOpacity] = React.useState(false);
+  const [email, setEmail] = useState(null);
+  const [password, setPassword] = useState(null);
+
+  const {isLoading, Login} = useContext(AuthContext);
 
   return (
     <ImageBackground
       source={images.backgourndSigIn2}
       style={styles.ImagesBackground}
       resizeMode="stretch">
+      <Spinner visible={isLoading} />
       {/* SignIn View */}
       <SafeAreaView style={styles.SafeAreaStyles}>
         {/* SignIn Text */}
@@ -43,6 +53,8 @@ const SignInScreen = ({navigation}) => {
               autoCapitalize="none"
               placeholder="Enter your Email"
               style={styles.InputStyle}
+              value={email}
+              onChangeText={text => setEmail(text)}
             />
             <Image
               resizeMode="contain"
@@ -57,6 +69,8 @@ const SignInScreen = ({navigation}) => {
               secureTextEntry={true}
               placeholder="****************"
               style={styles.InputStyle}
+              value={password}
+              onChangeText={text => setPassword(text)}
             />
             <Image
               resizeMode="contain"
@@ -76,7 +90,10 @@ const SignInScreen = ({navigation}) => {
         {/* button login */}
         <View style={styles.btnSignInContainer}>
           <TouchableOpacity
-            onPress={() => navigation.navigate('HomeTabs')}
+            // onPress={() => navigation.navigate('HomeTabs')}
+            onPress={() => {
+              Login(email, password);
+            }}
             style={styles.btnSignIn}>
             <Text
               style={{

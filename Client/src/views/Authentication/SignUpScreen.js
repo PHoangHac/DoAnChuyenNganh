@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useContext, useState} from 'react';
 import {
   View,
   Text,
@@ -11,17 +11,27 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import {images, icons} from '../../constants/index';
+import {AuthContext} from '../../context/AuthContext';
+import Spinner from 'react-native-loading-spinner-overlay';
 const WDwidth = Dimensions.get('window').width;
 const WDheight = Dimensions.get('window').height;
 
 const SignUpScreen = ({navigation}) => {
   const [hasOpacity, setHasOpacity] = React.useState(false);
 
+  const [email, setEmail] = useState(null);
+  const [password, setPassword] = useState(null);
+  // const [name, setName] = useState(null);
+  // const [roleName, setRoleName] = useState(null);
+
+  const {isLoading, Register} = useContext(AuthContext);
+
   return (
     <ImageBackground
       source={images.backgourndSigIn2}
       style={styles.ImagesBackground}
       resizeMode="stretch">
+      <Spinner visible={isLoading} />
       {/* SignUp View */}
       <SafeAreaView style={styles.SafeAreaStyles}>
         {/* SignUp Text */}
@@ -36,6 +46,9 @@ const SignUpScreen = ({navigation}) => {
               autoCapitalize="none"
               placeholder="Enter your Email"
               style={styles.InputStyle}
+              onChangeText={text => setEmail(text)}
+              value={email}
+              autoComplete="off"
             />
             <Image
               resizeMode="contain"
@@ -64,6 +77,8 @@ const SignUpScreen = ({navigation}) => {
               secureTextEntry={true}
               placeholder="****************"
               style={styles.InputStyle}
+              onChangeText={text => setPassword(text)}
+              value={password}
             />
             <Image
               resizeMode="contain"
@@ -102,7 +117,10 @@ const SignUpScreen = ({navigation}) => {
         {/* button login */}
         <View style={styles.btnSignUpContainer}>
           <TouchableOpacity
-            onPress={() => navigation.navigate('SignIn')}
+            // onPress={() => navigation.navigate('SignIn')}
+            onPress={() => {
+              Register(email, password);
+            }}
             style={styles.btnSignUp}>
             <Text
               style={{

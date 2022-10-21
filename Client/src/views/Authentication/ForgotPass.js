@@ -16,56 +16,53 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 // useDispatch : GỌI HÀNH ĐỘNG
 // useSelector: LẤY THÔNG TIN
-import {useDispatch, useSelector} from 'react-redux';
 
-import {updateEmail} from '../../redux/actions/updateAction';
+// import {updateEmail} from '../../redux/actions/updateAction';
 
 // const URL = `http://localhost:16225/api/v1/ViewTour`;
 
 // variable API
-const CallAPI = () => {
-  return new Promise((resolve, reject) => {
-    // TRONG KHOẢNG 2S LẤY RA DỮU LIỆU
-    setTimeout(() => {
-      resolve({data: 'data'});
-      console.log('Da tra ve DATA');
-    }, 2000);
-  });
-};
+// const CallAPI = () => {
+//   return new Promise((resolve, reject) => {
+//     // TRONG KHOẢNG 2S LẤY RA DỮU LIỆU
+//     setTimeout(() => {
+//       resolve({data: 'data'});
+//       console.log('Da tra ve DATA');
+//     }, 2000);
+//   });
+// };
 
-const getData = async setData => {
-  let data = await CallAPI();
-  setData(data);
-};
+// const getData = async setData => {
+//   let data = await CallAPI();
+//   setData(data);
+// };
 
-const ForgotPass = () => {
+const ForgotPass = ({navigation}) => {
   // const [data, setData] = useState({data: null});
-  const info = useSelector(state => state.personalInfo);
-  const [email, onchangeEmail] = useState('');
+  // const [email, onchangeEmail] = useState('');
 
   // check video 1
-  const [data, setData] = useState([]);
-  const [loading, setLoading] = useState(true);
-  // check video 1
+  // const [data, setData] = useState([]);
+  // const [loading, setLoading] = useState(true);
+  // // check video 1
 
-  const dispatch = useDispatch();
-  // LIFECYCLE
-  useEffect(() => {
-    console.log('VO MAN HINH');
-    // GỌI
-    // getData(setData);
+  // // LIFECYCLE
+  // useEffect(() => {
+  //   console.log('VO MAN HINH');
+  //   // GỌI
+  //   // getData(setData);
 
-    // console.log(info);
+  //   // console.log(info);
 
-    // NGẮT LẮNG NGHE
-    return () => {
-      console.log('THOAT KHOI MAN HINH');
-    };
-  }, []);
+  //   // NGẮT LẮNG NGHE
+  //   return () => {
+  //     console.log('THOAT KHOI MAN HINH');
+  //   };
+  // }, []);
 
-  useEffect(() => {
-    console.log('Data da lang nghe:', data);
-  });
+  // useEffect(() => {
+  //   console.log('Data da lang nghe:', data);
+  // });
 
   // const URL = `https://jsonplaceholder.typicode.com/users`;
 
@@ -81,20 +78,20 @@ const ForgotPass = () => {
   //     .finally(() => setLoading(false));
   // }, []);
 
-  const CallGETUrl = async () => {
-    try {
-      const url = `http://192.168.249.122:9090/get-crud`;
-      const response = await fetch(url, {
-        method: 'GET',
-      })
-        .then(response => response.json())
-        .then(responseJson => console.log(responseJson));
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  // const CallGETUrl = async () => {
+  //   try {
+  //     const url = `http://192.168.249.122:9090/get-crud`;
+  //     const response = await fetch(url, {
+  //       method: 'GET',
+  //     })
+  //       .then(response => response.json())
+  //       .then(responseJson => console.log(responseJson));
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
 
-  console.log(data);
+  // console.log(data);
 
   // CALL API
   // const CallGETUrl = () => {
@@ -112,19 +109,19 @@ const ForgotPass = () => {
   // };
 
   // CALL API WITH ID
-  const CallGETUrlID = () => {
-    console.log('GET API RUN WITH ID....');
-  };
+  // const CallGETUrlID = () => {
+  //   console.log('GET API RUN WITH ID....');
+  // };
 
-  // CALL API
-  const CallPOSTUrl = () => {
-    console.log('POST API RUN....');
-  };
+  // // CALL API
+  // const CallPOSTUrl = () => {
+  //   console.log('POST API RUN....');
+  // };
 
-  // CALL API
-  const CallQUERYUrl = () => {
-    console.log('QUERY API RUN....');
-  };
+  // // CALL API
+  // const CallQUERYUrl = () => {
+  //   console.log('QUERY API RUN....');
+  // };
 
   return (
     <ImageBackground
@@ -143,43 +140,6 @@ const ForgotPass = () => {
         </TouchableOpacity>
       </View>
 
-      {/* Test */}
-      <View
-        style={{
-          backgroundColor: 'white',
-          alignItems: 'center',
-        }}>
-        <Text>address: {info.address}</Text>
-        <Text>email: {info.email}</Text>
-        <Text>id: {info.id}</Text>
-        <Text>score: {info.score}</Text>
-        <TextInput
-          style={{
-            borderWidth: 1,
-            borderColor: 'black',
-            width: '50%',
-          }}
-          onChangeText={onchangeEmail}
-          value={email}
-        />
-        <TouchableOpacity
-          style={{
-            backgroundColor: 'blue',
-          }}
-          onPress={() => {
-            console.log('EMAIL:' + email);
-            dispatch(updateEmail(email));
-          }}>
-          <Text
-            style={{
-              padding: 10,
-              color: 'white',
-            }}>
-            Update
-          </Text>
-        </TouchableOpacity>
-      </View>
-      {/* END Test */}
       {/*  */}
       <View
         style={{
@@ -190,8 +150,7 @@ const ForgotPass = () => {
           style={{
             backgroundColor: 'blue',
             borderRadius: 10,
-          }}
-          onPress={() => CallGETUrl()}>
+          }}>
           <Text
             style={{
               color: 'white',
@@ -204,8 +163,7 @@ const ForgotPass = () => {
           style={{
             backgroundColor: 'blue',
             borderRadius: 10,
-          }}
-          onPress={() => CallGETUrlID()}>
+          }}>
           <Text
             style={{
               color: 'white',
@@ -218,8 +176,7 @@ const ForgotPass = () => {
           style={{
             backgroundColor: 'blue',
             borderRadius: 10,
-          }}
-          onPress={() => CallPOSTUrl()}>
+          }}>
           <Text
             style={{
               color: 'white',
@@ -232,8 +189,7 @@ const ForgotPass = () => {
           style={{
             backgroundColor: 'blue',
             borderRadius: 10,
-          }}
-          onPress={() => CallQUERYUrl()}>
+          }}>
           <Text
             style={{
               color: 'white',

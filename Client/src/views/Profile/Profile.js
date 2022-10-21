@@ -1,11 +1,19 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import {View, Text, Image, TouchableOpacity} from 'react-native';
 
 import {icons, images} from '../../constants/index';
 
+//------AuthContext-----//
+import {AuthContext} from '../../context/AuthContext';
+//------AuthContext-----//
+import Spinner from 'react-native-loading-spinner-overlay';
+
 const Onboarding = ({navigation}) => {
+  const {isLoading, Logout} = useContext(AuthContext);
+
   return (
     <View style={{flex: 100, backgroundColor: 'white'}}>
+      <Spinner visible={isLoading} />
       {/* Header */}
       <View style={{flex: 20}}>
         {/* 50% backg */}
@@ -382,6 +390,37 @@ const Onboarding = ({navigation}) => {
                 style={{
                   height: 15,
                   width: 15,
+                  right: 20,
+                }}
+                source={icons.rightarrowicon}
+              />
+            </TouchableOpacity>
+          </View>
+          <View
+            style={{
+              marginVertical: 5,
+            }}>
+            <TouchableOpacity
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                right: 15,
+              }}
+              onPress={Logout}>
+              <Text
+                style={{
+                  left: 30,
+                  fontSize: 20,
+                  color: 'black',
+                  fontFamily: 'Inter-Bold',
+                }}>
+                LOGOUT
+              </Text>
+              <Image
+                style={{
+                  height: 18,
+                  width: 18,
                   right: 20,
                 }}
                 source={icons.rightarrowicon}

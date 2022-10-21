@@ -1,6 +1,10 @@
 import db from "../models/index";
 import CRUDService from "../services/CRUDService";
 
+// images upload
+import multer from "multer";
+import path, { extname } from "path";
+
 let getHomePage = async (req, res) => {
   try {
     let data = await db.User.findAll();
@@ -21,7 +25,9 @@ let getCRUD = (req, res) => {
 };
 
 let postCRUD = async (req, res) => {
-  let message = await CRUDService.createNewUser(req.body);
+  let data = req.body;
+  let imageData = req.file.path;
+  let message = await CRUDService.createNewUser(data, imageData);
   console.log(message);
   return res.send("post crud from server");
 };
@@ -71,6 +77,100 @@ let getDeleteCRUD = async (req, res) => {
   }
 };
 
+// specialty
+
+let speciatlyCRUD = async (req, res) => {
+  try {
+    let data = req.body;
+    let filenames = req.files.map(function (file) {
+      return file.path; // or file.originalname
+    });
+
+    // console.log(Object.entries(filenames));
+    // console.log(filenames);
+    // console.log(typeof filenames);
+
+    // const reformattedArray = req.files.map(({ key, value }) => ({
+    //   [key]: value,
+    // }));
+    // console.log(reformattedArray);
+
+    // let names = filenames.map((item) => item.path);
+    // console.log(names);
+    // console.log(typeof names);
+
+    // let jsonObject = JSON.parse(filenames);
+    // console.log(jsonObject);
+
+    let jsonarray = JSON.stringify(filenames);
+    console.log(jsonarray);
+    // console.log(typeof jsonarray);
+    // let arrayimg = req.files;
+    let speciatlyS = await db.Specialty.create({
+      name: data.name,
+      description: data.description,
+      image: jsonarray,
+    });
+    return res.status(200).send(speciatlyS);
+  } catch (error) {
+    return res.status(500).send(error);
+  }
+};
+
+let displayspeciatlyCRUD = async (req, res) => {
+  let data = await CRUDService.disAllplayspeciatlyCRUD();
+  // console.log('---------------------')
+  // console.log(data);
+  // console.log('---------------------')
+  // return res.render('displayCRUD.ejs', {
+  //     dataTable : data
+  // });
+  return res.status(200).send({ speciatly: data });
+};
+
+// Upload images controller
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    // cb(null, Date.now() + path.extname(file.originalname)) // 10/20/2020.png
+    cb(null, "src/assets/images"); // 10/20/2020.png
+  },
+  filename: (req, file, cb) => {
+    cb(null, Date.now() + path.extname(file.originalname)); // 10/20/2020.png
+  },
+});
+
+const upload = multer({
+  storage: storage,
+  limits: { fileSize: "10000000" }, // 10000000 = 10mb
+  fileFilter: (req, file, cb) => {
+    const fileTypes = /jpeg|jpg|png|gif/;
+    const minType = fileTypes.test(file.mimetype);
+    const extname = fileTypes.test(path.extname(file.originalname));
+
+    if (minType && extname) {
+      return cb(null, true);
+    }
+    cb("Give proper file format to upload");
+  },
+}).single("image");
+
+const uploads = multer({
+  storage: storage,
+  limits: { fileSize: "10000000" }, // 10000000 = 10mb
+  fileFilter: (req, file, cb) => {
+    const fileTypes = /jpeg|jpg|png|gif/;
+    const minType = fileTypes.test(file.mimetype);
+    const extname = fileTypes.test(path.extname(file.originalname));
+
+    if (minType && extname) {
+      return cb(null, true);
+    }
+    cb("Give proper file format to upload");
+  },
+}).array("image", 3);
+
+// .array('images', 3)
+
 module.exports = {
   getHomePage: getHomePage,
   getAboutPage: getAboutPage,
@@ -80,4 +180,8 @@ module.exports = {
   getEditCRUD: getEditCRUD,
   putCRUD: putCRUD,
   getDeleteCRUD: getDeleteCRUD,
+  upload: upload,
+  uploads: uploads,
+  speciatlyCRUD: speciatlyCRUD,
+  displayspeciatlyCRUD: displayspeciatlyCRUD,
 };

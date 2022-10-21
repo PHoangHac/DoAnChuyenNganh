@@ -1,5 +1,5 @@
 // library
-import React from 'react';
+import React, {useContext} from 'react';
 // import {Image} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
@@ -27,8 +27,12 @@ import Bookings2 from './views/Bookings/Bookings1';
 import PaymentScreen from './views/Payment/PaymentScreen';
 import BillScreen from './views/Payment/BillScreen';
 
-import {Provider} from 'react-redux';
-import {store} from './redux/store';
+// --------------Test screen
+import CheckImage from './views/Authentication/CheckImage';
+import CRUDReduxScreen from './views/Authentication/Redux';
+// --------------Test screen
+
+import {AuthContext} from './context/AuthContext';
 
 // variable
 const Stack = createNativeStackNavigator();
@@ -122,27 +126,36 @@ const HomeTabs = () => {
   );
 };
 
-const RootPage = () => {
+const Navigation = () => {
+  const {userInfo} = useContext(AuthContext);
+  // console.log(userInfo.jwtToken);
   return (
-    <Provider store={store}>
-      <NavigationContainer>
-        <Stack.Navigator
-          initialRouteName="OnBoarding"
-          screenOptions={{headerShown: false}}>
-          <Stack.Screen name="OnBoarding" component={OnBoarding} />
-          <Stack.Screen name="SignIn" component={SignInScreen} />
-          <Stack.Screen name="SignUp" component={SignUpScreen} />
-          <Stack.Screen name="ForgotPass" component={ForgotPass} />
-          <Stack.Screen name="DetailsScreen2" component={DetailsScreen2} />
-          <Stack.Screen name="ProfileDetail" component={ProfileDetail} />
-          <Stack.Screen name="HomeTabs" component={HomeTabs} />
-          <Stack.Screen name="Bookings" component={Bookings2} />
-          <Stack.Screen name="PaymentScreen" component={PaymentScreen} />
-          <Stack.Screen name="BillScreen" component={BillScreen} />
-        </Stack.Navigator>
-      </NavigationContainer>
-    </Provider>
+    <NavigationContainer>
+      <Stack.Navigator
+        initialRouteName="OnBoarding"
+        screenOptions={{headerShown: false}}>
+        {userInfo.jwtToken ? (
+          <>
+            <Stack.Screen name="HomeTabs" component={HomeTabs} />
+            <Stack.Screen name="DetailsScreen2" component={DetailsScreen2} />
+            <Stack.Screen name="ProfileDetail" component={ProfileDetail} />
+            <Stack.Screen name="Bookings" component={Bookings2} />
+            <Stack.Screen name="PaymentScreen" component={PaymentScreen} />
+            <Stack.Screen name="BillScreen" component={BillScreen} />
+            <Stack.Screen name="CheckImage" component={CheckImage} />
+            <Stack.Screen name="CRUDReduxScreen" component={CRUDReduxScreen} />
+          </>
+        ) : (
+          <>
+            <Stack.Screen name="ForgotPass" component={ForgotPass} />
+            <Stack.Screen name="OnBoarding" component={OnBoarding} />
+            <Stack.Screen name="SignIn" component={SignInScreen} />
+            <Stack.Screen name="SignUp" component={SignUpScreen} />
+          </>
+        )}
+      </Stack.Navigator>
+    </NavigationContainer>
   );
 };
 
-export default RootPage;
+export default Navigation;

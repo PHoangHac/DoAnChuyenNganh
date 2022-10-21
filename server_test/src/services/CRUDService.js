@@ -2,19 +2,14 @@ import db from "../models/index";
 import bcrypt from "bcryptjs";
 const salt = bcrypt.genSaltSync(10);
 
-let createNewUser = async (data) => {
+let createNewUser = async (data, imageData) => {
   return new Promise(async (resolve, reject) => {
     try {
-      let hashPasswordFromBcryt = await hashUserPassword(data.password);
       await db.User.create({
         email: data.email,
         password: hashPasswordFromBcryt,
-        firstName: data.firstName,
-        lastName: data.lastName,
-        address: data.address,
-        phonenumber: data.phonenumber,
-        gender: data.gender === "1" ? true : false,
-        roledId: data.roledId,
+        name: data.name,
+        roleName: data.roleName,
       });
 
       resolve("Create a new user success !");
@@ -39,6 +34,19 @@ let getAllUser = () => {
   return new Promise(async (resolve, reject) => {
     try {
       let users = db.User.findAll({
+        raw: true,
+      });
+      resolve(users);
+    } catch (e) {
+      reject(e);
+    }
+  });
+};
+
+let disAllplayspeciatlyCRUD = () => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      let users = db.Specialty.findAll({
         raw: true,
       });
       resolve(users);
@@ -112,4 +120,5 @@ module.exports = {
   getUserInfoById: getUserInfoById,
   updateUserdata: updateUserdata,
   deleteUserById: deleteUserById,
+  disAllplayspeciatlyCRUD: disAllplayspeciatlyCRUD,
 };

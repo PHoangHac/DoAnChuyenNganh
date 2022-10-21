@@ -5,6 +5,7 @@ const sequelize = new Sequelize("checkdatabase", "root", null, {
   host: "localhost",
   dialect: "mysql",
   logging: false,
+  port: 3307,
 });
 
 let connecDB = async () => {
