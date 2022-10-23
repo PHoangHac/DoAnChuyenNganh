@@ -4,7 +4,7 @@ import LocationService from "../services/LocationService.js";
 const LocationController = {
   CreateLocation: async (req, res) => {
     let data = req.body;
-    console.log(data);
+    // console.log(data);
     let locationData = await LocationService.CreateLocation(data);
     return res.status(200).json({
       errCode: locationData.errCode,

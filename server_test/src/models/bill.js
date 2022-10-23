@@ -20,7 +20,7 @@ module.exports = (sequelize, DataTypes) => {
       TimePayment: DataTypes.STRING,
       codeGenerate: DataTypes.STRING,
       Status: DataTypes.BOOLEAN,
-      idUser: DataTypes.INTEGER,
+      idUser: DataTypes.INTEGER, //????????????
       idBooking: DataTypes.INTEGER,
     },
     {

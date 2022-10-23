@@ -21,8 +21,6 @@ const BookingController = {
   GetIdBooking2: async (req, res) => {
     try {
       const { id } = req.params;
-      // console.log({ id });
-      // const findTourbyId = await db.TourInfo.findByPk(id);
       const findBookingbyId = await db.Booking.findOne({
         attributes: [
           "id",
@@ -45,7 +43,17 @@ const BookingController = {
         group: ["id", "Adult", "Children", "Status"],
         include: [
           { model: db.User, attributes: ["name", "email", "phone"] },
-          { model: db.TourInfo, attributes: ["NameTour"] },
+          {
+            model: db.TourInfo,
+            attributes: ["NameTour", "PricePerson"],
+            // include: [
+            //   {
+            //     moodel: db.Location,
+            //     attributes: ["country", "placeName", "descLocation"],
+            //     where: { id: db.TourInfo.idLocation },
+            //   },
+            // ],
+          },
         ],
         raw: true,
         nest: true,
