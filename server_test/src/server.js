@@ -45,8 +45,11 @@ let port = process.env.PORT;
 // app.use("/img", express.static(path.join(__dirname, "public/images")));
 app.use("*/images", express.static("src/assets/images"));
 // app.use("*/public", express.static("public"));
-app.listen(port, "192.168.1.13", () => {
-  console.log("server running");
+app.listen(port, "192.168.1.208", () => {
+    console.log("server running");
 });
+// app.listen(port, "192.168.1.13", () => {
+//   console.log("server running");
+// });
 
 // 192.168.1.13

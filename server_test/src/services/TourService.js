@@ -75,14 +75,30 @@ const TourService = {
         //   tourData.errCode = 1;
         //   tourData.errMessage = "Can't find this id is system !";
         // }
-      } catch (error) {}
+      } catch (error) { }
     });
   },
   GetAll: () => {
     return new Promise(async (resolve, reject) => {
       try {
         let allHotel = db.TourInfo.findAll({
+          attributes: [
+            "id",
+            "NameTour",
+            "abbreviation",
+            "totalTime",
+            "Departureday",
+            "Description",
+            "PricePerson",
+            "images",
+          ],
+          include: [
+            // { model: db.TypeOfTransport, attributes: ["nameTransport"] },
+            // { model: db.Hotel, attributes: ["NameHotel"]},
+            { model: db.Location, attributes: ["country"] },
+          ],
           raw: true,
+          nest: true,
         });
         resolve(allHotel);
       } catch (e) {

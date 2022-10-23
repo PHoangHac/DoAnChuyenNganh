@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 
 import {
   View,
@@ -15,8 +15,8 @@ import {
 
 import DeviceInfo from 'react-native-device-info';
 
-import {places} from '../../constants/dataDummy';
-import {icons, images} from '../../constants/index';
+import { places } from '../../constants/dataDummy';
+import { icons, images } from '../../constants/index';
 const WDwidth = Dimensions.get('window').width;
 const WDheight = Dimensions.get('window').height;
 
@@ -26,7 +26,7 @@ const WDheight = Dimensions.get('window').height;
 
 // console.log('Chieu dai man hinh:' + WDheight, 'Chieu rong man hinh:' + WDwidth);
 
-const HomeScreen = ({navigation}) => {
+const HomeScreen = ({ navigation }) => {
   const appName = DeviceInfo.getBrand();
   const [data, setData] = useState([]);
   const [dataTour, setDataTour] = useState([]);
@@ -36,12 +36,13 @@ const HomeScreen = ({navigation}) => {
   //   'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.';
   // console.log(String.length);
 
-  // console.log(dataTour);
-  const URL = `http://192.168.1.13:9090/transport/GetAll`;
-  const URL_STATCI = `http://192.168.1.13:9090`;
+  // console.log(loading);
+  // const URL = `http://192.168.1.13:9090/transport/GetAll`;
+  const URL = `http://192.168.1.208:9090`;
 
+  // fect data transport
   useEffect(() => {
-    fetch(`${URL}`, {
+    fetch(`${URL}/transport/GetAll`, {
       method: 'GET',
     })
       .then(response => response.json())
@@ -51,7 +52,7 @@ const HomeScreen = ({navigation}) => {
   }, []);
 
   useEffect(() => {
-    fetch(`http://192.168.1.13:9090/tour/GetAll`, {
+    fetch(`${URL}/tour/GetAll`, {
       method: 'GET',
     })
       .then(response => response.json())
@@ -69,11 +70,11 @@ const HomeScreen = ({navigation}) => {
   // ];
 
   const StarIcons = [
-    <Image style={{height: 12, width: 12}} source={icons.staricon} />,
-    <Image style={{height: 12, width: 12}} source={icons.staricon} />,
-    <Image style={{height: 12, width: 12}} source={icons.staricon} />,
-    <Image style={{height: 12, width: 12}} source={icons.staricon} />,
-    <Image style={{height: 12, width: 12}} source={icons.staricon} />,
+    <Image style={{ height: 12, width: 12 }} source={icons.staricon} />,
+    <Image style={{ height: 12, width: 12 }} source={icons.staricon} />,
+    <Image style={{ height: 12, width: 12 }} source={icons.staricon} />,
+    <Image style={{ height: 12, width: 12 }} source={icons.staricon} />,
+    <Image style={{ height: 12, width: 12 }} source={icons.staricon} />,
   ];
 
   const ListCategories = () => {
@@ -96,10 +97,10 @@ const HomeScreen = ({navigation}) => {
                   // borderColor: 'black',
                 }}
                 key={index}>
-                <View style={{padding: 5}}>
+                <View style={{ padding: 5 }}>
                   <Image
-                    style={{height: 50, width: 50}}
-                    source={{uri: `${URL_STATCI}/${icon.image}`}}
+                    style={{ height: 50, width: 50 }}
+                    source={{ uri: `${URL}/${icon.image}` }}
                   />
                 </View>
               </TouchableOpacity>
@@ -142,8 +143,9 @@ const HomeScreen = ({navigation}) => {
     );
   };
 
-  const Card = ({place}) => {
+  const Card = ({ place }) => {
     // console.log(typeof JSON.parse(place.images));
+    // console.log(place.Location.country)
     const pic = JSON.parse(place.images);
     // console.log(typeof pic[0]);
     const filenames = pic.map(function (item) {
@@ -153,7 +155,7 @@ const HomeScreen = ({navigation}) => {
     return (
       <TouchableOpacity
         onPress={() => navigation.navigate('DetailsScreen2')}
-        style={{marginHorizontal: 10}}
+        style={{ marginHorizontal: 10 }}
         activeOpacity={0.82}>
         <View
           style={{
@@ -172,7 +174,7 @@ const HomeScreen = ({navigation}) => {
               width: 150,
               borderRadius: 12,
             }}
-            source={{uri: `${URL_STATCI}/${filenames[0]}`}}
+            source={{ uri: `${URL}/${filenames[0]}` }}
           />
           {/* body */}
           <View
@@ -185,7 +187,7 @@ const HomeScreen = ({navigation}) => {
             }}>
             <Text
               style={{
-                fontSize: 13,
+                fontSize: 14,
                 fontFamily: 'Inter-Bold',
                 color: 'black',
               }}>
@@ -220,12 +222,12 @@ const HomeScreen = ({navigation}) => {
               />
               <Text
                 style={{
-                  fontSize: 12,
+                  fontSize: 13,
                   paddingLeft: 5,
                   color: 'black',
                   fontFamily: 'Inter-Medium',
                 }}>
-                {place.location}
+                {place.Location.country}
               </Text>
             </View>
             <View
@@ -373,7 +375,12 @@ const HomeScreen = ({navigation}) => {
   //         source={place.image}></ImageBackground> */}
   //     </TouchableOpacity>
 
-  const PopularCard = ({place}) => {
+  const PopularCard = ({ place }) => {
+    const pic = JSON.parse(place.images);
+    // console.log(typeof pic[0]);
+    const filenames = pic.map(function (item) {
+      return item.path; // or file.originalname
+    });
     return (
       <TouchableOpacity>
         <ImageBackground
@@ -385,7 +392,9 @@ const HomeScreen = ({navigation}) => {
             overflow: 'hidden',
             padding: 5,
           }}
-          source={place.image}>
+          source={{ uri: `${URL}/${filenames[2]}` }}
+        // source={place.image}
+        >
           <View
             style={{
               backgroundColor: 'white',
@@ -412,7 +421,7 @@ const HomeScreen = ({navigation}) => {
                 padding: 5,
                 fontFamily: 'Inter-SemiBold',
               }}>
-              {place.location}
+              {place.Location.country}
             </Text>
           </View>
         </ImageBackground>
@@ -421,7 +430,7 @@ const HomeScreen = ({navigation}) => {
   };
 
   return (
-    <View style={{flex: 100, backgroundColor: 'white'}}>
+    <View style={{ flex: 100, backgroundColor: 'white' }}>
       {/* Header */}
       <View
         style={{
@@ -512,10 +521,10 @@ const HomeScreen = ({navigation}) => {
         </View>
       </View>
       {/* Scroll */}
-      <View style={{flex: 75}}>
+      <View style={{ flex: 75 }}>
         <ScrollView
-          contentContainerStyle={{paddingBottom: 90}}
-          style={{height: '100%', width: '100%'}}>
+          contentContainerStyle={{ paddingBottom: 90 }}
+          style={{ height: '100%', width: '100%' }}>
           {/* Categories */}
           <View
             style={{
@@ -554,7 +563,7 @@ const HomeScreen = ({navigation}) => {
                 width: '80%',
                 alignSelf: 'center',
               }}></View>
-            <View style={{margin: 20, left: 1}}>
+            <View style={{ margin: 20, left: 1 }}>
               <Text
                 style={{
                   fontSize: 16,
@@ -566,11 +575,11 @@ const HomeScreen = ({navigation}) => {
             </View>
             <View>
               <FlatList
-                contentContainerStyle={{paddingHorizontal: 10}}
+                contentContainerStyle={{ paddingHorizontal: 10 }}
                 data={dataTour}
                 horizontal
                 showsHorizontalScrollIndicator={false}
-                renderItem={({item}) => <Card place={item} />}
+                renderItem={({ item }) => <Card place={item} />}
               />
             </View>
           </View>
@@ -590,7 +599,7 @@ const HomeScreen = ({navigation}) => {
                 width: '80%',
                 alignSelf: 'center',
               }}></View>
-            <View style={{margin: 20, left: 1}}>
+            <View style={{ margin: 20, left: 1 }}>
               <Text
                 style={{
                   fontSize: 16,
@@ -603,16 +612,16 @@ const HomeScreen = ({navigation}) => {
             <View>
               <FlatList
                 snapToInterval={WDwidth - 20}
-                contentContainerStyle={{paddingLeft: 20}}
-                data={places}
+                contentContainerStyle={{ paddingLeft: 20 }}
+                data={dataTour}
                 horizontal
                 showsHorizontalScrollIndicator={false}
-                renderItem={({item}) => <PopularCard place={item} />}
+                renderItem={({ item }) => <PopularCard place={item} />}
               />
             </View>
           </View>
-          <View style={{height: '8%'}}>
-            <View style={{justifyContent: 'center', alignItems: 'center'}}>
+          <View style={{ height: '8%' }}>
+            <View style={{ justifyContent: 'center', alignItems: 'center' }}>
               <Image
                 style={{
                   height: 220,
