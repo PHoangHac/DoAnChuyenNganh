@@ -1,5 +1,9 @@
 // import React
-import React, {useState, useEffect, useCallback} from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
+
+import { useRoute } from '@react-navigation/native';
+
+import axios from 'axios';
 
 // import component core from react-native
 import {
@@ -14,10 +18,10 @@ import {
 } from 'react-native';
 
 // import function icons, images
-import {images, icons} from '../../../constants/index';
+import { images, icons } from '../../../constants/index';
 
 // import fake data
-import {FListData} from '../../../constants/dataDummy';
+import { FListData } from '../../../constants/dataDummy';
 
 // Check device
 import DeviceInfo from 'react-native-device-info';
@@ -43,15 +47,15 @@ const appName = DeviceInfo.getBrand();
 
 // Init variable = array of shapes(mảng chứa các hình)
 const StarIcons = [
-  <Image style={{height: 20, width: 20}} source={icons.staricon} />,
-  <Image style={{height: 20, width: 20}} source={icons.staricon} />,
-  <Image style={{height: 20, width: 20}} source={icons.staricon} />,
-  <Image style={{height: 20, width: 20}} source={icons.staricon} />,
-  <Image style={{height: 20, width: 20}} source={icons.staricon} />,
+  <Image style={{ height: 20, width: 20 }} source={icons.staricon} />,
+  <Image style={{ height: 20, width: 20 }} source={icons.staricon} />,
+  <Image style={{ height: 20, width: 20 }} source={icons.staricon} />,
+  <Image style={{ height: 20, width: 20 }} source={icons.staricon} />,
+  <Image style={{ height: 20, width: 20 }} source={icons.staricon} />,
 ];
 
 // Component
-const CardPicture = ({FListData}) => {
+const CardPicture = ({ FListData }) => {
   return (
     <TouchableOpacity>
       <Image
@@ -68,12 +72,40 @@ const CardPicture = ({FListData}) => {
   );
 };
 
-const DetailsScreen2 = ({navigation}) => {
+const URL = `http://192.168.1.8:9090`;
+
+const DetailsScreen2 = ({ navigation }) => {
   const [showMoreButton, setShowMoreButton] = useState(false);
   const [textShown, setTextShown] = useState(false);
   const [numLines, setNumLines] = useState(undefined);
 
+  const [loading, setLoading] = useState(false);
+  const [data, setData] = useState([]);
+
+  const [NameTour, setNameTour] = useState([]);
+  const [totalTime, setTotalTime] = useState("");
+  const [Description, setDescription] = useState("");
+  const [PricePerson, setPricePerson] = useState("");
+  const [Images, setImages] = useState("");
+  const [Hotel, setHotel] = useState({});
+
+  // console.log(Hotel)
+
+  // const pic = JSON.parse(Images);
+  // // console.log(typeof pic[0]);
+  // const filenames = pic.map(function (item) {
+  //   return item.path; // or file.originalname
+  // });
+
+  // console.log(filenames)
+
+  const route = useRoute();
+
+  // console.log(route.params)
+
   // console.log(textShown);
+
+  const URL = `http://192.168.1.8:9090`;
 
   const toggleTextShown = () => {
     setTextShown(!textShown);
@@ -93,9 +125,40 @@ const DetailsScreen2 = ({navigation}) => {
     [textShown],
   );
 
+  const getByIdTour = useCallback(async () => {
+    const getData = await axios.get(`${URL}/tour/GetIdTour2/${route.params}`);
+    setNameTour(getData.data.NameTour);
+    setTotalTime(getData.data.totalTime);
+    setDescription(getData.data.Description);
+    setPricePerson(getData.data.PricePerson);
+    setImages(getData.data.images);
+    setHotel(getData.data.Hotel);
+  }, [route.params]);
+
+  useEffect(() => {
+    getByIdTour();
+  }, [getByIdTour]);
+
+  // useEffect(() => {
+  //   fetch(`${URL}/tour/GetIdTour2/${route.params}`, {
+  //     method: 'GET',
+  //   })
+  //     .then(response => response.json())
+  //     .then(json => setData(json))
+  //     .catch(err => console.error(err))
+  //     .finally(() => setLoading(true));
+  // }, []);
+
+  // console.log(data)
+
+
+  // console.log(filenames);
+
   // const Chuoi =
   //   "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged sadsd dadsadad dadd sdasd ddddddd.";
   // console.log(Chuoi.length);
+  // console.log(JSON.parse(data.images));
+  // console.log(data.images)
 
   return (
     // Container
@@ -110,6 +173,7 @@ const DetailsScreen2 = ({navigation}) => {
           flex: 90,
         }}>
         {/* ScrollView container */}
+
         <ScrollView
           style={{
             height: HEIGHTDEVICE,
@@ -131,6 +195,7 @@ const DetailsScreen2 = ({navigation}) => {
                 width: WIGHTDEVICE,
               }}
               source={images.onboardImage1}
+              // source={{ uri: `${URL}/${filenames[0]}` }}
               resizeMode="cover">
               <View
                 style={{
@@ -189,11 +254,13 @@ const DetailsScreen2 = ({navigation}) => {
             <View>
               <Text
                 style={{
-                  fontSize: 25,
+                  fontSize: 22,
                   color: 'black',
                   fontFamily: 'Inter-ExtraBold',
+                  // backgroundColor: "gray"
                 }}>
-                ThaiLand
+                {NameTour}
+                {/* ThaiLand */}
               </Text>
             </View>
             {/* star rating */}
@@ -355,7 +422,8 @@ const DetailsScreen2 = ({navigation}) => {
                       color: '#7A7A7A',
                       fontFamily: 'Inter-Medium',
                     }}>
-                    Hotel: 5 Star
+                    {Hotel.NameHotel}
+                    {/* Hotel: 5 Star */}
                   </Text>
                 </View>
                 <View
@@ -435,17 +503,11 @@ const DetailsScreen2 = ({navigation}) => {
                 onTextLayout={onTextLayout}
                 numberOfLines={numLines}
                 ellipsizeMode="tail">
-                Lorem Ipsum is simply dummy text of the printing and typesetting
-                industry. Lorem Ipsum has been the industry's standard dummy
-                text ever since the 1500s, when an unknown printer took a galley
-                of type and scrambled it to make a type specimen book. It has
-                survived not only five centuries, but also the leap into
-                electronic typesetting, remaining essentially unchanged. sadsd
-                dadsadad dadd sdasd ddddddd.
+                {Description}
               </Text>
               {showMoreButton ? (
                 <Text
-                  style={{color: 'blue', fontSize: 16, fontWeight: 'bold'}}
+                  style={{ color: 'blue', fontSize: 16, fontWeight: 'bold' }}
                   onPress={toggleTextShown}>
                   {textShown ? 'Read Less' : 'Read More'}
                 </Text>
@@ -474,7 +536,7 @@ const DetailsScreen2 = ({navigation}) => {
                 data={FListData}
                 horizontal
                 showsHorizontalScrollIndicator={false}
-                renderItem={({item}) => <CardPicture FListData={item} />}
+                renderItem={({ item }) => <CardPicture FListData={item} />}
               />
             </View>
           </View>

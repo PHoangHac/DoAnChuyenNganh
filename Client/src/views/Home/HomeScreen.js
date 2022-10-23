@@ -15,7 +15,7 @@ import {
 
 import DeviceInfo from 'react-native-device-info';
 
-import { places } from '../../constants/dataDummy';
+// import { places } from '../../constants/dataDummy';
 import { icons, images } from '../../constants/index';
 const WDwidth = Dimensions.get('window').width;
 const WDheight = Dimensions.get('window').height;
@@ -32,13 +32,14 @@ const HomeScreen = ({ navigation }) => {
   const [dataTour, setDataTour] = useState([]);
   const [loading, setLoading] = useState(false);
 
+
   // const String =
   //   'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.';
   // console.log(String.length);
 
   // console.log(loading);
   // const URL = `http://192.168.1.13:9090/transport/GetAll`;
-  const URL = `http://192.168.1.208:9090`;
+  const URL = `http://192.168.1.8:9090`;
 
   // fect data transport
   useEffect(() => {
@@ -115,30 +116,6 @@ const HomeScreen = ({ navigation }) => {
             <ActivityIndicator size="large" color="#1925C3" />
           </View>
         )}
-
-        {/* {loading ? (
-          categoryIcons.map((icon, index) => (
-            <TouchableOpacity
-              style={{
-                backgroundColor: '#EFEFEF',
-                borderRadius: 10,
-                elevation: 5,
-                // borderWidth: 1,
-                // borderColor: 'black',
-              }}
-              key={index}>
-              <View style={{padding: 5}}>{icon}</View>
-            </TouchableOpacity>
-          ))
-        ) : (
-          <View
-            style={{
-              justifyContent: 'center',
-              backgroundColor: '#fff',
-            }}>
-            <ActivityIndicator size="large" color="#1925C3" />
-          </View>
-        )} */}
       </View>
     );
   };
@@ -146,6 +123,7 @@ const HomeScreen = ({ navigation }) => {
   const Card = ({ place }) => {
     // console.log(typeof JSON.parse(place.images));
     // console.log(place.Location.country)
+    // console.log(place.id)
     const pic = JSON.parse(place.images);
     // console.log(typeof pic[0]);
     const filenames = pic.map(function (item) {
@@ -154,7 +132,8 @@ const HomeScreen = ({ navigation }) => {
     // console.log(filenames);
     return (
       <TouchableOpacity
-        onPress={() => navigation.navigate('DetailsScreen2')}
+        onPress={() => navigation.navigate('DetailsScreen2',
+          place.id)}
         style={{ marginHorizontal: 10 }}
         activeOpacity={0.82}>
         <View
