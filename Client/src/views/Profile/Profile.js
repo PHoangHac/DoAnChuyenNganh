@@ -405,15 +405,18 @@ const Onboarding = ({navigation}) => {
                 flexDirection: 'row',
                 justifyContent: 'space-between',
                 alignItems: 'center',
-                right: 15,
+                backgroundColor: '#1925C3',
+                // paddingRight: 15,
               }}
               onPress={Logout}>
               <Text
                 style={{
-                  left: 30,
+                  // left: 30,
                   fontSize: 20,
-                  color: 'black',
+                  color: 'white',
                   fontFamily: 'Inter-Bold',
+                  // paddingRight: 15,
+                  paddingLeft: 15,
                 }}>
                 LOGOUT
               </Text>
@@ -421,7 +424,8 @@ const Onboarding = ({navigation}) => {
                 style={{
                   height: 18,
                   width: 18,
-                  right: 20,
+                  tintColor: 'white',
+                  marginRight: 35,
                 }}
                 source={icons.rightarrowicon}
               />

@@ -32,6 +32,7 @@ const AuthService = {
             email: data.email,
             password: hash,
             name: data.name,
+            phone: data.phone,
             roleName: data.roleName,
           });
           userData.errCode = 0;
@@ -56,36 +57,44 @@ const AuthService = {
         // let UserEmail = await db.User.findOne({
         //   where: { email: email },
         // });
-        let user = await db.User.findOne({
-          attributes: ["id", "email", "password", "name", "roleName"],
-          where: { email: email },
-          raw: true,
-        });
-        if (user) {
-          let validPassword = await bcrypt.compareSync(password, user.password);
-          if (validPassword) {
-            // let jwtToken = jwt.sign(
-            //   {
-            //     id: user.id,
-            //     email: user.email,
-            //   },
-            //   process.env.JWT_SCERET_KEY
-            // );
-            let jwtToken = encodedToken(user.id);
-            userData.errCode = 0;
-            userData.errMessage = "Login Success!";
-            // userData.user = user;
-            // userData.token = "Bearer " + jwtToken;
-            userData.token = jwtToken;
-            delete user.password;
-            userData.user = user;
+        if (email && password) {
+          let user = await db.User.findOne({
+            attributes: ["id", "email", "password", "name", "roleName"],
+            where: { email: email },
+            raw: true,
+          });
+          if (user) {
+            let validPassword = await bcrypt.compareSync(
+              password,
+              user.password
+            );
+            if (validPassword) {
+              // let jwtToken = jwt.sign(
+              //   {
+              //     id: user.id,
+              //     email: user.email,
+              //   },
+              //   process.env.JWT_SCERET_KEY
+              // );
+              let jwtToken = encodedToken(user.id);
+              userData.errCode = 0;
+              userData.errMessage = "Login Success!";
+              // userData.user = user;
+              // userData.token = "Bearer " + jwtToken;
+              userData.token = jwtToken;
+              delete user.password;
+              userData.user = user;
+            } else {
+              userData.errCode = 1;
+              userData.errMessage = "Wrong password !";
+            }
           } else {
-            userData.errCode = 1;
-            userData.errMessage = "Wrong password !";
+            userData.errCode = 2;
+            userData.errMessage = "can't find this email is system !";
           }
         } else {
-          userData.errCode = 2;
-          userData.errMessage = "can't find this email is system !";
+          userData.errCode = 3;
+          userData.errMessage = "Field is empty !";
         }
         resolve(userData);
       } catch (e) {

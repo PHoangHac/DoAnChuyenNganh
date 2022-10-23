@@ -14,20 +14,12 @@ const authController = {
   signin: async (req, res) => {
     let email = req.body.email;
     let password = req.body.password;
-
-    if (email == "" || password == "") {
-      return res.status(500).json({
-        errCode: 1,
-        message: "Field is empty!!",
-      });
-    }
-
     let userData = await AuthService.SignInUser(email, password);
-    console.log(typeof userData);
+    // console.log(typeof userData);
     return res.status(200).json({
       jwtToken: userData.token,
-      // errCode: userData.errCode,
-      // message: userData.errMessage,
+      errCode: userData.errCode,
+      message: userData.errMessage,
       user: userData.user,
       // ? userData.user
       // : { message: "Wrong something!!!" },

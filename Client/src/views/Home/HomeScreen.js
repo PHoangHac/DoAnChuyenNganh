@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 
 import {
   View,
@@ -10,6 +10,7 @@ import {
   FlatList,
   ImageBackground,
   Dimensions,
+  ActivityIndicator,
 } from 'react-native';
 
 import DeviceInfo from 'react-native-device-info';
@@ -27,13 +28,45 @@ const WDheight = Dimensions.get('window').height;
 
 const HomeScreen = ({navigation}) => {
   const appName = DeviceInfo.getBrand();
+  const [data, setData] = useState([]);
+  const [dataTour, setDataTour] = useState([]);
+  const [loading, setLoading] = useState(false);
 
-  const categoryIcons = [
-    <Image style={{height: 50, width: 50}} source={icons.airplaneicon} />,
-    <Image style={{height: 50, width: 50}} source={icons.truckicon} />,
-    <Image style={{height: 50, width: 50}} source={icons.tranicon} />,
-    <Image style={{height: 50, width: 50}} source={icons.shipicon} />,
-  ];
+  // const String =
+  //   'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.';
+  // console.log(String.length);
+
+  // console.log(dataTour);
+  const URL = `http://192.168.1.13:9090/transport/GetAll`;
+  const URL_STATCI = `http://192.168.1.13:9090`;
+
+  useEffect(() => {
+    fetch(`${URL}`, {
+      method: 'GET',
+    })
+      .then(response => response.json())
+      .then(json => setData(json))
+      .catch(err => console.error(err))
+      .finally(() => setLoading(true));
+  }, []);
+
+  useEffect(() => {
+    fetch(`http://192.168.1.13:9090/tour/GetAll`, {
+      method: 'GET',
+    })
+      .then(response => response.json())
+      .then(json => setDataTour(json))
+      .catch(err => console.error(err))
+      .finally(() => setLoading(true));
+  }, []);
+
+  // console.log(dataTour);
+  // const categoryIcons = [
+  //   <Image style={{height: 50, width: 50}} source={icons.airplaneicon} />,
+  //   <Image style={{height: 50, width: 50}} source={icons.truckicon} />,
+  //   <Image style={{height: 50, width: 50}} source={icons.tranicon} />,
+  //   <Image style={{height: 50, width: 50}} source={icons.shipicon} />,
+  // ];
 
   const StarIcons = [
     <Image style={{height: 12, width: 12}} source={icons.staricon} />,
@@ -51,24 +84,72 @@ const HomeScreen = ({navigation}) => {
           justifyContent: 'space-evenly',
           top: 10,
         }}>
-        {categoryIcons.map((icon, index) => (
-          <TouchableOpacity
+        {loading ? (
+          data.map((icon, index) => {
+            return (
+              <TouchableOpacity
+                style={{
+                  backgroundColor: '#EFEFEF',
+                  borderRadius: 10,
+                  elevation: 5,
+                  // borderWidth: 1,
+                  // borderColor: 'black',
+                }}
+                key={index}>
+                <View style={{padding: 5}}>
+                  <Image
+                    style={{height: 50, width: 50}}
+                    source={{uri: `${URL_STATCI}/${icon.image}`}}
+                  />
+                </View>
+              </TouchableOpacity>
+            );
+          })
+        ) : (
+          <View
             style={{
-              backgroundColor: '#EFEFEF',
-              borderRadius: 10,
-              elevation: 5,
-              // borderWidth: 1,
-              // borderColor: 'black',
-            }}
-            key={index}>
-            <View style={{padding: 5}}>{icon}</View>
-          </TouchableOpacity>
-        ))}
+              justifyContent: 'center',
+              backgroundColor: '#fff',
+            }}>
+            <ActivityIndicator size="large" color="#1925C3" />
+          </View>
+        )}
+
+        {/* {loading ? (
+          categoryIcons.map((icon, index) => (
+            <TouchableOpacity
+              style={{
+                backgroundColor: '#EFEFEF',
+                borderRadius: 10,
+                elevation: 5,
+                // borderWidth: 1,
+                // borderColor: 'black',
+              }}
+              key={index}>
+              <View style={{padding: 5}}>{icon}</View>
+            </TouchableOpacity>
+          ))
+        ) : (
+          <View
+            style={{
+              justifyContent: 'center',
+              backgroundColor: '#fff',
+            }}>
+            <ActivityIndicator size="large" color="#1925C3" />
+          </View>
+        )} */}
       </View>
     );
   };
 
   const Card = ({place}) => {
+    // console.log(typeof JSON.parse(place.images));
+    const pic = JSON.parse(place.images);
+    // console.log(typeof pic[0]);
+    const filenames = pic.map(function (item) {
+      return item.path; // or file.originalname
+    });
+    // console.log(filenames);
     return (
       <TouchableOpacity
         onPress={() => navigation.navigate('DetailsScreen2')}
@@ -91,7 +172,7 @@ const HomeScreen = ({navigation}) => {
               width: 150,
               borderRadius: 12,
             }}
-            source={place.image}
+            source={{uri: `${URL_STATCI}/${filenames[0]}`}}
           />
           {/* body */}
           <View
@@ -104,11 +185,11 @@ const HomeScreen = ({navigation}) => {
             }}>
             <Text
               style={{
-                fontSize: 14,
+                fontSize: 13,
                 fontFamily: 'Inter-Bold',
                 color: 'black',
               }}>
-              {place.name}
+              {place.NameTour}
             </Text>
             <View
               style={{
@@ -139,7 +220,7 @@ const HomeScreen = ({navigation}) => {
               />
               <Text
                 style={{
-                  fontSize: 14,
+                  fontSize: 12,
                   paddingLeft: 5,
                   color: 'black',
                   fontFamily: 'Inter-Medium',
@@ -154,16 +235,16 @@ const HomeScreen = ({navigation}) => {
               }}>
               <Text
                 style={{
-                  fontSize: 14,
+                  fontSize: 13,
                   color: '#1925C3',
-                  fontFamily: 'Inter-Medium',
+                  fontFamily: 'Inter-Bold',
                 }}>
-                $ {place.price}
+                $ {place.PricePerson}
               </Text>
               <Text
                 style={{
-                  fontSize: 14,
-                  fontFamily: 'Inter-Medium',
+                  fontSize: 13,
+                  fontFamily: 'Inter-Bold',
                   color: '#551613',
                 }}>
                 /Person
@@ -181,6 +262,116 @@ const HomeScreen = ({navigation}) => {
       </TouchableOpacity>
     );
   };
+
+  // <TouchableOpacity
+  //       onPress={() => navigation.navigate('DetailsScreen2')}
+  //       style={{marginHorizontal: 10}}
+  //       activeOpacity={0.82}>
+  //       <View
+  //         style={{
+  //           flexDirection: 'row',
+  //           backgroundColor: '#EBF0EF',
+  //           borderRadius: 20,
+  //           shadowColor: 'gray',
+  //           shadowOpacity: 2,
+  //           elevation: 10,
+  //           marginBottom: 10,
+  //         }}>
+  //         {/* picture */}
+  //         <Image
+  //           style={{
+  //             height: 150,
+  //             width: 150,
+  //             borderRadius: 12,
+  //           }}
+  //           source={{uri: `${URL_STATCI}/${place.images[0]}`}}
+  //         />
+  //         {/* body */}
+  //         <View
+  //           style={{
+  //             flexDirection: 'column',
+  //             width: 150,
+  //             borderRadius: 20,
+  //             paddingLeft: 10,
+  //             paddingRight: 10,
+  //           }}>
+  //           <Text
+  //             style={{
+  //               fontSize: 14,
+  //               fontFamily: 'Inter-Bold',
+  //               color: 'black',
+  //             }}>
+  //             {place.NameTour}
+  //           </Text>
+  //           <View
+  //             style={{
+  //               flexDirection: 'row',
+  //             }}>
+  //             {StarIcons.map((icon, index) => (
+  //               <View
+  //                 style={{
+  //                   marginTop: 10,
+  //                   marginHorizontal: 2,
+  //                 }}
+  //                 key={index}>
+  //                 {icon}
+  //               </View>
+  //             ))}
+  //           </View>
+  //           <View
+  //             style={{
+  //               flexDirection: 'row',
+  //               paddingTop: 10,
+  //             }}>
+  //             <Image
+  //               style={{
+  //                 height: 20,
+  //                 width: 20,
+  //               }}
+  //               source={icons.locationicon}
+  //             />
+  //             <Text
+  //               style={{
+  //                 fontSize: 14,
+  //                 paddingLeft: 5,
+  //                 color: 'black',
+  //                 fontFamily: 'Inter-Medium',
+  //               }}>
+  //               {place.location}
+  //             </Text>
+  //           </View>
+  //           <View
+  //             style={{
+  //               marginTop: 10,
+  //               flexDirection: 'row',
+  //             }}>
+  //             <Text
+  //               style={{
+  //                 fontSize: 14,
+  //                 color: '#1925C3',
+  //                 fontFamily: 'Inter-Medium',
+  //               }}>
+  //               $ {place.PricePerson}
+  //             </Text>
+  //             <Text
+  //               style={{
+  //                 fontSize: 14,
+  //                 fontFamily: 'Inter-Medium',
+  //                 color: '#551613',
+  //               }}>
+  //               /Person
+  //             </Text>
+  //           </View>
+  //         </View>
+  //       </View>
+  //       {/* <ImageBackground
+  //         style={{
+  //           height: 150,
+  //           width: 150,
+  //           borderRadius: 12,
+  //         }}
+  //         source={place.image}></ImageBackground> */}
+  //     </TouchableOpacity>
 
   const PopularCard = ({place}) => {
     return (
@@ -376,7 +567,7 @@ const HomeScreen = ({navigation}) => {
             <View>
               <FlatList
                 contentContainerStyle={{paddingHorizontal: 10}}
-                data={places}
+                data={dataTour}
                 horizontal
                 showsHorizontalScrollIndicator={false}
                 renderItem={({item}) => <Card place={item} />}

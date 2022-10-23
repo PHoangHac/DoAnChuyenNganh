@@ -21,6 +21,7 @@ import {images, icons} from '../../constants/index';
 import {AuthContext} from '../../context/AuthContext';
 //------AuthContext-----//
 import Spinner from 'react-native-loading-spinner-overlay';
+import Toast from 'react-native-toast-message';
 
 // variable get height and width device
 const WDwidth = Dimensions.get('window').width;
@@ -33,12 +34,21 @@ const SignInScreen = ({navigation}) => {
 
   const {isLoading, Login} = useContext(AuthContext);
 
+  const showToast = () => {
+    Toast.show({
+      type: 'error',
+      text1: 'This is some something 👋',
+      visibilityTime: 2000,
+    });
+  };
+
   return (
     <ImageBackground
       source={images.backgourndSigIn2}
       style={styles.ImagesBackground}
       resizeMode="stretch">
       <Spinner visible={isLoading} />
+      <Toast topOffset={20} />
       {/* SignIn View */}
       <SafeAreaView style={styles.SafeAreaStyles}>
         {/* SignIn Text */}
@@ -128,9 +138,10 @@ const SignInScreen = ({navigation}) => {
           <View style={styles.SocialLogin}>
             {/* google login */}
             <TouchableOpacity
-              onPress={() => {
-                setHasOpacity(!hasOpacity);
-              }}
+              // onPress={() => {
+              //   setHasOpacity(!hasOpacity);
+              // }}
+              onPress={showToast}
               activeOpacity={0.2}
               style={[styles.btnSocial, {opacity: hasOpacity ? 0.5 : 1.0}]}>
               <Image source={icons.googleIcon2} />

@@ -2,18 +2,26 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable("Bookings", {
+    await queryInterface.createTable("Bills", {
+      // TimePayment: DataTypes.RANGE(DataTypes.DATE),
+      // codeGenerate: DataTypes.STRING,
+      // Status: DataTypes.BOOLEAN,
+      // idUser: DataTypes.INTEGER,
+      // idBooking: DataTypes.INTEGER,
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER,
       },
-      Adult: {
-        type: Sequelize.INTEGER,
+      DatePayment: {
+        type: Sequelize.STRING,
       },
-      Children: {
-        type: Sequelize.INTEGER,
+      TimePayment: {
+        type: Sequelize.STRING,
+      },
+      codeGenerate: {
+        type: Sequelize.STRING,
       },
       Status: {
         type: Sequelize.BOOLEAN,
@@ -21,7 +29,7 @@ module.exports = {
       idUser: {
         type: Sequelize.INTEGER,
       },
-      idTourInfo: {
+      idBooking: {
         type: Sequelize.INTEGER,
       },
       createdAt: {
@@ -35,6 +43,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable("Bookings");
+    await queryInterface.dropTable("Bills");
   },
 };

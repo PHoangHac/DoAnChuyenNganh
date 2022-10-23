@@ -163,7 +163,6 @@ let BookingInfo = (getInfo) => {
         Status: getInfo.Status,
         idTourInfo: getInfo.idTourInfo,
       });
-
       bookingData.errCode = 0;
       bookingData.errMessage = "Booking Success!!!";
 

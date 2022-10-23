@@ -8,6 +8,11 @@ import cors from "cors";
 require("dotenv").config();
 //---------GET ROUTE-----------//
 import AuthRoutes from "./routes/authRoute.js";
+import TransportRoute from "./routes/transportRoute.js";
+import HotelRoute from "./routes/hotelRoute.js";
+import TourRoute from "./routes/tourRoute.js";
+import LocationRoute from "./routes/locationRoute.js";
+import BookingRoute from "./routes/bookingRoute";
 //---------GET ROUTE-----------//
 
 let app = express();
@@ -18,6 +23,11 @@ app.use(cors());
 
 //----------USE ROUTE---------//
 AuthRoutes(app);
+TransportRoute(app);
+HotelRoute(app);
+TourRoute(app);
+LocationRoute(app);
+BookingRoute(app);
 //----------USE ROUTE---------//
 
 viewEngine(app);

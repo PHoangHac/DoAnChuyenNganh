@@ -2,28 +2,20 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable("Bookings", {
+    await queryInterface.createTable("Hotels", {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER,
       },
-      Adult: {
-        type: Sequelize.INTEGER,
+      NameHotel: {
+        type: Sequelize.STRING,
       },
-      Children: {
-        type: Sequelize.INTEGER,
+      images: {
+        type: Sequelize.JSON,
       },
-      Status: {
-        type: Sequelize.BOOLEAN,
-      },
-      idUser: {
-        type: Sequelize.INTEGER,
-      },
-      idTourInfo: {
-        type: Sequelize.INTEGER,
-      },
+      ///
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,

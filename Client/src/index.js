@@ -26,6 +26,7 @@ import ProfileDetail from './views/Profile/ProfileDetail';
 import Bookings2 from './views/Bookings/Bookings1';
 import PaymentScreen from './views/Payment/PaymentScreen';
 import BillScreen from './views/Payment/BillScreen';
+import SplashLoadingScreen from './views/splashScreen/SplashScreen';
 
 // --------------Test screen
 import CheckImage from './views/Authentication/CheckImage';
@@ -127,14 +128,20 @@ const HomeTabs = () => {
 };
 
 const Navigation = () => {
-  const {userInfo} = useContext(AuthContext);
+  const {userInfo, splashLoading} = useContext(AuthContext);
   // console.log(userInfo.jwtToken);
   return (
     <NavigationContainer>
       <Stack.Navigator
         initialRouteName="OnBoarding"
         screenOptions={{headerShown: false}}>
-        {userInfo.jwtToken ? (
+        {splashLoading ? (
+          <Stack.Screen
+            name="SplashLoadingScreen"
+            component={SplashLoadingScreen}
+            options={{headerShown: false}}
+          />
+        ) : userInfo.jwtToken ? (
           <>
             <Stack.Screen name="HomeTabs" component={HomeTabs} />
             <Stack.Screen name="DetailsScreen2" component={DetailsScreen2} />
