@@ -32,13 +32,6 @@ const HomeScreen = ({ navigation }) => {
   const [dataTour, setDataTour] = useState([]);
   const [loading, setLoading] = useState(false);
 
-
-  // const String =
-  //   'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.';
-  // console.log(String.length);
-
-  // console.log(loading);
-  // const URL = `http://192.168.1.13:9090/transport/GetAll`;
   const URL = `http://192.168.1.8:9090`;
 
   // fect data transport
@@ -62,13 +55,6 @@ const HomeScreen = ({ navigation }) => {
       .finally(() => setLoading(true));
   }, []);
 
-  // console.log(dataTour);
-  // const categoryIcons = [
-  //   <Image style={{height: 50, width: 50}} source={icons.airplaneicon} />,
-  //   <Image style={{height: 50, width: 50}} source={icons.truckicon} />,
-  //   <Image style={{height: 50, width: 50}} source={icons.tranicon} />,
-  //   <Image style={{height: 50, width: 50}} source={icons.shipicon} />,
-  // ];
 
   const StarIcons = [
     <Image style={{ height: 12, width: 12 }} source={icons.staricon} />,
@@ -86,7 +72,15 @@ const HomeScreen = ({ navigation }) => {
           justifyContent: 'space-evenly',
           top: 10,
         }}>
-        {loading ? (
+        {data == "" ? (
+          <View
+            style={{
+              justifyContent: 'center',
+              backgroundColor: '#fff',
+            }}>
+            <ActivityIndicator size="large" color="#1925C3" />
+          </View>
+        ) : (
           data.map((icon, index) => {
             return (
               <TouchableOpacity
@@ -107,15 +101,8 @@ const HomeScreen = ({ navigation }) => {
               </TouchableOpacity>
             );
           })
-        ) : (
-          <View
-            style={{
-              justifyContent: 'center',
-              backgroundColor: '#fff',
-            }}>
-            <ActivityIndicator size="large" color="#1925C3" />
-          </View>
-        )}
+        )
+        }
       </View>
     );
   };
@@ -126,14 +113,17 @@ const HomeScreen = ({ navigation }) => {
     // console.log(place.id)
     const pic = JSON.parse(place.images);
     // console.log(typeof pic[0]);
-    const filenames = pic.map(function (item) {
-      return item.path; // or file.originalname
-    });
+    // const filenames = pic.map(function (item) {
+    //   return item.path; // or file.originalname
+    // });
     // console.log(filenames);
+    // console.log(pic)
     return (
       <TouchableOpacity
-        onPress={() => navigation.navigate('DetailsScreen2',
-          place.id)}
+        onPress={() => navigation.navigate('DetailsScreen2', {
+          id: place.id,
+          images: place.images
+        })}
         style={{ marginHorizontal: 10 }}
         activeOpacity={0.82}>
         <View
@@ -153,7 +143,7 @@ const HomeScreen = ({ navigation }) => {
               width: 150,
               borderRadius: 12,
             }}
-            source={{ uri: `${URL}/${filenames[0]}` }}
+            source={{ uri: `${URL}/${pic[0]}` }}
           />
           {/* body */}
           <View
@@ -244,122 +234,12 @@ const HomeScreen = ({ navigation }) => {
     );
   };
 
-  // <TouchableOpacity
-  //       onPress={() => navigation.navigate('DetailsScreen2')}
-  //       style={{marginHorizontal: 10}}
-  //       activeOpacity={0.82}>
-  //       <View
-  //         style={{
-  //           flexDirection: 'row',
-  //           backgroundColor: '#EBF0EF',
-  //           borderRadius: 20,
-  //           shadowColor: 'gray',
-  //           shadowOpacity: 2,
-  //           elevation: 10,
-  //           marginBottom: 10,
-  //         }}>
-  //         {/* picture */}
-  //         <Image
-  //           style={{
-  //             height: 150,
-  //             width: 150,
-  //             borderRadius: 12,
-  //           }}
-  //           source={{uri: `${URL_STATCI}/${place.images[0]}`}}
-  //         />
-  //         {/* body */}
-  //         <View
-  //           style={{
-  //             flexDirection: 'column',
-  //             width: 150,
-  //             borderRadius: 20,
-  //             paddingLeft: 10,
-  //             paddingRight: 10,
-  //           }}>
-  //           <Text
-  //             style={{
-  //               fontSize: 14,
-  //               fontFamily: 'Inter-Bold',
-  //               color: 'black',
-  //             }}>
-  //             {place.NameTour}
-  //           </Text>
-  //           <View
-  //             style={{
-  //               flexDirection: 'row',
-  //             }}>
-  //             {StarIcons.map((icon, index) => (
-  //               <View
-  //                 style={{
-  //                   marginTop: 10,
-  //                   marginHorizontal: 2,
-  //                 }}
-  //                 key={index}>
-  //                 {icon}
-  //               </View>
-  //             ))}
-  //           </View>
-  //           <View
-  //             style={{
-  //               flexDirection: 'row',
-  //               paddingTop: 10,
-  //             }}>
-  //             <Image
-  //               style={{
-  //                 height: 20,
-  //                 width: 20,
-  //               }}
-  //               source={icons.locationicon}
-  //             />
-  //             <Text
-  //               style={{
-  //                 fontSize: 14,
-  //                 paddingLeft: 5,
-  //                 color: 'black',
-  //                 fontFamily: 'Inter-Medium',
-  //               }}>
-  //               {place.location}
-  //             </Text>
-  //           </View>
-  //           <View
-  //             style={{
-  //               marginTop: 10,
-  //               flexDirection: 'row',
-  //             }}>
-  //             <Text
-  //               style={{
-  //                 fontSize: 14,
-  //                 color: '#1925C3',
-  //                 fontFamily: 'Inter-Medium',
-  //               }}>
-  //               $ {place.PricePerson}
-  //             </Text>
-  //             <Text
-  //               style={{
-  //                 fontSize: 14,
-  //                 fontFamily: 'Inter-Medium',
-  //                 color: '#551613',
-  //               }}>
-  //               /Person
-  //             </Text>
-  //           </View>
-  //         </View>
-  //       </View>
-  //       {/* <ImageBackground
-  //         style={{
-  //           height: 150,
-  //           width: 150,
-  //           borderRadius: 12,
-  //         }}
-  //         source={place.image}></ImageBackground> */}
-  //     </TouchableOpacity>
-
   const PopularCard = ({ place }) => {
     const pic = JSON.parse(place.images);
     // console.log(typeof pic[0]);
-    const filenames = pic.map(function (item) {
-      return item.path; // or file.originalname
-    });
+    // const filenames = pic.map(function (item) {
+    //   return item.path; // or file.originalname
+    // });
     return (
       <TouchableOpacity>
         <ImageBackground
@@ -371,7 +251,7 @@ const HomeScreen = ({ navigation }) => {
             overflow: 'hidden',
             padding: 5,
           }}
-          source={{ uri: `${URL}/${filenames[2]}` }}
+          source={{ uri: `${URL}/${pic[0]}` }}
         // source={place.image}
         >
           <View
@@ -407,6 +287,16 @@ const HomeScreen = ({ navigation }) => {
       </TouchableOpacity>
     );
   };
+
+  // const LoadingTour = ({ place }) => {
+  //   <View
+  //     style={{
+  //       justifyContent: 'center',
+  //       backgroundColor: '#fff',
+  //     }}>
+  //     <ActivityIndicator size="large" color="#1925C3" />
+  //   </View>
+  // }
 
   return (
     <View style={{ flex: 100, backgroundColor: 'white' }}>
@@ -553,13 +443,25 @@ const HomeScreen = ({ navigation }) => {
               </Text>
             </View>
             <View>
-              <FlatList
-                contentContainerStyle={{ paddingHorizontal: 10 }}
-                data={dataTour}
-                horizontal
-                showsHorizontalScrollIndicator={false}
-                renderItem={({ item }) => <Card place={item} />}
-              />
+              {dataTour == "" ? (
+                <View
+                  style={{
+                    justifyContent: 'center',
+                    backgroundColor: '#fff',
+
+                    height: 150
+                  }}>
+                  <ActivityIndicator size="large" color="#1925C3" />
+                </View>
+              ) : (
+                <FlatList
+                  contentContainerStyle={{ paddingHorizontal: 10 }}
+                  data={dataTour}
+                  horizontal
+                  showsHorizontalScrollIndicator={false}
+                  renderItem={({ item }) => <Card place={item} />}
+                />
+              )}
             </View>
           </View>
           {/* popular */}
@@ -589,14 +491,25 @@ const HomeScreen = ({ navigation }) => {
               </Text>
             </View>
             <View>
-              <FlatList
-                snapToInterval={WDwidth - 20}
-                contentContainerStyle={{ paddingLeft: 20 }}
-                data={dataTour}
-                horizontal
-                showsHorizontalScrollIndicator={false}
-                renderItem={({ item }) => <PopularCard place={item} />}
-              />
+              {dataTour == "" ? (
+                <View
+                  style={{
+                    justifyContent: 'center',
+                    backgroundColor: '#fff',
+                    height: 200
+                  }}>
+                  <ActivityIndicator size="large" color="#1925C3" />
+                </View>
+              ) : (
+                <FlatList
+                  snapToInterval={WDwidth - 20}
+                  contentContainerStyle={{ paddingLeft: 20 }}
+                  data={dataTour}
+                  horizontal
+                  showsHorizontalScrollIndicator={false}
+                  renderItem={({ item }) => <PopularCard place={item} />}
+                />
+              )}
             </View>
           </View>
           <View style={{ height: '8%' }}>

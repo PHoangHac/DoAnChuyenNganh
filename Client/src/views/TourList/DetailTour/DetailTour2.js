@@ -1,7 +1,7 @@
 // import React
 import React, { useState, useEffect, useCallback } from 'react';
 
-import { useRoute } from '@react-navigation/native';
+// import { useRoute } from '@react-navigation/native';
 
 import axios from 'axios';
 
@@ -17,11 +17,11 @@ import {
   FlatList,
 } from 'react-native';
 
-// import function icons, images
-import { images, icons } from '../../../constants/index';
+// // import function icons, images
+// import { images, icons } from '../../../constants/index';
 
-// import fake data
-import { FListData } from '../../../constants/dataDummy';
+// // import fake data
+// import { FListData } from '../../../constants/dataDummy';
 
 // Check device
 import DeviceInfo from 'react-native-device-info';
@@ -56,6 +56,7 @@ const StarIcons = [
 
 // Component
 const CardPicture = ({ FListData }) => {
+  console.log(FListData)
   return (
     <TouchableOpacity>
       <Image
@@ -66,7 +67,8 @@ const CardPicture = ({ FListData }) => {
           // marginHorizontal: 10,
           marginRight: 10,
         }}
-        source={FListData.imageUrl}
+        // source={FListData.imageUrl}
+        source={{ uri: `${URL}/${FListData}` }}
       />
     </TouchableOpacity>
   );
@@ -74,7 +76,7 @@ const CardPicture = ({ FListData }) => {
 
 const URL = `http://192.168.1.8:9090`;
 
-const DetailsScreen2 = ({ navigation }) => {
+const DetailsScreen2 = ({ navigation, route }) => {
   const [showMoreButton, setShowMoreButton] = useState(false);
   const [textShown, setTextShown] = useState(false);
   const [numLines, setNumLines] = useState(undefined);
@@ -89,21 +91,21 @@ const DetailsScreen2 = ({ navigation }) => {
   const [Images, setImages] = useState("");
   const [Hotel, setHotel] = useState({});
 
-  // console.log(Hotel)
+  const pic = JSON.parse(route.params.images);
 
-  // const pic = JSON.parse(Images);
-  // // console.log(typeof pic[0]);
-  // const filenames = pic.map(function (item) {
-  //   return item.path; // or file.originalname
+  // console.log(Object.values(pic));
+
+  // for (const [key, value] of Object.entries(pic)) {
+  //   console.log(`${key}: ${value}`);
+  // }
+
+  // const picdata = Object.entries(pic).forEach(([key, value]) => {
+  //   console.log(`${key} ${value}`); // "a 5", "b 7", "c 9"
   // });
 
-  // console.log(filenames)
+  const datanamearr = Object.keys(pic).map(key => pic[key])
 
-  const route = useRoute();
-
-  // console.log(route.params)
-
-  // console.log(textShown);
+  console.log(datanamearr)
 
   const URL = `http://192.168.1.8:9090`;
 
@@ -126,7 +128,7 @@ const DetailsScreen2 = ({ navigation }) => {
   );
 
   const getByIdTour = useCallback(async () => {
-    const getData = await axios.get(`${URL}/tour/GetIdTour2/${route.params}`);
+    const getData = await axios.get(`${URL}/tour/GetIdTour2/${route.params.id}`);
     setNameTour(getData.data.NameTour);
     setTotalTime(getData.data.totalTime);
     setDescription(getData.data.Description);
@@ -138,27 +140,6 @@ const DetailsScreen2 = ({ navigation }) => {
   useEffect(() => {
     getByIdTour();
   }, [getByIdTour]);
-
-  // useEffect(() => {
-  //   fetch(`${URL}/tour/GetIdTour2/${route.params}`, {
-  //     method: 'GET',
-  //   })
-  //     .then(response => response.json())
-  //     .then(json => setData(json))
-  //     .catch(err => console.error(err))
-  //     .finally(() => setLoading(true));
-  // }, []);
-
-  // console.log(data)
-
-
-  // console.log(filenames);
-
-  // const Chuoi =
-  //   "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged sadsd dadsadad dadd sdasd ddddddd.";
-  // console.log(Chuoi.length);
-  // console.log(JSON.parse(data.images));
-  // console.log(data.images)
 
   return (
     // Container
@@ -194,8 +175,8 @@ const DetailsScreen2 = ({ navigation }) => {
                 height: HEIGHTDEVICE / 4,
                 width: WIGHTDEVICE,
               }}
-              source={images.onboardImage1}
-              // source={{ uri: `${URL}/${filenames[0]}` }}
+              // source={images.onboardImage1}
+              source={{ uri: `${URL}/${pic[0]}` }}
               resizeMode="cover">
               <View
                 style={{
@@ -524,16 +505,17 @@ const DetailsScreen2 = ({ navigation }) => {
               justifyContent: 'center',
               marginTop: appName === 'Redmi' ? 10 : null,
             }}>
-            <View
-              style={
-                {
-                  // borderWidth: 1,
-                  // borderColor: 'red',
-                }
-              }>
-              <FlatList
+            <View>
+              {/* <FlatList
                 // contentContainerStyle={{paddingHorizontal: 5}}
                 data={FListData}
+                horizontal
+                showsHorizontalScrollIndicator={false}
+                renderItem={({ item }) => <CardPicture FListData={item} />}
+              /> */}
+              <FlatList
+                // contentContainerStyle={{paddingHorizontal: 5}}
+                data={datanamearr}
                 horizontal
                 showsHorizontalScrollIndicator={false}
                 renderItem={({ item }) => <CardPicture FListData={item} />}

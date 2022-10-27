@@ -6,9 +6,9 @@ const TourController = {
   CreateTour: async (req, res) => {
     let data = req.body;
     let filenames = req.files.map(function (file) {
-      return file; // or file.originalname
+      return file.path; // or file.originalname
     });
-    console.log(typeof filenames);
+    console.log(filenames);
     // let imageData = JSON.stringify(filenames);
     // console.log(typeof imageData);
     let tourData = await TourService.CreateTour(data, filenames);

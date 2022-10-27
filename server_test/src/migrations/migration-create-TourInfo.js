@@ -45,7 +45,15 @@ module.exports = {
         type: Sequelize.INTEGER,
       },
       images: {
+        // type: Sequelize.JSON,
         type: Sequelize.JSON,
+        allowNull: false,
+        get() {
+          return this.getDataValue('images').split(';')
+        },
+        set(val) {
+          this.setDataValue('images', val.join(';'));
+        },
       },
       idTypesOfTransport: {
         allowNull: false,
