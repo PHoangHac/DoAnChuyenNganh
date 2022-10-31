@@ -1,5 +1,5 @@
 // import React
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 
 // import core component
 import {View, Text, Image, Dimensions, TouchableOpacity} from 'react-native';
@@ -7,10 +7,54 @@ import {View, Text, Image, Dimensions, TouchableOpacity} from 'react-native';
 //import icons
 import {icons} from '../../constants/index';
 
-const HEIGHTDEVICE = Dimensions.get('window').height;
-const WIDHTDEVICE = Dimensions.get('window').width;
+import {URL} from '../../context/config';
 
-const BillScreen = ({navigation}) => {
+import axios from 'axios';
+
+const HEIGHTDEVICE = Dimensions.get('window').height;
+const WidthDevice = Dimensions.get('window').width;
+
+const BillScreen = ({navigation, route}) => {
+  const [data, setData] = useState([]);
+  setTimeout(() => {
+    navigation.navigate('HomeTabs');
+  }, 10000);
+
+  //-------GET ID WITH ROUTE.PARAMS-----///
+  const idParams = route.params.data;
+  console.log('ID Bill: ' + idParams.id);
+  //-------GET ID WITH ROUTE.PARAMS-----///
+
+  //-----CREATE VARIABLE----//
+  let User, Booking, DatePayment, TimePayment, Code;
+  //-----CREATE VARIABLE----//
+
+  //-----CHECK DATA EMPTY----//
+  if (data.length === 0) {
+    console.log('Data empty');
+  } else {
+    const hello = Object.keys(data).map(k => data[k]);
+    Code = hello[0];
+    TimePayment = hello[2];
+    DatePayment = hello[1];
+    User = hello[5];
+    Booking = hello[6];
+    console.log(Booking.TourInfo.Location.country);
+  }
+  //-----CHECK DATA EMPTY----//
+
+  useEffect(() => {
+    axios
+      .get(`${URL}/Bill/GetOneBill/${idParams.id}`)
+      .then(res => {
+        // console.log(res);
+        setData(res.data);
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  }, [idParams.id]);
+
   return (
     <View
       style={{
@@ -150,14 +194,25 @@ const BillScreen = ({navigation}) => {
                 //   backgroundColor: 'yellow',
               }
             }>
-            <Text
-              style={{
-                fontSize: 16,
-                fontFamily: 'Inter-ExtraBold',
-                color: 'black',
-              }}>
-              800 $
-            </Text>
+            {data.length === 0 ? (
+              <Text
+                style={{
+                  fontSize: 16,
+                  fontFamily: 'Inter-ExtraBold',
+                  color: 'black',
+                }}>
+                NaN $
+              </Text>
+            ) : (
+              <Text
+                style={{
+                  fontSize: 16,
+                  fontFamily: 'Inter-ExtraBold',
+                  color: 'black',
+                }}>
+                {Booking.totalCost} $
+              </Text>
+            )}
           </View>
         </View>
       </View>
@@ -194,7 +249,7 @@ const BillScreen = ({navigation}) => {
           //   alignItems: 'center',
           backgroundColor: '#fff',
           //   height: HEIGHTDEVICE / 10,
-          width: WIDHTDEVICE / 1.115,
+          width: WidthDevice / 1.115,
           borderRadius: 15,
           borderTopStartRadius: 15,
           borderTopRightRadius: 15,
@@ -239,14 +294,25 @@ const BillScreen = ({navigation}) => {
                   }}>
                   Time for Payment
                 </Text>
-                <Text
-                  style={{
-                    fontSize: 14,
-                    fontFamily: 'Inter-light',
-                    color: 'black',
-                  }}>
-                  10:20 - 05/20/2022
-                </Text>
+                {data.length === 0 ? (
+                  <Text
+                    style={{
+                      fontSize: 14,
+                      fontFamily: 'Inter-light',
+                      color: 'black',
+                    }}>
+                    NaN
+                  </Text>
+                ) : (
+                  <Text
+                    style={{
+                      fontSize: 14,
+                      fontFamily: 'Inter-light',
+                      color: 'black',
+                    }}>
+                    {TimePayment} - {DatePayment}
+                  </Text>
+                )}
               </View>
               {/* Line 1 -2  */}
               <View
@@ -267,14 +333,25 @@ const BillScreen = ({navigation}) => {
                   }}>
                   Code
                 </Text>
-                <Text
-                  style={{
-                    fontSize: 14,
-                    fontFamily: 'Inter-light',
-                    color: '#7F0F77',
-                  }}>
-                  90932038203
-                </Text>
+                {data.length === 0 ? (
+                  <Text
+                    style={{
+                      fontSize: 14,
+                      fontFamily: 'Inter-light',
+                      color: '#7F0F77',
+                    }}>
+                    NaN
+                  </Text>
+                ) : (
+                  <Text
+                    style={{
+                      fontSize: 14,
+                      fontFamily: 'Inter-light',
+                      color: '#7F0F77',
+                    }}>
+                    {Code}
+                  </Text>
+                )}
               </View>
             </View>
           </View>
@@ -358,14 +435,25 @@ const BillScreen = ({navigation}) => {
                     }}>
                     Total Money
                   </Text>
-                  <Text
-                    style={{
-                      fontSize: 14,
-                      fontFamily: 'Inter-Bold',
-                      color: 'black',
-                    }}>
-                    800 $
-                  </Text>
+                  {data.length === 0 ? (
+                    <Text
+                      style={{
+                        fontSize: 14,
+                        fontFamily: 'Inter-ExtraBold',
+                        color: 'black',
+                      }}>
+                      NaN $
+                    </Text>
+                  ) : (
+                    <Text
+                      style={{
+                        fontSize: 14,
+                        fontFamily: 'Inter-ExtraBold',
+                        color: 'black',
+                      }}>
+                      {Booking.totalCost} $
+                    </Text>
+                  )}
                 </View>
               </View>
             </View>
@@ -406,14 +494,25 @@ const BillScreen = ({navigation}) => {
                     }}>
                     User
                   </Text>
-                  <Text
-                    style={{
-                      fontSize: 14,
-                      color: 'black',
-                      fontFamily: 'Inter-SemiBold',
-                    }}>
-                    Nguyen Quoc Dung
-                  </Text>
+                  {data.length === 0 ? (
+                    <Text
+                      style={{
+                        fontSize: 14,
+                        color: 'black',
+                        fontFamily: 'Inter-SemiBold',
+                      }}>
+                      NaN
+                    </Text>
+                  ) : (
+                    <Text
+                      style={{
+                        fontSize: 14,
+                        color: 'black',
+                        fontFamily: 'Inter-SemiBold',
+                      }}>
+                      {User.name}
+                    </Text>
+                  )}
                 </View>
                 {/* line 2 */}
                 <View
@@ -432,14 +531,25 @@ const BillScreen = ({navigation}) => {
                     }}>
                     Phone
                   </Text>
-                  <Text
-                    style={{
-                      fontSize: 14,
-                      color: 'black',
-                      fontFamily: 'Inter-SemiBold',
-                    }}>
-                    ******3818
-                  </Text>
+                  {data.length === 0 ? (
+                    <Text
+                      style={{
+                        fontSize: 14,
+                        color: 'black',
+                        fontFamily: 'Inter-SemiBold',
+                      }}>
+                      NaN
+                    </Text>
+                  ) : (
+                    <Text
+                      style={{
+                        fontSize: 14,
+                        color: 'black',
+                        fontFamily: 'Inter-SemiBold',
+                      }}>
+                      {User.phone}
+                    </Text>
+                  )}
                 </View>
                 {/* line 3 */}
                 <View
@@ -458,14 +568,26 @@ const BillScreen = ({navigation}) => {
                     }}>
                     Location
                   </Text>
-                  <Text
-                    style={{
-                      fontSize: 14,
-                      color: 'black',
-                      fontFamily: 'Inter-SemiBold',
-                    }}>
-                    BangKok, ThaiLand
-                  </Text>
+                  {data.length === 0 ? (
+                    <Text
+                      style={{
+                        fontSize: 14,
+                        color: 'black',
+                        fontFamily: 'Inter-SemiBold',
+                      }}>
+                      NaN
+                    </Text>
+                  ) : (
+                    <Text
+                      style={{
+                        fontSize: 14,
+                        color: 'black',
+                        fontFamily: 'Inter-SemiBold',
+                      }}>
+                      {Booking.TourInfo.Location.placeName},{' '}
+                      {Booking.TourInfo.Location.country}
+                    </Text>
+                  )}
                 </View>
                 {/* line 4 */}
                 <View
@@ -511,14 +633,25 @@ const BillScreen = ({navigation}) => {
                     }}>
                     Total guest
                   </Text>
-                  <Text
-                    style={{
-                      fontSize: 14,
-                      color: 'black',
-                      fontFamily: 'Inter-SemiBold',
-                    }}>
-                    2
-                  </Text>
+                  {data.length === 0 ? (
+                    <Text
+                      style={{
+                        fontSize: 14,
+                        color: 'black',
+                        fontFamily: 'Inter-SemiBold',
+                      }}>
+                      NaN
+                    </Text>
+                  ) : (
+                    <Text
+                      style={{
+                        fontSize: 14,
+                        color: 'black',
+                        fontFamily: 'Inter-SemiBold',
+                      }}>
+                      {Booking.totalGuest}
+                    </Text>
+                  )}
                 </View>
               </View>
             </View>
@@ -541,7 +674,7 @@ const BillScreen = ({navigation}) => {
           //   justifyContent: 'center',
           //   alignItems: 'center',
           //   backgroundColor: '#fff',
-          width: WIDHTDEVICE / 1.115,
+          width: WidthDevice / 1.115,
         }}></View>
       {/* END Content */}
     </View>

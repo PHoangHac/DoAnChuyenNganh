@@ -75,7 +75,7 @@ const TourService = {
         //   tourData.errCode = 1;
         //   tourData.errMessage = "Can't find this id is system !";
         // }
-      } catch (error) { }
+      } catch (error) {}
     });
   },
   GetAll: () => {
@@ -95,7 +95,10 @@ const TourService = {
           include: [
             // { model: db.TypeOfTransport, attributes: ["nameTransport"] },
             // { model: db.Hotel, attributes: ["NameHotel"]},
-            { model: db.Location, attributes: ["country"] },
+            {
+              model: db.Location,
+              attributes: ["country", "placeName", "descLocation"],
+            },
           ],
           raw: true,
           nest: true,

@@ -1,5 +1,8 @@
 // import React
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
+
+// import axios
+import axios from 'axios';
 
 // import core component
 import {
@@ -9,6 +12,7 @@ import {
   TouchableOpacity,
   ScrollView,
   Dimensions,
+  Settings,
 } from 'react-native';
 
 import DeviceInfo from 'react-native-device-info';
@@ -23,12 +27,21 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 const WIGHTDEVICE = Dimensions.get('window').width;
 const HEIGHTDEVICE = Dimensions.get('window').height;
 
-const BookingScreen2 = ({navigation}) => {
+//URL SERVER
+import {URL} from '../../context/config';
+
+import {AuthContext} from '../../context/AuthContext';
+
+import Spinner from 'react-native-loading-spinner-overlay';
+
+const BookingScreen2 = ({navigation, route}) => {
+  // console.log(route.params.transport);
+
   // Khởi tạo trạng thái
   const [numberA, setNumberA] = useState(1);
-  const [numberC, setNumberC] = useState(1);
+  const [numberC, setNumberC] = useState(0);
 
-  const [money, setMoney] = useState(200);
+  const [money, setMoney] = useState(route.params.price);
 
   // Hàm thay tăng số lượng người lớn
   const IncreaseAdult = () => {
@@ -58,6 +71,8 @@ const BookingScreen2 = ({navigation}) => {
       setNumberC(numberC - 1);
     }
   };
+
+  const TotalCost = (money * numberC * 75) / 100 + money * numberA;
 
   // Khởi tạo trạng thái là ngày và thời gian hiện tại
   const [date, setDate] = useState(new Date());
@@ -145,6 +160,81 @@ const BookingScreen2 = ({navigation}) => {
 
   // console.log('Chieu dai:' + HEIGHTDEVICE, 'Chieu rong' + WIGHTDEVICE);
 
+  const NameTransport = route.params.transport;
+  // console.log(NameTransport);
+
+  const {userInfo} = React.useContext(AuthContext);
+
+  // console.log(userInfo.user.id);
+
+  // console.log(route.params.idTour);
+
+  //------------API_POST----------//
+  // const [numOfAdult, setNumOfAdult] = useState(null);
+  // const [numOfChildren, setNumOfChildren] = useState(null);
+  // const [totalCostOfAdult, setTotalCostOfAdult] = useState(null);
+  // const [totalCostOfChildren, setTotalCostOfChildren] = useState(null);
+  // const [totalCost, setTotalCost] = useState(null);
+  // const [totalGuest, setTotalGuest] = useState(null);
+  const [Status, setFeatured] = useState(false);
+  const [loading, setLoading] = useState(false);
+  // const [idUser, setIdUser] = useState(undefined);
+  // const [idTourInfo, setIdTourInfo] = useState(undefined);
+
+  // const [dataFake, setDataFake] = useState([]);
+
+  const NewBooking = async () => {
+    try {
+      setTimeout(async () => {
+        const res = await axios.post(`${URL}/booking/Create`, {
+          Adult: numberA,
+          Children: numberC,
+          AdultTotalCost: money * numberA,
+          ChildrenTotalCost: money * numberC,
+          totalCost: TotalCost,
+          totalGuest: numberA + numberC,
+          Status,
+          idUser: userInfo.user.id,
+          idTourInfo: route.params.idTour,
+        });
+        // setDataFake(res.data);
+        setTimeout(() => {
+          navigation.navigate('PaymentScreen', {
+            data: res.data,
+          });
+        }, 2500);
+      }, 2000);
+      setLoading(true);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  //------------API_POST----------//
+
+  // useEffect(() => {
+  //   const timer = setTimeout(() => {
+  //     console.log(dataFake);
+  //   }, 3000);
+
+  //   return () => {
+  //     clearTimeout(timer);
+  //   };
+  // }, []);
+
+  // -------Automatic page switching-----//
+  // {
+  //   (!dataFake == '') & (loading == true)
+  //     ? setTimeout(() => {
+  //         console.log(dataFake);
+  //       }, 7000)
+  //     : console.log('chu truyen id');
+  // }
+
+  // navigation.navigate('PaymentScreen', {
+  //   bookingId: dataFake.message.id,
+  // });
+  // -------Automatic page switching-----//
+
   return (
     // Container
     <View
@@ -152,6 +242,7 @@ const BookingScreen2 = ({navigation}) => {
         flex: 100,
         backgroundColor: '#ffffff',
       }}>
+      <Spinner visible={loading} />
       {/* Header */}
       <View
         style={{
@@ -283,7 +374,7 @@ const BookingScreen2 = ({navigation}) => {
                       borderColor: 'black',
                       borderRadius: 12,
                     }}
-                    onPress={showTimepicker}>
+                    onPress={showDatepicker}>
                     <Image
                       style={{
                         height: 30,
@@ -591,13 +682,23 @@ const BookingScreen2 = ({navigation}) => {
                         }}>
                         Transports:
                       </Text>
-                      <Image
-                        style={{
-                          height: 20,
-                          width: 20,
-                        }}
-                        source={icons.busicon}
-                      />
+                      {NameTransport == 'Airplane' ? (
+                        <Image
+                          style={{
+                            height: 22,
+                            width: 22,
+                          }}
+                          source={icons.airplaneicon}
+                        />
+                      ) : (
+                        <Image
+                          style={{
+                            height: 20,
+                            width: 20,
+                          }}
+                          source={icons.busicon}
+                        />
+                      )}
                     </View>
                   </View>
                   {/* Line 2 */}
@@ -655,9 +756,9 @@ const BookingScreen2 = ({navigation}) => {
                       <Text
                         style={{
                           fontFamily: 'Inter-Regular',
-                          color: '#551613',
+                          color: '#00008B',
                         }}>
-                        ThaiLand
+                        {route.params.location}
                       </Text>
                       {/* <Image
                         style={{
@@ -760,7 +861,7 @@ const BookingScreen2 = ({navigation}) => {
                   fontFamily: 'Inter-SemiBold',
                   alignSelf: 'center',
                 }}>
-                Total: $ {(money * numberC * 75) / 100 + money * numberA}
+                Total: $ {TotalCost}
               </Text>
             </View>
             {/* END Total Cost */}
@@ -778,10 +879,13 @@ const BookingScreen2 = ({navigation}) => {
               }}>
               <TouchableOpacity
                 style={{
-                  backgroundColor: '#551613',
+                  // backgroundColor: '#00008B',
+                  backgroundColor: loading == true ? '#C1C1C1' : '#00008B',
                   borderRadius: 12,
                 }}
-                onPress={() => navigation.navigate('PaymentScreen')}>
+                disabled={loading == true ? true : false}
+                // onPress={() => navigation.navigate('PaymentScreen')}
+                onPress={NewBooking}>
                 <Text
                   style={{
                     color: 'white',

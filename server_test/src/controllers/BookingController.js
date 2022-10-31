@@ -63,6 +63,50 @@ const BookingController = {
       return res.status(500).json(error);
     }
   },
+  GetBookingByUser: async (req, res) => {
+    try {
+      const { id } = req.params;
+      const FindAll = await db.Booking.findAll({
+        where: { idUser: id },
+        include: [
+          {
+            model: db.TourInfo,
+            attributes: ["NameTour", "PricePerson", "createdAt"],
+          },
+        ],
+        raw: true,
+        nest: true,
+      });
+      return res.status(200).json(FindAll);
+    } catch (error) {
+      return res.status(500).json(error);
+    }
+  },
+  DefaultPayment: async (req, res) => {
+    try {
+      // const data = req.body;
+      // // console.log(data);
+      const { id } = req.params;
+      // const DPayment = await db.Booking.update({
+      //   where: { id: id },
+      //   Status: data.Status,
+      //   returning: true,
+      // });
+      // // return res.status(200).json({ me: "success !" });
+      // return res.status(200).json(DPayment);
+
+      const User = await db.Booking.findOne({
+        where: { id: id },
+      });
+      if (User) {
+        User.Status = req.body.Status;
+        await User.save();
+      }
+      return res.status(200).json({ msg: "success !" });
+    } catch (error) {
+      return res.status(500).json(error);
+    }
+  },
 };
 
 export default BookingController;

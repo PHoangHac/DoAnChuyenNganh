@@ -7,7 +7,9 @@ let HotelRoute = (app) => {
   router
     .post("/Create", BookingController.CreateBooking)
     .get("/DetailsBooking/:id", BookingController.GetIdBooking2)
-    .get("/GetAll", BookingController.GetAllBooking);
+    .get("/GetAll", BookingController.GetAllBooking)
+    .get("/GetAllBookingUser/:id", BookingController.GetBookingByUser)
+    .put("/DefaultPayment/:id", BookingController.DefaultPayment);
   // .post("/GetAll", authController.signin)
   // .get(
   //   "/",

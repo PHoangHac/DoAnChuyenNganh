@@ -19,8 +19,11 @@ module.exports = (sequelize, DataTypes) => {
     {
       Adult: DataTypes.INTEGER,
       Children: DataTypes.INTEGER,
-      // totalGuest: DataTypes.INTEGER,
       Status: DataTypes.BOOLEAN,
+      AdultTotalCost: DataTypes.INTEGER,
+      ChildrenTotalCost: DataTypes.INTEGER,
+      totalCost: DataTypes.INTEGER,
+      totalGuest: DataTypes.INTEGER,
       idUser: DataTypes.INTEGER,
       idTourInfo: DataTypes.INTEGER,
     },

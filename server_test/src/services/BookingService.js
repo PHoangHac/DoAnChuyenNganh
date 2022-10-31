@@ -11,6 +11,10 @@ const BookingService = {
           let booking = await db.Booking.create({
             Adult: data.Adult,
             Children: data.Children,
+            AdultTotalCost: data.AdultTotalCost,
+            ChildrenTotalCost: data.ChildrenTotalCost,
+            totalCost: data.totalCost,
+            totalGuest: data.totalGuest,
             Status: data.Status,
             idUser: data.idUser,
             idTourInfo: data.idTourInfo,

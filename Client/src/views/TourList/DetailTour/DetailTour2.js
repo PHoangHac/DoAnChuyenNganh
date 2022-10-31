@@ -1,7 +1,5 @@
 // import React
-import React, { useState, useEffect, useCallback } from 'react';
-
-// import { useRoute } from '@react-navigation/native';
+import React, {useState, useEffect, useCallback} from 'react';
 
 import axios from 'axios';
 
@@ -18,10 +16,11 @@ import {
 } from 'react-native';
 
 // // import function icons, images
-// import { images, icons } from '../../../constants/index';
+import {images, icons} from '../../../constants/index';
 
 // // import fake data
 // import { FListData } from '../../../constants/dataDummy';
+import {URL} from '../../../context/config';
 
 // Check device
 import DeviceInfo from 'react-native-device-info';
@@ -46,17 +45,18 @@ const appName = DeviceInfo.getBrand();
 // console.log('Chieu dai:' + HEIGHTDEVICE, 'Chieu rong' + WIGHTDEVICE);
 
 // Init variable = array of shapes(mảng chứa các hình)
+
 const StarIcons = [
-  <Image style={{ height: 20, width: 20 }} source={icons.staricon} />,
-  <Image style={{ height: 20, width: 20 }} source={icons.staricon} />,
-  <Image style={{ height: 20, width: 20 }} source={icons.staricon} />,
-  <Image style={{ height: 20, width: 20 }} source={icons.staricon} />,
-  <Image style={{ height: 20, width: 20 }} source={icons.staricon} />,
+  <Image style={{height: 20, width: 20}} source={icons.staricon} />,
+  <Image style={{height: 20, width: 20}} source={icons.staricon} />,
+  <Image style={{height: 20, width: 20}} source={icons.staricon} />,
+  <Image style={{height: 20, width: 20}} source={icons.staricon} />,
+  <Image style={{height: 20, width: 20}} source={icons.staricon} />,
 ];
 
 // Component
-const CardPicture = ({ FListData }) => {
-  console.log(FListData)
+const CardPicture = ({FListData}) => {
+  // console.log(FListData)
   return (
     <TouchableOpacity>
       <Image
@@ -68,15 +68,13 @@ const CardPicture = ({ FListData }) => {
           marginRight: 10,
         }}
         // source={FListData.imageUrl}
-        source={{ uri: `${URL}/${FListData}` }}
+        source={{uri: `${URL}/${FListData}`}}
       />
     </TouchableOpacity>
   );
 };
 
-const URL = `http://192.168.1.8:9090`;
-
-const DetailsScreen2 = ({ navigation, route }) => {
+const DetailsScreen2 = ({navigation, route}) => {
   const [showMoreButton, setShowMoreButton] = useState(false);
   const [textShown, setTextShown] = useState(false);
   const [numLines, setNumLines] = useState(undefined);
@@ -85,29 +83,17 @@ const DetailsScreen2 = ({ navigation, route }) => {
   const [data, setData] = useState([]);
 
   const [NameTour, setNameTour] = useState([]);
-  const [totalTime, setTotalTime] = useState("");
-  const [Description, setDescription] = useState("");
-  const [PricePerson, setPricePerson] = useState("");
-  const [Images, setImages] = useState("");
+  const [totalTime, setTotalTime] = useState('');
+  const [Description, setDescription] = useState('');
+  const [PricePerson, setPricePerson] = useState('');
+  const [Images, setImages] = useState('');
   const [Hotel, setHotel] = useState({});
+  const [Location, setLocation] = useState({});
+  const [transPort, setTransPort] = useState({});
 
   const pic = JSON.parse(route.params.images);
 
-  // console.log(Object.values(pic));
-
-  // for (const [key, value] of Object.entries(pic)) {
-  //   console.log(`${key}: ${value}`);
-  // }
-
-  // const picdata = Object.entries(pic).forEach(([key, value]) => {
-  //   console.log(`${key} ${value}`); // "a 5", "b 7", "c 9"
-  // });
-
-  const datanamearr = Object.keys(pic).map(key => pic[key])
-
-  console.log(datanamearr)
-
-  const URL = `http://192.168.1.8:9090`;
+  const datanamearr = Object.keys(pic).map(key => pic[key]);
 
   const toggleTextShown = () => {
     setTextShown(!textShown);
@@ -128,18 +114,26 @@ const DetailsScreen2 = ({ navigation, route }) => {
   );
 
   const getByIdTour = useCallback(async () => {
-    const getData = await axios.get(`${URL}/tour/GetIdTour2/${route.params.id}`);
+    const getData = await axios.get(
+      `${URL}/tour/GetIdTour2/${route.params.id}`,
+    );
     setNameTour(getData.data.NameTour);
     setTotalTime(getData.data.totalTime);
     setDescription(getData.data.Description);
     setPricePerson(getData.data.PricePerson);
     setImages(getData.data.images);
     setHotel(getData.data.Hotel);
+    setLocation(getData.data.Location);
+    setTransPort(getData.data.TypeOfTransport);
   }, [route.params]);
 
   useEffect(() => {
     getByIdTour();
   }, [getByIdTour]);
+
+  // const routes = useNavigationState(state => state.routes);
+  // const previousRoute = routes[routes.length - 2].name;
+  // console.log('currentRoute: ', previousRoute);
 
   return (
     // Container
@@ -176,7 +170,7 @@ const DetailsScreen2 = ({ navigation, route }) => {
                 width: WIGHTDEVICE,
               }}
               // source={images.onboardImage1}
-              source={{ uri: `${URL}/${pic[0]}` }}
+              source={{uri: `${URL}/${pic[0]}`}}
               resizeMode="cover">
               <View
                 style={{
@@ -266,26 +260,28 @@ const DetailsScreen2 = ({ navigation, route }) => {
             <View
               style={{
                 flexDirection: 'row',
-                // borderWidth: 1,
-                // borderColor: 'black',
+                // backgroundColor: 'gray',
+                marginVertical: 5,
               }}>
               <Image
                 style={{
                   height: 26,
                   width: 26,
-                  alignSelf: 'center',
+                  // alignSelf: 'center',
                 }}
                 source={icons.locationicon}
               />
               <Text
                 style={{
-                  fontSize: 16,
+                  fontSize: 14,
                   color: 'black',
-                  fontFamily: 'Inter-Light',
+                  fontFamily: 'Inter-Regular',
                   alignSelf: appName == 'google' ? 'center' : null,
-                  marginTop: 5,
+                  paddingLeft: 3,
+                  // marginTop: 5,
+                  // backgroundColor: 'gray',
                 }}>
-                Wat Pho, BangKok, ThaiLand
+                {Location.descLocation}
               </Text>
             </View>
           </View>
@@ -488,7 +484,7 @@ const DetailsScreen2 = ({ navigation, route }) => {
               </Text>
               {showMoreButton ? (
                 <Text
-                  style={{ color: 'blue', fontSize: 16, fontWeight: 'bold' }}
+                  style={{color: 'blue', fontSize: 16, fontWeight: 'bold'}}
                   onPress={toggleTextShown}>
                   {textShown ? 'Read Less' : 'Read More'}
                 </Text>
@@ -518,7 +514,7 @@ const DetailsScreen2 = ({ navigation, route }) => {
                 data={datanamearr}
                 horizontal
                 showsHorizontalScrollIndicator={false}
-                renderItem={({ item }) => <CardPicture FListData={item} />}
+                renderItem={({item}) => <CardPicture FListData={item} />}
               />
             </View>
           </View>
@@ -562,13 +558,20 @@ const DetailsScreen2 = ({ navigation, route }) => {
               color: 'white',
               fontFamily: 'Inter-Bold',
             }}>
-            $ 200/Person
+            $ {PricePerson}/Person
           </Text>
         </View>
         {/* btn container*/}
         <View>
           <TouchableOpacity
-            onPress={() => navigation.navigate('Bookings')}
+            onPress={() =>
+              navigation.navigate('Bookings', {
+                location: Location.country,
+                transport: transPort.nameTransport,
+                price: PricePerson,
+                idTour: route.params.id,
+              })
+            }
             style={{
               backgroundColor: 'white',
               borderRadius: 20,

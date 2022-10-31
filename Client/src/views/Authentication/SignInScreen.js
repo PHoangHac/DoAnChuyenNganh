@@ -16,6 +16,7 @@ import {
 
 // import icons, images physical
 import {images, icons} from '../../constants/index';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 //------AuthContext-----//
 import {AuthContext} from '../../context/AuthContext';
@@ -32,7 +33,11 @@ const SignInScreen = ({navigation}) => {
   const [email, setEmail] = useState(null);
   const [password, setPassword] = useState(null);
 
+  const [icon, setIcon] = useState('eye');
+  const [show, setShow] = useState(true);
+
   const {isLoading, Login} = useContext(AuthContext);
+  // console.log(show);
 
   const showToast = () => {
     Toast.show({
@@ -40,6 +45,16 @@ const SignInScreen = ({navigation}) => {
       text1: 'This is some something 👋',
       visibilityTime: 2000,
     });
+  };
+
+  const changeIcon = () => {
+    icon !== 'eye-off'
+      ? (setIcon('eye-off'), setShow(false))
+      : (setIcon('eye'), setShow(true));
+  };
+
+  const RemoveText = () => {
+    setEmail('');
   };
 
   return (
@@ -60,33 +75,27 @@ const SignInScreen = ({navigation}) => {
           {/* Email */}
           <View style={styles.ViewInput}>
             <TextInput
-              autoCapitalize="none"
-              placeholder="Enter your Email"
-              style={styles.InputStyle}
-              value={email}
+              autoComplete="off"
+              placeholder="Your email"
               onChangeText={text => setEmail(text)}
-            />
-            <Image
-              resizeMode="contain"
-              style={styles.visiblePassstyle}
-              source={icons.deleteEmail}
-            />
+              value={email}
+              style={styles.InputStyle}></TextInput>
+            <TouchableOpacity onPress={RemoveText} style={styles.iconStyle}>
+              <Icon size={30} name="close-box-outline" />
+            </TouchableOpacity>
           </View>
           {/* PassWord */}
           <View style={styles.ViewInput}>
             <TextInput
-              autoCapitalize="none"
-              secureTextEntry={true}
-              placeholder="****************"
-              style={styles.InputStyle}
-              value={password}
+              placeholder="***********"
+              secureTextEntry={show}
               onChangeText={text => setPassword(text)}
-            />
-            <Image
-              resizeMode="contain"
-              style={styles.visiblePassstyle}
-              source={icons.visiblePass}
-            />
+              value={password}
+              style={styles.InputStyle}></TextInput>
+            <TouchableOpacity onPress={changeIcon} style={styles.iconStyle}>
+              <Icon size={30} name={icon} />
+              {/* eye-off */}
+            </TouchableOpacity>
           </View>
           {/* Forgot Pass */}
           <View style={styles.textforgotpw}>
@@ -217,7 +226,6 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '15%',
     marginTop: 0.015 * WDheight,
-    // backgroundColor: 'gray',
     alignItems: 'center',
   },
   ViewInput: {
@@ -240,13 +248,13 @@ const styles = StyleSheet.create({
     borderRadius: 7,
     paddingRight: 50,
   },
-  visiblePassstyle: {
+  iconStyle: {
     height: '100%',
     width: '10%',
     aspectRatio: 1,
     position: 'absolute',
+    top: 8,
     right: 0,
-    paddingLeft: 10,
     marginRight: 5,
   },
   textforgotpw: {
@@ -303,7 +311,7 @@ const styles = StyleSheet.create({
     // borderColor: 'white',
     // borderWidth: 1,
     backgroundColor: 'white',
-    paddingVertical: 12, // Tren, phai, duoi, trai
+    paddingVertical: 12,
     paddingHorizontal: 35,
     borderRadius: 9,
     // opacity: 0.7,
@@ -311,8 +319,7 @@ const styles = StyleSheet.create({
   registerText: {
     width: '100%',
     height: 100,
-    // backgroundColor: 'gray',
-    // borderWidth: 1,
+
     borderColor: 'white',
     alignItems: 'center',
     justifyContent: 'center',

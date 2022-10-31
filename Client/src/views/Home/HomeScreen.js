@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, {useState, useEffect} from 'react';
 
 import {
   View,
@@ -15,8 +15,12 @@ import {
 
 import DeviceInfo from 'react-native-device-info';
 
+import {AuthContext} from '../../context/AuthContext';
+
+import {URL} from '../../context/config';
+
 // import { places } from '../../constants/dataDummy';
-import { icons, images } from '../../constants/index';
+import {icons, images} from '../../constants/index.js';
 const WDwidth = Dimensions.get('window').width;
 const WDheight = Dimensions.get('window').height;
 
@@ -26,15 +30,15 @@ const WDheight = Dimensions.get('window').height;
 
 // console.log('Chieu dai man hinh:' + WDheight, 'Chieu rong man hinh:' + WDwidth);
 
-const HomeScreen = ({ navigation }) => {
+const HomeScreen = ({navigation}) => {
   const appName = DeviceInfo.getBrand();
   const [data, setData] = useState([]);
   const [dataTour, setDataTour] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  const URL = `http://192.168.1.8:9090`;
+  const {userInfo} = React.useContext(AuthContext);
 
-  // fect data transport
+  // fetch data transport
   useEffect(() => {
     fetch(`${URL}/transport/GetAll`, {
       method: 'GET',
@@ -55,13 +59,12 @@ const HomeScreen = ({ navigation }) => {
       .finally(() => setLoading(true));
   }, []);
 
-
   const StarIcons = [
-    <Image style={{ height: 12, width: 12 }} source={icons.staricon} />,
-    <Image style={{ height: 12, width: 12 }} source={icons.staricon} />,
-    <Image style={{ height: 12, width: 12 }} source={icons.staricon} />,
-    <Image style={{ height: 12, width: 12 }} source={icons.staricon} />,
-    <Image style={{ height: 12, width: 12 }} source={icons.staricon} />,
+    <Image style={{height: 12, width: 12}} source={icons.staricon} />,
+    <Image style={{height: 12, width: 12}} source={icons.staricon} />,
+    <Image style={{height: 12, width: 12}} source={icons.staricon} />,
+    <Image style={{height: 12, width: 12}} source={icons.staricon} />,
+    <Image style={{height: 12, width: 12}} source={icons.staricon} />,
   ];
 
   const ListCategories = () => {
@@ -72,7 +75,7 @@ const HomeScreen = ({ navigation }) => {
           justifyContent: 'space-evenly',
           top: 10,
         }}>
-        {data == "" ? (
+        {data == '' ? (
           <View
             style={{
               justifyContent: 'center',
@@ -91,23 +94,25 @@ const HomeScreen = ({ navigation }) => {
                   // borderWidth: 1,
                   // borderColor: 'black',
                 }}
-                key={index}>
-                <View style={{ padding: 5 }}>
+                key={index}
+                onPress={() => {
+                  navigation.navigate('BillScreen');
+                }}>
+                <View style={{padding: 5}}>
                   <Image
-                    style={{ height: 50, width: 50 }}
-                    source={{ uri: `${URL}/${icon.image}` }}
+                    style={{height: 50, width: 50}}
+                    source={{uri: `${URL}/${icon.image}`}}
                   />
                 </View>
               </TouchableOpacity>
             );
           })
-        )
-        }
+        )}
       </View>
     );
   };
 
-  const Card = ({ place }) => {
+  const Card = ({place}) => {
     // console.log(typeof JSON.parse(place.images));
     // console.log(place.Location.country)
     // console.log(place.id)
@@ -120,11 +125,13 @@ const HomeScreen = ({ navigation }) => {
     // console.log(pic)
     return (
       <TouchableOpacity
-        onPress={() => navigation.navigate('DetailsScreen2', {
-          id: place.id,
-          images: place.images
-        })}
-        style={{ marginHorizontal: 10 }}
+        onPress={() =>
+          navigation.navigate('DetailsScreen2', {
+            id: place.id,
+            images: place.images,
+          })
+        }
+        style={{marginHorizontal: 10}}
         activeOpacity={0.82}>
         <View
           style={{
@@ -143,7 +150,7 @@ const HomeScreen = ({ navigation }) => {
               width: 150,
               borderRadius: 12,
             }}
-            source={{ uri: `${URL}/${pic[0]}` }}
+            source={{uri: `${URL}/${pic[0]}`}}
           />
           {/* body */}
           <View
@@ -234,7 +241,7 @@ const HomeScreen = ({ navigation }) => {
     );
   };
 
-  const PopularCard = ({ place }) => {
+  const PopularCard = ({place}) => {
     const pic = JSON.parse(place.images);
     // console.log(typeof pic[0]);
     // const filenames = pic.map(function (item) {
@@ -251,8 +258,8 @@ const HomeScreen = ({ navigation }) => {
             overflow: 'hidden',
             padding: 5,
           }}
-          source={{ uri: `${URL}/${pic[0]}` }}
-        // source={place.image}
+          source={{uri: `${URL}/${pic[0]}`}}
+          // source={place.image}
         >
           <View
             style={{
@@ -262,6 +269,8 @@ const HomeScreen = ({ navigation }) => {
               borderRadius: 10,
               top: 5,
               flexDirection: 'row',
+              // borderWidth: 1,
+              // borderColor: 'red',
             }}>
             <Image
               style={{
@@ -276,11 +285,11 @@ const HomeScreen = ({ navigation }) => {
             <Text
               style={{
                 color: 'black',
-                fontSize: 18,
+                fontSize: 16,
                 padding: 5,
                 fontFamily: 'Inter-SemiBold',
               }}>
-              {place.Location.country}
+              {place.Location.placeName}
             </Text>
           </View>
         </ImageBackground>
@@ -299,7 +308,7 @@ const HomeScreen = ({ navigation }) => {
   // }
 
   return (
-    <View style={{ flex: 100, backgroundColor: 'white' }}>
+    <View style={{flex: 100, backgroundColor: 'white'}}>
       {/* Header */}
       <View
         style={{
@@ -338,7 +347,7 @@ const HomeScreen = ({ navigation }) => {
                 fontFamily: 'Inter-SemiBold',
                 color: 'white',
               }}>
-              Hello, Dung
+              Hello, {userInfo.user.name}
             </Text>
             <Text
               style={{
@@ -390,10 +399,10 @@ const HomeScreen = ({ navigation }) => {
         </View>
       </View>
       {/* Scroll */}
-      <View style={{ flex: 75 }}>
+      <View style={{flex: 75}}>
         <ScrollView
-          contentContainerStyle={{ paddingBottom: 90 }}
-          style={{ height: '100%', width: '100%' }}>
+          contentContainerStyle={{paddingBottom: 90}}
+          style={{height: '100%', width: '100%'}}>
           {/* Categories */}
           <View
             style={{
@@ -432,7 +441,7 @@ const HomeScreen = ({ navigation }) => {
                 width: '80%',
                 alignSelf: 'center',
               }}></View>
-            <View style={{ margin: 20, left: 1 }}>
+            <View style={{margin: 20, left: 1}}>
               <Text
                 style={{
                   fontSize: 16,
@@ -443,23 +452,23 @@ const HomeScreen = ({ navigation }) => {
               </Text>
             </View>
             <View>
-              {dataTour == "" ? (
+              {dataTour == '' ? (
                 <View
                   style={{
                     justifyContent: 'center',
                     backgroundColor: '#fff',
 
-                    height: 150
+                    height: 150,
                   }}>
                   <ActivityIndicator size="large" color="#1925C3" />
                 </View>
               ) : (
                 <FlatList
-                  contentContainerStyle={{ paddingHorizontal: 10 }}
+                  contentContainerStyle={{paddingHorizontal: 10}}
                   data={dataTour}
                   horizontal
                   showsHorizontalScrollIndicator={false}
-                  renderItem={({ item }) => <Card place={item} />}
+                  renderItem={({item}) => <Card place={item} />}
                 />
               )}
             </View>
@@ -480,7 +489,7 @@ const HomeScreen = ({ navigation }) => {
                 width: '80%',
                 alignSelf: 'center',
               }}></View>
-            <View style={{ margin: 20, left: 1 }}>
+            <View style={{margin: 20, left: 1}}>
               <Text
                 style={{
                   fontSize: 16,
@@ -491,29 +500,29 @@ const HomeScreen = ({ navigation }) => {
               </Text>
             </View>
             <View>
-              {dataTour == "" ? (
+              {dataTour == '' ? (
                 <View
                   style={{
                     justifyContent: 'center',
                     backgroundColor: '#fff',
-                    height: 200
+                    height: 200,
                   }}>
                   <ActivityIndicator size="large" color="#1925C3" />
                 </View>
               ) : (
                 <FlatList
                   snapToInterval={WDwidth - 20}
-                  contentContainerStyle={{ paddingLeft: 20 }}
+                  contentContainerStyle={{paddingLeft: 20}}
                   data={dataTour}
                   horizontal
                   showsHorizontalScrollIndicator={false}
-                  renderItem={({ item }) => <PopularCard place={item} />}
+                  renderItem={({item}) => <PopularCard place={item} />}
                 />
               )}
             </View>
           </View>
-          <View style={{ height: '8%' }}>
-            <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+          <View style={{height: '8%'}}>
+            <View style={{justifyContent: 'center', alignItems: 'center'}}>
               <Image
                 style={{
                   height: 220,

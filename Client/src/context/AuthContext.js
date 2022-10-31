@@ -52,7 +52,7 @@ export const AuthProvider = ({children, navigation}) => {
           setUserInfo(userInfo);
           AsyncStorage.setItem('userInfo', JSON.stringify(userInfo));
           setIsloading(false);
-          // console.log(userInfo);
+          console.log(userInfo);
           // navigation.navigate('HomeTabs');
         }, 2000);
       })

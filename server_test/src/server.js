@@ -12,7 +12,8 @@ import TransportRoute from "./routes/transportRoute.js";
 import HotelRoute from "./routes/hotelRoute.js";
 import TourRoute from "./routes/tourRoute.js";
 import LocationRoute from "./routes/locationRoute.js";
-import BookingRoute from "./routes/bookingRoute";
+import BookingRoute from "./routes/bookingRoute.js";
+import BillRoute from "./routes/billRoute.js";
 //---------GET ROUTE-----------//
 
 let app = express();
@@ -28,6 +29,7 @@ HotelRoute(app);
 TourRoute(app);
 LocationRoute(app);
 BookingRoute(app);
+BillRoute(app);
 //----------USE ROUTE---------//
 
 viewEngine(app);
@@ -46,7 +48,7 @@ let port = process.env.PORT;
 app.use("*/images", express.static("src/assets/images"));
 // app.use("*/public", express.static("public"));
 app.listen(port, "192.168.1.8", () => {
-    console.log("server running");
+  console.log("server running");
 });
 // app.listen(port, "192.168.1.13", () => {
 //   console.log("server running");

@@ -16,7 +16,7 @@ import ForgotPass from './views/Authentication/ForgotPass';
 import HomeScreen from './views/Home/HomeScreen';
 // import MapScreen from './views/Map/MapScreen';
 import ProfileScreen from './views/Profile/Profile';
-import FavoritesScreen from './views/Favorites/Favories';
+import FavoritesScreen from './views/Favorites/Favorites';
 import SearchScreen from './views/Search/Search';
 // import DetailsScreen from './views/TourList/DetailTour/DetailTour';
 import DetailsScreen2 from './views/TourList/DetailTour/DetailTour2';
@@ -27,6 +27,8 @@ import Bookings2 from './views/Bookings/Bookings1';
 import PaymentScreen from './views/Payment/PaymentScreen';
 import BillScreen from './views/Payment/BillScreen';
 import SplashLoadingScreen from './views/splashScreen/SplashScreen';
+import UnpaidScreen from './views/Payment/Unpaid';
+import HistoriesScreen from './views/Payment/Histories';
 
 // --------------Test screen
 import CheckImage from './views/Authentication/CheckImage';
@@ -97,12 +99,12 @@ const HomeTabs = () => {
         component={SearchScreen}
       />
       <Tab.Screen
-        name="Favories"
+        name="Discover"
         component={FavoritesScreen}
         options={{
           tabBarIcon: ({color, focused}) => (
             <Icon
-              name={focused ? 'favorite' : 'favorite-outline'}
+              name={focused ? 'rate-review' : 'preview'}
               color={color}
               size={32}
             />
@@ -149,8 +151,8 @@ const Navigation = () => {
             <Stack.Screen name="Bookings" component={Bookings2} />
             <Stack.Screen name="PaymentScreen" component={PaymentScreen} />
             <Stack.Screen name="BillScreen" component={BillScreen} />
-            <Stack.Screen name="CheckImage" component={CheckImage} />
-            <Stack.Screen name="CRUDReduxScreen" component={CRUDReduxScreen} />
+            <Stack.Screen name="UnpaidScreen" component={UnpaidScreen} />
+            <Stack.Screen name="HistoriesScreen" component={HistoriesScreen} />
           </>
         ) : (
           <>

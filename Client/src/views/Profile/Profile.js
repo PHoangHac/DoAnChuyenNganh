@@ -114,7 +114,7 @@ const Onboarding = ({navigation}) => {
                 fontSize: 16,
                 left: 15,
               }}>
-              Mimi Headline
+              Payment Status
             </Text>
           </View>
           <View
@@ -122,6 +122,9 @@ const Onboarding = ({navigation}) => {
               marginVertical: 5,
             }}>
             <TouchableOpacity
+              onPress={() => {
+                navigation.navigate('UnpaidScreen');
+              }}
               style={{
                 flexDirection: 'row',
                 justifyContent: 'space-between',
@@ -134,7 +137,7 @@ const Onboarding = ({navigation}) => {
                   fontSize: 18,
                   color: 'black',
                 }}>
-                Popular
+                Status
               </Text>
               <Image
                 style={{
@@ -151,6 +154,9 @@ const Onboarding = ({navigation}) => {
               marginVertical: 5,
             }}>
             <TouchableOpacity
+              onPress={() => {
+                navigation.navigate('HistoriesScreen');
+              }}
               style={{
                 flexDirection: 'row',
                 justifyContent: 'space-between',
@@ -163,7 +169,7 @@ const Onboarding = ({navigation}) => {
                   fontSize: 18,
                   color: 'black',
                 }}>
-                Treading
+                Histories Payment
               </Text>
               <Image
                 style={{
@@ -180,6 +186,9 @@ const Onboarding = ({navigation}) => {
               marginVertical: 5,
             }}>
             <TouchableOpacity
+              onPress={() => {
+                navigation.navigate('HistoriesScreen');
+              }}
               style={{
                 flexDirection: 'row',
                 justifyContent: 'space-between',
@@ -191,15 +200,16 @@ const Onboarding = ({navigation}) => {
                 style={{
                   left: 30,
                   fontSize: 18,
-                  color: 'black',
+                  color: 'white',
                 }}>
-                Today
+                History Payment
               </Text>
               <Image
                 style={{
                   height: 15,
                   width: 15,
                   right: 20,
+                  tintColor: 'white',
                 }}
                 source={icons.rightarrowicon}
               />

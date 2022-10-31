@@ -13,6 +13,7 @@ import {
 import {images, icons} from '../../constants/index';
 import {AuthContext} from '../../context/AuthContext';
 import Spinner from 'react-native-loading-spinner-overlay';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 const WDwidth = Dimensions.get('window').width;
 const WDheight = Dimensions.get('window').height;
 
@@ -20,11 +21,28 @@ const SignUpScreen = ({navigation}) => {
   const [hasOpacity, setHasOpacity] = React.useState(false);
 
   const [email, setEmail] = useState(null);
+  const [phoneNumber, setPhoneNumber] = useState(null);
   const [password, setPassword] = useState(null);
-  // const [name, setName] = useState(null);
+  const [name, setName] = useState(null);
   // const [roleName, setRoleName] = useState(null);
+  const [icon, setIcon] = useState('eye');
+  const [show, setShow] = useState(true);
 
   const {isLoading, Register} = useContext(AuthContext);
+
+  const changeIcon = () => {
+    icon !== 'eye-off'
+      ? (setIcon('eye-off'), setShow(false))
+      : (setIcon('eye'), setShow(true));
+  };
+
+  const RemoveText = () => {
+    setEmail('');
+  };
+
+  const RemovePhone = () => {
+    setPhoneNumber('');
+  };
 
   return (
     <ImageBackground
@@ -43,62 +61,62 @@ const SignUpScreen = ({navigation}) => {
           {/* Email */}
           <View style={styles.ViewInput}>
             <TextInput
-              autoCapitalize="none"
-              placeholder="Enter your Email"
-              style={styles.InputStyle}
+              placeholder="Your email"
               onChangeText={text => setEmail(text)}
               value={email}
-              autoComplete="off"
-            />
-            <Image
-              resizeMode="contain"
-              style={styles.visiblePassstyle}
-              source={icons.deleteEmail}
-            />
+              style={styles.InputStyle}></TextInput>
+            <TouchableOpacity onPress={RemoveText} style={styles.iconStyle}>
+              <Icon size={30} name="close-box-outline" />
+            </TouchableOpacity>
           </View>
+          {/* <View style={styles.ViewInput}>
+            <TextInput
+              placeholder="Your name"
+              onChangeText={text => setName(text)}
+              value={name}
+              style={styles.InputStyle}></TextInput>
+            <TouchableOpacity onPress={RemoveText} style={styles.iconStyle}>
+              <Icon size={30} name="close-box-outline" />
+            </TouchableOpacity>
+          </View> */}
           <View style={styles.ViewInput}>
             <TextInput
+              placeholder="Enter your Phone"
               keyboardType="numeric"
               // textContentType="telephoneNumber"
               autoCapitalize="none"
-              placeholder="Enter your Phone"
-              style={styles.InputStyle}
-            />
-            <Image
-              resizeMode="contain"
-              style={styles.visiblePassstyle}
-              source={icons.deleteEmail}
-            />
+              onChangeText={text => setPhoneNumber(text)}
+              value={phoneNumber}
+              style={styles.InputStyle}></TextInput>
+            <TouchableOpacity onPress={RemovePhone} style={styles.iconStyle}>
+              <Icon size={30} name="close-box-outline" />
+            </TouchableOpacity>
           </View>
           {/* PassWord */}
           <View style={styles.ViewInput}>
             <TextInput
-              autoCapitalize="none"
-              secureTextEntry={true}
-              placeholder="****************"
-              style={styles.InputStyle}
+              placeholder="***********"
+              secureTextEntry={show}
               onChangeText={text => setPassword(text)}
               value={password}
-            />
-            <Image
-              resizeMode="contain"
-              style={styles.visiblePassstyle}
-              source={icons.visiblePass}
-            />
+              style={styles.InputStyle}></TextInput>
+            <TouchableOpacity onPress={changeIcon} style={styles.iconStyle}>
+              <Icon size={30} name={icon} />
+              {/* eye-off */}
+            </TouchableOpacity>
           </View>
           {/* RePassWord */}
           <View style={styles.ViewInput}>
             <TextInput
-              autoCapitalize="none"
-              secureTextEntry={true}
-              placeholder="****************"
-              style={styles.InputStyle}
-            />
-            <Image
-              resizeMode="contain"
-              style={styles.visiblePassstyle}
-              source={icons.visiblePass}
-            />
+              placeholder="Repeat password"
+              secureTextEntry={show}
+              onChangeText={text => setPassword(text)}
+              value={password}
+              style={styles.InputStyle}></TextInput>
+            <TouchableOpacity onPress={changeIcon} style={styles.iconStyle}>
+              <Icon size={30} name={icon} />
+              {/* eye-off */}
+            </TouchableOpacity>
           </View>
           {/* Forgot Pass */}
           <View style={styles.textforgotpw}>
@@ -214,7 +232,7 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '10%',
     // backgroundColor: 'gray',
-    marginTop: 0.07 * WDheight,
+    marginTop: 0.06 * WDheight,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -235,6 +253,8 @@ const styles = StyleSheet.create({
     marginTop: 0.015 * WDheight,
     // backgroundColor: 'gray',
     alignItems: 'center',
+    // borderWidth: 1,
+    // borderColor: 'black',
   },
   ViewInput: {
     width: '80%',
@@ -334,6 +354,15 @@ const styles = StyleSheet.create({
     borderColor: 'white',
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  iconStyle: {
+    height: '100%',
+    width: '10%',
+    aspectRatio: 1,
+    position: 'absolute',
+    top: 8,
+    right: 0,
+    marginRight: 5,
   },
 });
 

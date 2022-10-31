@@ -1,6 +1,6 @@
 // import React
 import React, {useState} from 'react';
-
+import axios from 'axios';
 //import core component
 import {View, Text, Image, TouchableOpacity} from 'react-native';
 
@@ -9,11 +9,68 @@ import {icons} from '../../constants/index';
 
 import DeviceInfo from 'react-native-device-info';
 
-const PaymentScreen = ({navigation}) => {
+import {URL} from '../../context/config';
+
+import {useNavigationState} from '@react-navigation/native';
+
+import Spinner from 'react-native-loading-spinner-overlay';
+
+import {AuthContext} from '../../context/AuthContext';
+
+const PaymentScreen = ({navigation, route}) => {
   const [defaultPayment, setDefaultPayment] = useState(false);
   const [choose, setChoose] = useState(false);
   const [choose2, setChoose2] = useState(false);
   const [choose3, setChoose3] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  const {userInfo} = React.useContext(AuthContext);
+
+  const routes = useNavigationState(state => state.routes);
+  const previousRoute = routes[routes.length - 2].name;
+  // console.log('currentRoute: ', previousRoute);
+
+  let id;
+  //----check nameScreen props from anotherScreen--//
+  if (previousRoute == 'Bookings') {
+    // console.log('bookings di qua');
+    const DATA = route.params.data;
+    const idBK = DATA.message.id;
+    id = idBK;
+  } else if (previousRoute == 'UnpaidScreen') {
+    // console.log('UnpaidScreen di qua');
+    const idPMS = route.params.bookingId;
+    id = idPMS;
+  }
+  //----check id props from anotherScreen--//
+  console.log('ID BOOKING:' + id);
+
+  const DefaultPayment = async () => {
+    try {
+      setTimeout(async () => {
+        const res = await axios.put(`${URL}/booking/DefaultPayment/${id}`, {
+          Status: 1,
+        });
+        const resBill = await axios.post(`${URL}/Bill/Create`, {
+          idUser: userInfo.user.id,
+          idBooking: id,
+        });
+        setTimeout(() => {
+          navigation.navigate('BillScreen', {
+            data: resBill.data,
+          });
+        }, 1500);
+        console.log(res.data);
+        console.log(resBill.data);
+      }, 1500);
+      setLoading(true);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  // console.log(id);
+  // console.log(route.params.bookingId);
 
   const HasChooseDP = () => {
     setDefaultPayment(true);
@@ -51,6 +108,7 @@ const PaymentScreen = ({navigation}) => {
         flex: 100,
         backgroundColor: '#E2E9E8',
       }}>
+      <Spinner visible={loading} />
       {/* Header */}
       <View
         style={{
@@ -91,14 +149,14 @@ const PaymentScreen = ({navigation}) => {
                   borderColor: 'white',
                   borderRadius: 12,
                 }}
-                onPress={() => navigation.goBack()}>
+                onPress={() => navigation.navigate('HomeTabs')}>
                 <Image
                   style={{
                     height: 45,
                     width: 45,
                     tintColor: 'white',
                   }}
-                  source={icons.ArrowBackIcon}
+                  source={icons.homeicon}
                 />
               </TouchableOpacity>
             </View>
@@ -215,8 +273,8 @@ const PaymentScreen = ({navigation}) => {
             {/* content */}
             <View
               style={{
-                // borderWidth: 1,
-                // borderColor: 'blue',
+                borderWidth: 1,
+                borderColor: 'blue',
                 height: '95%',
                 width: '95%',
                 flexDirection: 'column',
@@ -240,7 +298,7 @@ const PaymentScreen = ({navigation}) => {
                   height: '50%',
                   width: '95%',
                   flexDirection: 'column',
-                  //   backgroundColor: 'gray',
+                  // backgroundColor: 'gray',
                   justifyContent: 'space-between',
                 }}>
                 <TouchableOpacity
@@ -390,6 +448,21 @@ const PaymentScreen = ({navigation}) => {
                   )}
                 </TouchableOpacity>
               </View>
+              {/* END method */}
+              <View
+                style={{
+                  height: '30%',
+                  width: '95%',
+                  alignItems: 'center',
+                  paddingTop: 5,
+                }}>
+                <Text
+                  style={{
+                    fontFamily: 'Inter-Bold',
+                  }}>
+                  Attention: You can pay or not now !
+                </Text>
+              </View>
             </View>
           </View>
         </View>
@@ -414,7 +487,7 @@ const PaymentScreen = ({navigation}) => {
             marginBottom: 30,
           }}>
           <TouchableOpacity
-            onPress={() => navigation.navigate('BillScreen')}
+            onPress={DefaultPayment}
             style={{
               backgroundColor:
                 (defaultPayment || choose || choose2 || choose3) == true
