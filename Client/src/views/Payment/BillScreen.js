@@ -39,7 +39,7 @@ const BillScreen = ({navigation, route}) => {
     DatePayment = hello[1];
     User = hello[5];
     Booking = hello[6];
-    console.log(Booking.TourInfo.Location.country);
+    // console.log(Booking.TourInfo.Location.country);
   }
   //-----CHECK DATA EMPTY----//
 
@@ -158,7 +158,7 @@ const BillScreen = ({navigation, route}) => {
           //   borderColor: 'black',
           //   alignItems: 'center',
           backgroundColor: '#fff',
-          width: WIDHTDEVICE / 1.115,
+          width: WidthDevice / 1.115,
           justifyContent: 'center',
           borderBottomEndRadius: 15,
           borderBottomStartRadius: 15,
@@ -226,7 +226,7 @@ const BillScreen = ({navigation, route}) => {
           //   backgroundColor: 'red',
           justifyContent: 'center',
           alignItems: 'center',
-          width: WIDHTDEVICE / 1.115,
+          width: WidthDevice / 1.115,
           zIndex: 99,
         }}>
         <View

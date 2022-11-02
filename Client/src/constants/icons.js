@@ -51,6 +51,7 @@ const momoicon = require('../assets/icons/MoMo_Logo.png');
 const check1icon = require('../assets/icons/check1.png');
 const visaicon = require('../assets/icons/visa.png');
 const creditcardicon = require('../assets/icons/credit-card.png');
+const SignPostIcon = require('../assets/icons/signpost.png');
 
 export default {
   travelicon,
@@ -106,4 +107,5 @@ export default {
   check1icon,
   visaicon,
   creditcardicon,
+  SignPostIcon,
 };

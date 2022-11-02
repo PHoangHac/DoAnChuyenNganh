@@ -202,8 +202,8 @@ const BookingScreen2 = ({navigation, route}) => {
           navigation.navigate('PaymentScreen', {
             data: res.data,
           });
-        }, 2500);
-      }, 2000);
+        }, 1500);
+      }, 1000);
       setLoading(true);
     } catch (error) {
       console.log(error);
@@ -402,6 +402,7 @@ const BookingScreen2 = ({navigation, route}) => {
                       mode={mode}
                       is24Hour={true}
                       onChange={onChange}
+                      minimumDate={new Date(2022, 11, 30)}
                     />
                   )}
                 </View>

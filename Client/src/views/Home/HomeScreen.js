@@ -11,6 +11,7 @@ import {
   ImageBackground,
   Dimensions,
   ActivityIndicator,
+  BackHandler,
 } from 'react-native';
 
 import DeviceInfo from 'react-native-device-info';
@@ -37,6 +38,15 @@ const HomeScreen = ({navigation}) => {
   const [loading, setLoading] = useState(false);
 
   const {userInfo} = React.useContext(AuthContext);
+
+  // React.useEffect(() => {
+  //   const backHandler = BackHandler.addEventListener(
+  //     'hardwareBackPress',
+  //     () => true,
+  //   );
+  //   alert("Can't");
+  //   return () => backHandler.remove();
+  // }, []);
 
   // fetch data transport
   useEffect(() => {
@@ -96,7 +106,7 @@ const HomeScreen = ({navigation}) => {
                 }}
                 key={index}
                 onPress={() => {
-                  navigation.navigate('BillScreen');
+                  navigation.navigate('PayPalScreen');
                 }}>
                 <View style={{padding: 5}}>
                   <Image
@@ -248,7 +258,13 @@ const HomeScreen = ({navigation}) => {
     //   return item.path; // or file.originalname
     // });
     return (
-      <TouchableOpacity>
+      <TouchableOpacity
+        onPress={() =>
+          navigation.navigate('DetailsScreen2', {
+            id: place.id,
+            images: place.images,
+          })
+        }>
         <ImageBackground
           style={{
             width: WDwidth - 40,

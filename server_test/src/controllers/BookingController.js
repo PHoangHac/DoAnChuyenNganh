@@ -71,7 +71,17 @@ const BookingController = {
         include: [
           {
             model: db.TourInfo,
-            attributes: ["NameTour", "PricePerson", "createdAt"],
+            attributes: ["NameTour", "PricePerson", "totalTime", "images"],
+            include: [
+              {
+                model: db.Location,
+                attributes: ["country", "placeName", "descLocation"],
+              },
+              {
+                model: db.TypeOfTransport,
+                attributes: ["nameTransport", "image"],
+              },
+            ],
           },
         ],
         raw: true,
@@ -103,6 +113,35 @@ const BookingController = {
         await User.save();
       }
       return res.status(200).json({ msg: "success !" });
+    } catch (error) {
+      return res.status(500).json(error);
+    }
+  },
+  AllBookingPaymentSuccess: async (req, res) => {
+    try {
+      const { id } = req.params;
+      const FindAll = await db.Booking.findAll({
+        where: { idUser: id, Status: 1 },
+        include: [
+          {
+            model: db.TourInfo,
+            attributes: ["NameTour", "PricePerson", "totalTime", "images"],
+            include: [
+              {
+                model: db.Location,
+                attributes: ["country", "placeName", "descLocation"],
+              },
+              {
+                model: db.TypeOfTransport,
+                attributes: ["nameTransport", "image"],
+              },
+            ],
+          },
+        ],
+        raw: true,
+        nest: true,
+      });
+      return res.status(200).json(FindAll);
     } catch (error) {
       return res.status(500).json(error);
     }

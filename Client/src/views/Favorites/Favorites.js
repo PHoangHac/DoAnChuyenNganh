@@ -15,18 +15,8 @@ import {places} from '../../constants/dataDummy';
 const HEIGHT = Dimensions.get('window').height;
 const WIDTH = Dimensions.get('window').width;
 
-const Favories = ({navigation}) => {
+const Favorites = ({navigation}) => {
   // khoi tao state
-
-  // Khoi tao du lieu gia
-  // const data = [
-  //   {id: 'a', value: 'A'},
-  //   {id: 'b', value: 'B'},
-  //   {id: 'c', value: 'C'},
-  //   {id: 'd', value: 'D'},
-  //   {id: 'e', value: 'E'},
-  //   {id: 'f', value: 'F'},
-  // ];
 
   const StarIcons = [
     <Image style={{height: 14, width: 14}} source={icons.staricon} />,
@@ -220,4 +210,4 @@ const Favories = ({navigation}) => {
   );
 };
 
-export default Favories;
+export default Favorites;

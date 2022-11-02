@@ -4,6 +4,7 @@ import React, {useContext} from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import {createDrawerNavigator} from '@react-navigation/drawer';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
 // Screen view
@@ -29,7 +30,8 @@ import BillScreen from './views/Payment/BillScreen';
 import SplashLoadingScreen from './views/splashScreen/SplashScreen';
 import UnpaidScreen from './views/Payment/Unpaid';
 import HistoriesScreen from './views/Payment/Histories';
-
+import FilterSearch from './views/Search/ModelFilter';
+import PayPalScreen from './views/Payment/PayPal';
 // --------------Test screen
 import CheckImage from './views/Authentication/CheckImage';
 import CRUDReduxScreen from './views/Authentication/Redux';
@@ -40,6 +42,7 @@ import {AuthContext} from './context/AuthContext';
 // variable
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
+const Drawer = createDrawerNavigator();
 
 const HomeTabs = () => {
   return (
@@ -129,6 +132,14 @@ const HomeTabs = () => {
   );
 };
 
+// function DrawerCustom() {
+//   return (
+//     <Drawer.Navigator>
+//       <Drawer.Screen name="FilterSearch" component={FilterSearch} />
+//     </Drawer.Navigator>
+//   );
+// }
+
 const Navigation = () => {
   const {userInfo, splashLoading} = useContext(AuthContext);
   // console.log(userInfo.jwtToken);
@@ -146,10 +157,20 @@ const Navigation = () => {
         ) : userInfo.jwtToken ? (
           <>
             <Stack.Screen name="HomeTabs" component={HomeTabs} />
+            {/* <Stack.Screen name="Filter" component={DrawerCustom} /> */}
             <Stack.Screen name="DetailsScreen2" component={DetailsScreen2} />
             <Stack.Screen name="ProfileDetail" component={ProfileDetail} />
             <Stack.Screen name="Bookings" component={Bookings2} />
-            <Stack.Screen name="PaymentScreen" component={PaymentScreen} />
+            <Stack.Screen name="PayPalScreen" component={PayPalScreen} />
+            <Stack.Screen
+              listeners={({navigation}) => {
+                if (!navigation.canGoBack()) {
+                  console.log("we're on the initial screen");
+                }
+              }}
+              name="PaymentScreen"
+              component={PaymentScreen}
+            />
             <Stack.Screen name="BillScreen" component={BillScreen} />
             <Stack.Screen name="UnpaidScreen" component={UnpaidScreen} />
             <Stack.Screen name="HistoriesScreen" component={HistoriesScreen} />

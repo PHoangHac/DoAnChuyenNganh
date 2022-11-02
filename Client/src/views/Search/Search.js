@@ -17,8 +17,14 @@ import {places} from '../../constants/dataDummy';
 
 import DeviceInfo from 'react-native-device-info';
 
-const SearchScreen = () => {
+import FilterSearch from './ModelFilter';
+
+const SearchScreen = ({navigation}) => {
   const appName = DeviceInfo.getBrand();
+
+  //-------------
+  const [modalVisible, setModalVisible] = useState(false);
+  //-------------
 
   const [dataSource] = useState([
     'apple',
@@ -62,7 +68,7 @@ const SearchScreen = () => {
             alignContent: 'center',
           }}>
           {dataSource.length ? (
-            dataSource.map(item => {
+            dataSource.map((item, index) => {
               return (
                 <View
                   style={{
@@ -73,7 +79,8 @@ const SearchScreen = () => {
                     justifyContent: 'center',
                     borderBottomWidth: 0.5,
                     borderBottomColor: '#CCCCCC',
-                  }}>
+                  }}
+                  key={index}>
                   <Text
                     style={{
                       color: 'black',
@@ -254,12 +261,18 @@ const SearchScreen = () => {
         height: Dimensions.get('window').height,
       }}>
       {/* header */}
+      <FilterSearch
+        modalVisible={modalVisible}
+        setModalVisible={setModalVisible}
+      />
       <View
         style={{
           flex: 10,
           flexDirection: 'column',
           backgroundColor: 'white',
           zIndex: 9999,
+          backgroundColor: '#191970',
+          top: -30,
         }}>
         {/* container */}
         <View
@@ -292,7 +305,7 @@ const SearchScreen = () => {
             <TextInput
               onChangeText={onSearch}
               placeholder="Search..."
-              placeholderTextColor={appName == 'Redmi' ? '#A4D5DE' : '#7E6FAA'}
+              placeholderTextColor={appName == 'Redmi' ? '#343434' : '#7E6FAA'}
               style={{
                 backgroundColor: 'white',
                 height: '70%',
@@ -308,13 +321,17 @@ const SearchScreen = () => {
           </View>
           {/* filter */}
           <View>
-            <TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => {
+                setModalVisible(true);
+              }}>
               <Image
                 source={icons.filtercon}
                 style={{
                   height: 30,
                   width: 30,
                   marginRight: 30,
+                  tintColor: 'white',
                 }}
               />
             </TouchableOpacity>
@@ -344,7 +361,7 @@ const SearchScreen = () => {
           justifyContent: 'center',
           // alignItems: 'center',
           // marginVertical: 10,
-          marginTop: 20,
+          marginTop: -10,
           marginLeft: 10,
           marginVertical: 10,
         }}>

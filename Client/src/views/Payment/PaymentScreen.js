@@ -2,7 +2,7 @@
 import React, {useState} from 'react';
 import axios from 'axios';
 //import core component
-import {View, Text, Image, TouchableOpacity} from 'react-native';
+import {View, Text, Image, TouchableOpacity, BackHandler} from 'react-native';
 
 //import icons,images
 import {icons} from '../../constants/index';
@@ -29,6 +29,15 @@ const PaymentScreen = ({navigation, route}) => {
   const routes = useNavigationState(state => state.routes);
   const previousRoute = routes[routes.length - 2].name;
   // console.log('currentRoute: ', previousRoute);
+  if (previousRoute == 'Bookings') {
+    React.useEffect(() => {
+      const backHandler = BackHandler.addEventListener(
+        'hardwareBackPress',
+        () => true,
+      );
+      return () => backHandler.remove();
+    }, []);
+  }
 
   let id;
   //----check nameScreen props from anotherScreen--//
@@ -273,8 +282,8 @@ const PaymentScreen = ({navigation, route}) => {
             {/* content */}
             <View
               style={{
-                borderWidth: 1,
-                borderColor: 'blue',
+                // borderWidth: 1,
+                // borderColor: 'blue',
                 height: '95%',
                 width: '95%',
                 flexDirection: 'column',
@@ -302,6 +311,7 @@ const PaymentScreen = ({navigation, route}) => {
                   justifyContent: 'space-between',
                 }}>
                 <TouchableOpacity
+                  disabled={true}
                   style={{
                     height: '30%',
                     width: '100%',
@@ -311,6 +321,7 @@ const PaymentScreen = ({navigation, route}) => {
                     alignItems: 'center',
                     justifyContent: 'space-between',
                     borderColor: '#0F4EA5',
+                    opacity: 0.3,
                     // borderWidth: choose == true ? 2 : null,
                   }}
                   onPress={HasChoose}>
@@ -454,13 +465,14 @@ const PaymentScreen = ({navigation, route}) => {
                   height: '30%',
                   width: '95%',
                   alignItems: 'center',
-                  paddingTop: 5,
+                  paddingTop: 20,
                 }}>
                 <Text
                   style={{
                     fontFamily: 'Inter-Bold',
                   }}>
-                  Attention: You can pay or not now !
+                  Attention: You can pay or not now ! Click button on top to
+                  back.
                 </Text>
               </View>
             </View>
