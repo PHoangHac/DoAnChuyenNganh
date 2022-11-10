@@ -2,15 +2,23 @@ const places = [
   {
     id: '1',
     name: 'Lago di Braies, Braies',
-    location: 'Italy',
-    price: 100,
+    location: {
+      country: 'Italy',
+      placeName: 'Capri & Sorrento',
+      descLocation: ' coastal area within Liguria, in the northwest of Italy',
+    },
+    price: 100.0,
     image: require('../assets/images/location1.jpg'),
     details: `Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Consequat nisl vel pretium lectus quam id leo. Velit euismod in pellentesque massa placerat duis ultricies lacus sed. Justo laoreet sit amet cursus sit.`,
   },
   {
     id: '2',
     name: 'Siargao island',
-    location: 'Philippines',
+    location: {
+      country: 'Philippines',
+      placeName: 'Capri & Sorrento',
+      descLocation: ' coastal area within Liguria, in the northwest of Italy',
+    },
     price: 200,
     image: require('../assets/images/location2.jpg'),
     details: `Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Consequat nisl vel pretium lectus quam id leo. Velit euismod in pellentesque massa placerat duis ultricies lacus sed. Justo laoreet sit amet cursus sit.`,
@@ -18,7 +26,11 @@ const places = [
   {
     id: '3',
     name: 'Manarola',
-    location: 'Italy',
+    location: {
+      country: 'Italy',
+      placeName: 'Capri & Sorrento',
+      descLocation: ' coastal area within Liguria, in the northwest of Italy',
+    },
     price: 300,
     image: require('../assets/images/location3.jpg'),
     details: `Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Consequat nisl vel pretium lectus quam id leo. Velit euismod in pellentesque massa placerat duis ultricies lacus sed. Justo laoreet sit amet cursus sit.`,
@@ -26,7 +38,11 @@ const places = [
   {
     id: '4',
     name: 'Perhentian Islands',
-    location: 'Malaysia',
+    location: {
+      country: 'Malaysia',
+      placeName: 'Capri & Sorrento',
+      descLocation: ' coastal area within Liguria, in the northwest of Italy',
+    },
     price: 400,
     image: require('../assets/images/location4.jpg'),
     details: `Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Consequat nisl vel pretium lectus quam id leo. Velit euismod in pellentesque massa placerat duis ultricies lacus sed. Justo laoreet sit amet cursus sit.`,
@@ -34,7 +50,11 @@ const places = [
   {
     id: '5',
     name: 'Perhentian Islands',
-    location: 'Malaysia',
+    location: {
+      country: 'Malaysia',
+      placeName: 'Capri & Sorrento',
+      descLocation: ' coastal area within Liguria, in the northwest of Italy',
+    },
     price: 500,
     image: require('../assets/images/location4.jpg'),
     details: `Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Consequat nisl vel pretium lectus quam id leo. Velit euismod in pellentesque massa placerat duis ultricies lacus sed. Justo laoreet sit amet cursus sit.`,
@@ -42,7 +62,11 @@ const places = [
   {
     id: '6',
     name: 'Perhentian Islands',
-    location: 'Malaysia',
+    location: {
+      country: 'Indonesia',
+      placeName: 'Capri & Sorrento',
+      descLocation: ' coastal area within Liguria, in the northwest of Italy',
+    },
     price: 600,
     image: require('../assets/images/location4.jpg'),
     details: `Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Consequat nisl vel pretium lectus quam id leo. Velit euismod in pellentesque massa placerat duis ultricies lacus sed. Justo laoreet sit amet cursus sit.`,

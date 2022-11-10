@@ -54,6 +54,25 @@ const TourController = {
     let data = await TourService.GetAll();
     return res.status(200).send(data);
   },
+  UpdateOneTour: async (req, res) => {
+    const { id } = req.params;
+    try {
+      const findOneTour = await db.TourInfo.findOne({
+        where: { id: id },
+      });
+      if (findOneTour) {
+        findOneTour.NameTour = req.body.NameTour;
+        findOneTour.abbreviation = req.body.abbreviation;
+        findOneTour.totalTime = req.body.totalTime;
+        findOneTour.PricePerson = req.body.PricePerson;
+        findOneTour.Description = req.body.Description;
+        await findOneTour.save();
+        return res.status(200).json({ msg: "Update Success !" });
+      }
+    } catch (error) {
+      return res.status(500).json(error);
+    }
+  },
 };
 
 export default TourController;

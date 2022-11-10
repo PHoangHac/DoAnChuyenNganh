@@ -1,5 +1,5 @@
 // import React
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import axios from 'axios';
 //import core component
 import {View, Text, Image, TouchableOpacity, BackHandler} from 'react-native';
@@ -18,68 +18,15 @@ import Spinner from 'react-native-loading-spinner-overlay';
 import {AuthContext} from '../../context/AuthContext';
 
 const PaymentScreen = ({navigation, route}) => {
+  const {userInfo} = React.useContext(AuthContext);
   const [defaultPayment, setDefaultPayment] = useState(false);
   const [choose, setChoose] = useState(false);
   const [choose2, setChoose2] = useState(false);
   const [choose3, setChoose3] = useState(false);
   const [loading, setLoading] = useState(false);
-
-  const {userInfo} = React.useContext(AuthContext);
-
+  const appName = DeviceInfo.getBrand();
   const routes = useNavigationState(state => state.routes);
   const previousRoute = routes[routes.length - 2].name;
-  // console.log('currentRoute: ', previousRoute);
-  if (previousRoute == 'Bookings') {
-    React.useEffect(() => {
-      const backHandler = BackHandler.addEventListener(
-        'hardwareBackPress',
-        () => true,
-      );
-      return () => backHandler.remove();
-    }, []);
-  }
-
-  let id;
-  //----check nameScreen props from anotherScreen--//
-  if (previousRoute == 'Bookings') {
-    // console.log('bookings di qua');
-    const DATA = route.params.data;
-    const idBK = DATA.message.id;
-    id = idBK;
-  } else if (previousRoute == 'UnpaidScreen') {
-    // console.log('UnpaidScreen di qua');
-    const idPMS = route.params.bookingId;
-    id = idPMS;
-  }
-  //----check id props from anotherScreen--//
-  console.log('ID BOOKING:' + id);
-
-  const DefaultPayment = async () => {
-    try {
-      setTimeout(async () => {
-        const res = await axios.put(`${URL}/booking/DefaultPayment/${id}`, {
-          Status: 1,
-        });
-        const resBill = await axios.post(`${URL}/Bill/Create`, {
-          idUser: userInfo.user.id,
-          idBooking: id,
-        });
-        setTimeout(() => {
-          navigation.navigate('BillScreen', {
-            data: resBill.data,
-          });
-        }, 1500);
-        console.log(res.data);
-        console.log(resBill.data);
-      }, 1500);
-      setLoading(true);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  // console.log(id);
-  // console.log(route.params.bookingId);
 
   const HasChooseDP = () => {
     setDefaultPayment(true);
@@ -109,7 +56,54 @@ const PaymentScreen = ({navigation, route}) => {
     setChoose3(true);
   };
 
-  const appName = DeviceInfo.getBrand();
+  let id;
+  //----check nameScreen props from anotherScreen--//
+  if (previousRoute === 'Bookings') {
+    // console.log('bookings di qua');
+    const idBK = route.params.idBooking;
+    id = idBK;
+    StopUserBack;
+  } else if (previousRoute === 'UnpaidScreen') {
+    // console.log('UnpaidScreen di qua');
+    const idPMS = route.params.bookingId;
+    id = idPMS;
+  }
+  //----check id props from anotherScreen--//
+
+  const DefaultPayment = async () => {
+    try {
+      setTimeout(async () => {
+        const res = await axios.put(`${URL}/booking/DefaultPayment/${id}`, {
+          Status: 1,
+        });
+        const resBill = await axios.post(`${URL}/Bill/Create`, {
+          idUser: userInfo.user.id,
+          idBooking: id,
+        });
+        setTimeout(() => {
+          navigation.navigate('BillScreen', {
+            idBill: resBill.data.id,
+          });
+        }, 1500);
+        // console.log(res.data);
+        // console.log(resBill.data.id);
+      }, 1500);
+      setLoading(true);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  // console.log('currentRoute: ', previousRoute);
+  const StopUserBack = () => {
+    useEffect(() => {
+      const backHandler = BackHandler.addEventListener(
+        'hardwareBackPress',
+        () => true,
+      );
+      return () => backHandler.remove();
+    }, []);
+  };
 
   return (
     <View

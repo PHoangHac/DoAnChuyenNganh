@@ -4,7 +4,7 @@ import React, {useContext} from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import {createDrawerNavigator} from '@react-navigation/drawer';
+// import {createDrawerNavigator} from '@react-navigation/drawer';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
 // Screen view
@@ -18,7 +18,6 @@ import HomeScreen from './views/Home/HomeScreen';
 // import MapScreen from './views/Map/MapScreen';
 import ProfileScreen from './views/Profile/Profile';
 import FavoritesScreen from './views/Favorites/Favorites';
-import SearchScreen from './views/Search/Search';
 // import DetailsScreen from './views/TourList/DetailTour/DetailTour';
 import DetailsScreen2 from './views/TourList/DetailTour/DetailTour2';
 import ProfileDetail from './views/Profile/ProfileDetail';
@@ -30,19 +29,17 @@ import BillScreen from './views/Payment/BillScreen';
 import SplashLoadingScreen from './views/splashScreen/SplashScreen';
 import UnpaidScreen from './views/Payment/Unpaid';
 import HistoriesScreen from './views/Payment/Histories';
-import FilterSearch from './views/Search/ModelFilter';
 import PayPalScreen from './views/Payment/PayPal';
-// --------------Test screen
-import CheckImage from './views/Authentication/CheckImage';
-import CRUDReduxScreen from './views/Authentication/Redux';
-// --------------Test screen
+import ListItemSearch from './views/Search/SearchFix';
+import AdminDashBoard from './views/Admin';
+import UpdateTourScreen from './views/Admin/View/Tour/UpdateTourScreen';
 
 import {AuthContext} from './context/AuthContext';
 
 // variable
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
-const Drawer = createDrawerNavigator();
+// const Drawer = createDrawerNavigator();
 
 const HomeTabs = () => {
   return (
@@ -58,8 +55,6 @@ const HomeTabs = () => {
         tabBarStyle: {
           position: 'absolute',
           height: 60,
-          // backgroundColor: '#1847A2',
-          // backgroundColor: '#D7EFFC',
         },
       }}>
       <Tab.Screen
@@ -75,19 +70,6 @@ const HomeTabs = () => {
         name="Home"
         component={HomeScreen}
       />
-      {/* <Tab.Screen
-        options={{
-          tabBarIcon: () => (
-            <Image
-              source={icons.mapicon}
-              style={{width: 30, height: 30, marginTop: 5}}
-              resizeMode="stretch"
-            />
-          ),
-        }}
-        name="Map"
-        component={MapScreen}
-      /> */}
       <Tab.Screen
         options={{
           tabBarIcon: ({color, focused}) => (
@@ -99,7 +81,7 @@ const HomeTabs = () => {
           ),
         }}
         name="Search"
-        component={SearchScreen}
+        component={ListItemSearch}
       />
       <Tab.Screen
         name="Discover"
@@ -112,7 +94,6 @@ const HomeTabs = () => {
               size={32}
             />
           ),
-          // tabBarBadge: 3,
         }}
       />
       <Tab.Screen
@@ -142,7 +123,9 @@ const HomeTabs = () => {
 
 const Navigation = () => {
   const {userInfo, splashLoading} = useContext(AuthContext);
-  // console.log(userInfo.jwtToken);
+  // if (userInfo.user.roleName === 'Admin') {
+  //   console.log('True');
+  // }
   return (
     <NavigationContainer>
       <Stack.Navigator
@@ -156,24 +139,30 @@ const Navigation = () => {
           />
         ) : userInfo.jwtToken ? (
           <>
+            {userInfo.user.roleName === 'Admin' && (
+              <Stack.Screen name="AdminDashBoard" component={AdminDashBoard} />
+            )}
             <Stack.Screen name="HomeTabs" component={HomeTabs} />
-            {/* <Stack.Screen name="Filter" component={DrawerCustom} /> */}
             <Stack.Screen name="DetailsScreen2" component={DetailsScreen2} />
             <Stack.Screen name="ProfileDetail" component={ProfileDetail} />
             <Stack.Screen name="Bookings" component={Bookings2} />
             <Stack.Screen name="PayPalScreen" component={PayPalScreen} />
             <Stack.Screen
-              listeners={({navigation}) => {
-                if (!navigation.canGoBack()) {
-                  console.log("we're on the initial screen");
-                }
-              }}
+              // listeners={({navigation}) => {
+              //   if (!navigation.canGoBack()) {
+              //     console.log("we're on the initial screen");
+              //   }
+              // }}
               name="PaymentScreen"
               component={PaymentScreen}
             />
             <Stack.Screen name="BillScreen" component={BillScreen} />
             <Stack.Screen name="UnpaidScreen" component={UnpaidScreen} />
             <Stack.Screen name="HistoriesScreen" component={HistoriesScreen} />
+            <Stack.Screen
+              name="UpdateTourScreen"
+              component={UpdateTourScreen}
+            />
           </>
         ) : (
           <>

@@ -82,19 +82,9 @@ const TourService = {
     return new Promise(async (resolve, reject) => {
       try {
         let allHotel = db.TourInfo.findAll({
-          attributes: [
-            "id",
-            "NameTour",
-            "abbreviation",
-            "totalTime",
-            "Departureday",
-            "Description",
-            "PricePerson",
-            "images",
-          ],
           include: [
-            // { model: db.TypeOfTransport, attributes: ["nameTransport"] },
-            // { model: db.Hotel, attributes: ["NameHotel"]},
+            { model: db.TypeOfTransport, attributes: ["nameTransport"] },
+            { model: db.Hotel, attributes: ["NameHotel"] },
             {
               model: db.Location,
               attributes: ["country", "placeName", "descLocation"],

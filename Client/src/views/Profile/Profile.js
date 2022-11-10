@@ -9,7 +9,7 @@ import {AuthContext} from '../../context/AuthContext';
 import Spinner from 'react-native-loading-spinner-overlay';
 
 const Onboarding = ({navigation}) => {
-  const {isLoading, Logout} = useContext(AuthContext);
+  const {isLoading, Logout, userInfo} = useContext(AuthContext);
 
   return (
     <View style={{flex: 100, backgroundColor: 'white'}}>
@@ -181,40 +181,43 @@ const Onboarding = ({navigation}) => {
               />
             </TouchableOpacity>
           </View>
-          <View
-            style={{
-              marginVertical: 5,
-            }}>
-            <TouchableOpacity
-              onPress={() => {
-                navigation.navigate('HistoriesScreen');
-              }}
+          {userInfo.user.roleName === 'Admin' && (
+            <View
               style={{
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-
-                right: 15,
+                marginVertical: 5,
+                backgroundColor: 'gray',
+                marginBottom: 5,
               }}>
-              <Text
-                style={{
-                  left: 30,
-                  fontSize: 18,
-                  color: 'white',
-                }}>
-                History Payment
-              </Text>
-              <Image
-                style={{
-                  height: 15,
-                  width: 15,
-                  right: 20,
-                  tintColor: 'white',
+              <TouchableOpacity
+                onPress={() => {
+                  navigation.navigate('AdminDashBoard');
                 }}
-                source={icons.rightarrowicon}
-              />
-            </TouchableOpacity>
-          </View>
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  right: 15,
+                }}>
+                <Text
+                  style={{
+                    left: 30,
+                    fontSize: 18,
+                    color: 'white',
+                  }}>
+                  Admin DashBoard
+                </Text>
+                <Image
+                  style={{
+                    height: 15,
+                    width: 15,
+                    right: 20,
+                    tintColor: 'white',
+                  }}
+                  source={icons.rightarrowicon}
+                />
+              </TouchableOpacity>
+            </View>
+          )}
         </View>
       </View>
       {/* Content */}

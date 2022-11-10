@@ -2,7 +2,14 @@
 import React, {useState, useEffect} from 'react';
 
 // import core component
-import {View, Text, Image, Dimensions, TouchableOpacity} from 'react-native';
+import {
+  View,
+  Text,
+  Image,
+  Dimensions,
+  TouchableOpacity,
+  BackHandler,
+} from 'react-native';
 
 //import icons
 import {icons} from '../../constants/index';
@@ -16,22 +23,20 @@ const WidthDevice = Dimensions.get('window').width;
 
 const BillScreen = ({navigation, route}) => {
   const [data, setData] = useState([]);
-  setTimeout(() => {
-    navigation.navigate('HomeTabs');
-  }, 10000);
-
-  //-------GET ID WITH ROUTE.PARAMS-----///
-  const idParams = route.params.data;
-  console.log('ID Bill: ' + idParams.id);
-  //-------GET ID WITH ROUTE.PARAMS-----///
-
   //-----CREATE VARIABLE----//
   let User, Booking, DatePayment, TimePayment, Code;
   //-----CREATE VARIABLE----//
+  //-------GET ID WITH ROUTE.PARAMS-----///
+  const idParams = route.params.idBill;
+  console.log('ID Bill: ' + idParams);
+  //-------GET ID WITH ROUTE.PARAMS-----///
+  // setTimeout(() => {
+  //   navigation.navigate('HomeTabs');
+  // }, 10000);
 
   //-----CHECK DATA EMPTY----//
   if (data.length === 0) {
-    console.log('Data empty');
+    console.log('Data empty in BillScreen');
   } else {
     const hello = Object.keys(data).map(k => data[k]);
     Code = hello[0];
@@ -39,13 +44,11 @@ const BillScreen = ({navigation, route}) => {
     DatePayment = hello[1];
     User = hello[5];
     Booking = hello[6];
-    // console.log(Booking.TourInfo.Location.country);
   }
   //-----CHECK DATA EMPTY----//
-
   useEffect(() => {
     axios
-      .get(`${URL}/Bill/GetOneBill/${idParams.id}`)
+      .get(`${URL}/Bill/GetOneBill/${idParams}`)
       .then(res => {
         // console.log(res);
         setData(res.data);
@@ -53,6 +56,12 @@ const BillScreen = ({navigation, route}) => {
       .catch(err => {
         console.log(err);
       });
+
+    const backHandler = BackHandler.addEventListener(
+      'hardwareBackPress',
+      () => true,
+    );
+    return () => backHandler.remove();
   }, [idParams.id]);
 
   return (
@@ -194,25 +203,14 @@ const BillScreen = ({navigation, route}) => {
                 //   backgroundColor: 'yellow',
               }
             }>
-            {data.length === 0 ? (
-              <Text
-                style={{
-                  fontSize: 16,
-                  fontFamily: 'Inter-ExtraBold',
-                  color: 'black',
-                }}>
-                NaN $
-              </Text>
-            ) : (
-              <Text
-                style={{
-                  fontSize: 16,
-                  fontFamily: 'Inter-ExtraBold',
-                  color: 'black',
-                }}>
-                {Booking.totalCost} $
-              </Text>
-            )}
+            <Text
+              style={{
+                fontSize: 16,
+                fontFamily: 'Inter-ExtraBold',
+                color: 'black',
+              }}>
+              $ {data.length === 0 ? 'NaN' : Booking.totalCost}
+            </Text>
           </View>
         </View>
       </View>
@@ -294,25 +292,16 @@ const BillScreen = ({navigation, route}) => {
                   }}>
                   Time for Payment
                 </Text>
-                {data.length === 0 ? (
-                  <Text
-                    style={{
-                      fontSize: 14,
-                      fontFamily: 'Inter-light',
-                      color: 'black',
-                    }}>
-                    NaN
-                  </Text>
-                ) : (
-                  <Text
-                    style={{
-                      fontSize: 14,
-                      fontFamily: 'Inter-light',
-                      color: 'black',
-                    }}>
-                    {TimePayment} - {DatePayment}
-                  </Text>
-                )}
+                <Text
+                  style={{
+                    fontSize: 14,
+                    fontFamily: 'Inter-light',
+                    color: 'black',
+                  }}>
+                  {data.length === 0 ? 'NaN' : TimePayment}
+                  {'  '}
+                  {data.length === 0 ? 'NaN' : DatePayment}
+                </Text>
               </View>
               {/* Line 1 -2  */}
               <View
@@ -333,25 +322,15 @@ const BillScreen = ({navigation, route}) => {
                   }}>
                   Code
                 </Text>
-                {data.length === 0 ? (
-                  <Text
-                    style={{
-                      fontSize: 14,
-                      fontFamily: 'Inter-light',
-                      color: '#7F0F77',
-                    }}>
-                    NaN
-                  </Text>
-                ) : (
-                  <Text
-                    style={{
-                      fontSize: 14,
-                      fontFamily: 'Inter-light',
-                      color: '#7F0F77',
-                    }}>
-                    {Code}
-                  </Text>
-                )}
+                <Text
+                  style={{
+                    fontSize: 14,
+                    fontFamily: 'Inter-light',
+                    color: '#7F0F77',
+                  }}>
+                  {data.length === 0 ? 'NaN' : Booking.id}
+                  {/* NaN */}
+                </Text>
               </View>
             </View>
           </View>
@@ -435,25 +414,15 @@ const BillScreen = ({navigation, route}) => {
                     }}>
                     Total Money
                   </Text>
-                  {data.length === 0 ? (
-                    <Text
-                      style={{
-                        fontSize: 14,
-                        fontFamily: 'Inter-ExtraBold',
-                        color: 'black',
-                      }}>
-                      NaN $
-                    </Text>
-                  ) : (
-                    <Text
-                      style={{
-                        fontSize: 14,
-                        fontFamily: 'Inter-ExtraBold',
-                        color: 'black',
-                      }}>
-                      {Booking.totalCost} $
-                    </Text>
-                  )}
+                  <Text
+                    style={{
+                      fontSize: 14,
+                      fontFamily: 'Inter-ExtraBold',
+                      color: 'black',
+                    }}>
+                    $ {data.length === 0 ? 'Nan' : Booking.totalCost}
+                    {/* NaN $ */}
+                  </Text>
                 </View>
               </View>
             </View>
@@ -494,25 +463,15 @@ const BillScreen = ({navigation, route}) => {
                     }}>
                     User
                   </Text>
-                  {data.length === 0 ? (
-                    <Text
-                      style={{
-                        fontSize: 14,
-                        color: 'black',
-                        fontFamily: 'Inter-SemiBold',
-                      }}>
-                      NaN
-                    </Text>
-                  ) : (
-                    <Text
-                      style={{
-                        fontSize: 14,
-                        color: 'black',
-                        fontFamily: 'Inter-SemiBold',
-                      }}>
-                      {User.name}
-                    </Text>
-                  )}
+                  <Text
+                    style={{
+                      fontSize: 14,
+                      color: 'black',
+                      fontFamily: 'Inter-SemiBold',
+                    }}>
+                    {data.length === 0 ? 'NaN' : User.name}
+                    {/* NaN */}
+                  </Text>
                 </View>
                 {/* line 2 */}
                 <View
@@ -531,25 +490,15 @@ const BillScreen = ({navigation, route}) => {
                     }}>
                     Phone
                   </Text>
-                  {data.length === 0 ? (
-                    <Text
-                      style={{
-                        fontSize: 14,
-                        color: 'black',
-                        fontFamily: 'Inter-SemiBold',
-                      }}>
-                      NaN
-                    </Text>
-                  ) : (
-                    <Text
-                      style={{
-                        fontSize: 14,
-                        color: 'black',
-                        fontFamily: 'Inter-SemiBold',
-                      }}>
-                      {User.phone}
-                    </Text>
-                  )}
+                  <Text
+                    style={{
+                      fontSize: 14,
+                      color: 'black',
+                      fontFamily: 'Inter-SemiBold',
+                    }}>
+                    {data.length === 0 ? 'NaN' : User.phone}
+                    {/* NaN */}
+                  </Text>
                 </View>
                 {/* line 3 */}
                 <View
@@ -568,26 +517,17 @@ const BillScreen = ({navigation, route}) => {
                     }}>
                     Location
                   </Text>
-                  {data.length === 0 ? (
-                    <Text
-                      style={{
-                        fontSize: 14,
-                        color: 'black',
-                        fontFamily: 'Inter-SemiBold',
-                      }}>
-                      NaN
-                    </Text>
-                  ) : (
-                    <Text
-                      style={{
-                        fontSize: 14,
-                        color: 'black',
-                        fontFamily: 'Inter-SemiBold',
-                      }}>
-                      {Booking.TourInfo.Location.placeName},{' '}
-                      {Booking.TourInfo.Location.country}
-                    </Text>
-                  )}
+                  <Text
+                    style={{
+                      fontSize: 14,
+                      color: 'black',
+                      fontFamily: 'Inter-SemiBold',
+                    }}>
+                    {data.length === 0
+                      ? 'NaN'
+                      : Booking.TourInfo.Location.placeName}
+                    {/* NaN */}
+                  </Text>
                 </View>
                 {/* line 4 */}
                 <View
@@ -612,7 +552,7 @@ const BillScreen = ({navigation, route}) => {
                       color: 'black',
                       fontFamily: 'Inter-SemiBold',
                     }}>
-                    Visit 3 days BangKok
+                    {data.length === 0 ? 'NaN' : Booking.TourInfo.NameTour}
                   </Text>
                   {/* Nếu mà nhiều ký tự hơn thì check điều kiện cho kích thước chữ nhỏ */}
                 </View>
@@ -633,25 +573,15 @@ const BillScreen = ({navigation, route}) => {
                     }}>
                     Total guest
                   </Text>
-                  {data.length === 0 ? (
-                    <Text
-                      style={{
-                        fontSize: 14,
-                        color: 'black',
-                        fontFamily: 'Inter-SemiBold',
-                      }}>
-                      NaN
-                    </Text>
-                  ) : (
-                    <Text
-                      style={{
-                        fontSize: 14,
-                        color: 'black',
-                        fontFamily: 'Inter-SemiBold',
-                      }}>
-                      {Booking.totalGuest}
-                    </Text>
-                  )}
+                  <Text
+                    style={{
+                      fontSize: 14,
+                      color: 'black',
+                      fontFamily: 'Inter-SemiBold',
+                    }}>
+                    {data.length === 0 ? 'NaN' : Booking.totalGuest}
+                    {/* NaN */}
+                  </Text>
                 </View>
               </View>
             </View>

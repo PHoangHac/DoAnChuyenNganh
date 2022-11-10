@@ -19,6 +19,7 @@ const PayPal = {
     }
   },
   Payment: async (req, res) => {
+    const price = "10.00";
     try {
       const create_payment_json = {
         intent: "sale",
@@ -26,8 +27,8 @@ const PayPal = {
           payment_method: "paypal",
         },
         redirect_urls: {
-          return_url: "http://192.168.1.8:9090/PayPal/success",
-          cancel_url: "http://192.168.1.8:9090/PayPal/cancel",
+          return_url: "http://192.168.1.7:9090/PayPal/success",
+          cancel_url: "http://192.168.1.7:9090/PayPal/cancel",
         },
         transactions: [
           {
@@ -36,7 +37,7 @@ const PayPal = {
                 {
                   name: "item",
                   sku: "item",
-                  price: "1.00",
+                  price: price,
                   currency: "USD",
                   quantity: 1,
                 },
@@ -44,7 +45,7 @@ const PayPal = {
             },
             amount: {
               currency: "USD",
-              total: "1.00",
+              total: price,
             },
             description: "This is the payment description.",
           },
@@ -56,8 +57,11 @@ const PayPal = {
           throw error;
         } else {
           console.log("Create Payment Response");
-          console.log(payment.transactions);
-          res.redirect(payment.links[1].href);
+          // console.log(payment.transactions);
+          const no1 = payment.links[1].href;
+          res.redirect(no1);
+          const no2 = payment.transactions[0];
+          console.log(no2.item_list);
         }
       });
       //   return res.status(200).json({ msg: "success !" });
@@ -101,7 +105,8 @@ const PayPal = {
   },
   PaymentCancel: async (req, res) => {
     try {
-      res.render("CancelPayment.ejs");
+      // res.render("CancelPayment.ejs");
+      return res.send(req.dataFromMiddleware1);
     } catch (error) {
       return res.status(500).json(error);
     }

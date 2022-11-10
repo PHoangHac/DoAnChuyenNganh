@@ -200,10 +200,11 @@ const BookingScreen2 = ({navigation, route}) => {
         // setDataFake(res.data);
         setTimeout(() => {
           navigation.navigate('PaymentScreen', {
-            data: res.data,
+            idBooking: res.data.message.id,
           });
-        }, 1500);
-      }, 1000);
+        }, 2000);
+        // console.log(res.data.message.id);
+      }, 1500);
       setLoading(true);
     } catch (error) {
       console.log(error);

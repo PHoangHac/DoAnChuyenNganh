@@ -106,7 +106,9 @@ const HomeScreen = ({navigation}) => {
                 }}
                 key={index}
                 onPress={() => {
-                  navigation.navigate('PayPalScreen');
+                  navigation.navigate('PayPalScreen', {
+                    totalCost: '20.00',
+                  });
                 }}>
                 <View style={{padding: 5}}>
                   <Image

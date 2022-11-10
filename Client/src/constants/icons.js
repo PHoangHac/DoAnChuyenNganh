@@ -52,6 +52,12 @@ const check1icon = require('../assets/icons/check1.png');
 const visaicon = require('../assets/icons/visa.png');
 const creditcardicon = require('../assets/icons/credit-card.png');
 const SignPostIcon = require('../assets/icons/signpost.png');
+const RemoveIcon = require('../assets/icons/remove.png');
+const AddIcon = require('../assets/icons/add.png');
+const CancelIcon = require('../assets/icons/cancel.png');
+const EditIcon = require('../assets/icons/edit.png');
+const EditIcon2 = require('../assets/icons/edit-2.png');
+const TrashIcon = require('../assets/icons/trash-bin.png');
 
 export default {
   travelicon,
@@ -108,4 +114,10 @@ export default {
   visaicon,
   creditcardicon,
   SignPostIcon,
+  RemoveIcon,
+  AddIcon,
+  CancelIcon,
+  EditIcon,
+  TrashIcon,
+  EditIcon2,
 };

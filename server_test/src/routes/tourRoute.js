@@ -11,14 +11,8 @@ let TourRoute = (app) => {
     .post("/Create", UploadController.uploads, TourController.CreateTour)
     .get("/GetAll", TourController.GetAllTour)
     // .post("/GetIdTour", TourController.GetIdTour)
-    .get("/GetIdTour2/:id", TourController.GetIdTour2);
-  // .post("/GetAll", authController.signin)
-  // .get(
-  //   "/",
-  // //   passport.authenticate("jwt", { session: false }),
-  //   authController.DisplayAllUser
-  // )
-  // .post("/LogOut", authController.Logout);
+    .get("/GetIdTour2/:id", TourController.GetIdTour2)
+    .post("/UpdateTour/:id", TourController.UpdateOneTour);
 
   return app.use("/tour", router);
 };
