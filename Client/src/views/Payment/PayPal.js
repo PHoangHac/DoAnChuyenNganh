@@ -69,7 +69,7 @@ const PayPalScreen = ({navigation, route}) => {
         {
           headers: {
             'Content-Type': 'application/x-www-form-urlencoded',
-            Authorization: `Bearer A21AAJn4rqpthDPTOqVRdnHDqp4gzee-qxObLLdB_LOK5oTjxzfceKvNlK57667FAbTNVq-uszdzgWoIdsndFLCK7pqeO_Sdg`, // Your Authorization Value
+            Authorization: `Bearer A21AAKL2XCrgHPw6WvByndUXrmEOrUGWVwjcSzfnTBkfA5kWYxexTogXwZLLY6Tx83gZC2gajhP-gM8pF0_YaL7CjaRTOfQig`, // Your Authorization Value
           },
         },
       )

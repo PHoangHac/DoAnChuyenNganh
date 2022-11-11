@@ -2,7 +2,7 @@ import db from "../models/index";
 
 const LocationService = {
   CreateLocation: (data) => {
-    return new Promise(async (resolve, rejct) => {
+    return new Promise(async (resolve, reject) => {
       try {
         const locationData = {};
 
@@ -18,7 +18,7 @@ const LocationService = {
 
         resolve(locationData);
       } catch (e) {
-        rejct(e);
+        reject(e);
       }
     });
   },

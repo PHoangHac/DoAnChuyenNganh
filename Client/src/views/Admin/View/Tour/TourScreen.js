@@ -5,12 +5,18 @@ import {
   TouchableOpacity,
   Image,
   TouchableHighlight,
+  RefreshControl,
 } from 'react-native';
 import {SwipeListView} from 'react-native-swipe-list-view';
 import {icons, images} from '../../../../constants/index';
 import {URL} from '../../../../context/config';
 import moment from 'moment';
 import axios from 'axios';
+import Toast from 'react-native-toast-message';
+
+const wait = timeout => {
+  return new Promise(resolve => setTimeout(resolve, timeout));
+};
 
 const renderItem = data => {
   const pic = JSON.parse(data.item.images);
@@ -97,17 +103,19 @@ const renderItem = data => {
           <View
             style={{
               height: '40%',
-              width: '100%',
+              width: '75%',
               // backgroundColor: 'blue',
               justifyContent: 'center',
             }}>
             <Text
               style={{
-                color: 'white',
+                color: 'black',
                 paddingLeft: 10,
                 fontFamily: 'Inter-Bold',
+                backgroundColor: 'white',
+                borderRadius: 15,
               }}>
-              {data.item.PricePerson}/Person
+              {data.item.PricePerson} / Person
             </Text>
           </View>
         </View>
@@ -118,6 +126,13 @@ const renderItem = data => {
 
 const TourScreen = ({navigation}) => {
   const [DataTest, setDataTest] = useState([]);
+  const [refreshing, setRefreshing] = React.useState(false);
+
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    OKK();
+    wait(1500).then(() => setRefreshing(false));
+  }, []);
 
   const OKK = () => {
     axios
@@ -158,16 +173,18 @@ const TourScreen = ({navigation}) => {
     }
   };
 
-  const deleteRow = (rowMap, rowKey) => {
-    closeRow(rowMap, rowKey);
-    const newData = [...Data];
-    const prevIndex = Data.findIndex(item => item.id === rowKey);
-    newData.splice(prevIndex, 1);
-    setData(newData);
-  };
-
-  const onRowDidOpen = rowKey => {
-    // console.log('This row opened', rowKey);
+  const DeleteTour = async id => {
+    await axios.delete(`${URL}/tour/DeleteTour/${id}`).then(res => {
+      console.log(res.data);
+      Toast.show({
+        type: 'success',
+        text1: 'Status',
+        text2: 'DELETE SUCCESSFULLY ! 👋',
+        autoHide: true,
+        visibilityTime: 1500,
+      });
+      OKK();
+    });
   };
 
   const renderHiddenItem = (data, rowMap) => {
@@ -248,7 +265,7 @@ const TourScreen = ({navigation}) => {
               width: '33.3%',
               justifyContent: 'center',
             }}>
-            <TouchableOpacity>
+            <TouchableOpacity onPress={() => DeleteTour(data.item.id)}>
               <Image
                 style={{
                   height: 39.3,
@@ -373,10 +390,13 @@ const TourScreen = ({navigation}) => {
           style={{
             height: '100%',
             width: '90%',
-            paddingBottom: 60,
+            paddingBottom: 65,
             alignSelf: 'center',
           }}>
           <SwipeListView
+            refreshControl={
+              <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+            }
             data={OK}
             renderItem={renderItem}
             renderHiddenItem={renderHiddenItem}
@@ -385,7 +405,7 @@ const TourScreen = ({navigation}) => {
             previewRowKey={'0'}
             previewOpenValue={-40}
             previewOpenDelay={3000}
-            onRowDidOpen={onRowDidOpen}
+            // onRowDidOpen={onRowDidOpen}
             swipeRowStyle={{
               marginTop: 5,
             }}
@@ -394,6 +414,7 @@ const TourScreen = ({navigation}) => {
         </View>
       </View>
       {/* End Body */}
+      <Toast topOffset={10} />
     </View>
   );
 };

@@ -64,8 +64,11 @@ const FilterSearch = ({
   modalVisible,
   setModalVisible,
   onPress,
-  setCountry,
-  setPrice,
+  setSelectedCountry,
+  handleFilterPrice,
+  handleFilterTransPost,
+  // setCountry,
+  // setPrice,
   // onPressOut,
 }) => {
   const [multiSliderValue, setMultiSliderValue] = useState([0, 10000]);
@@ -73,8 +76,7 @@ const FilterSearch = ({
   const [value, setValue] = useState(null);
   const [label, setLabel] = useState(null);
   const [products, setProducts] = useState(DATA);
-
-  // console.log(label);
+  const [TransPort, setTransPort] = useState([]);
 
   const handleChange = id => {
     let temp = products.map(product => {
@@ -84,12 +86,26 @@ const FilterSearch = ({
       return product;
     });
     setProducts(temp);
+
+    let Result = temp
+      .filter(obj => obj.isChecked === true)
+      .map(filteredObj => filteredObj.title);
+    setTransPort(Result);
   };
 
   const OffPopUp = () => {
     setModalVisible(!modalVisible);
-    setCountry(label);
-    setPrice(multiSliderValue);
+    setMultiSliderValue([0, 10000]);
+    setProducts(DATA);
+    setTransPort([]);
+  };
+
+  const OffPopUpToView = () => {
+    setModalVisible(!modalVisible);
+    setSelectedCountry(label);
+    handleFilterPrice(multiSliderValue);
+    handleFilterTransPost(TransPort);
+    setLabel(null);
   };
 
   const renderItem = ({item}) => {
@@ -459,7 +475,7 @@ const FilterSearch = ({
                 <TouchableOpacity
                   style={[styles.button, styles.buttonClose]}
                   // onPress={onPressOut}
-                  onPressOut={OffPopUp}>
+                  onPressOut={OffPopUpToView}>
                   <Text style={styles.textStyle}>Done</Text>
                 </TouchableOpacity>
               </View>

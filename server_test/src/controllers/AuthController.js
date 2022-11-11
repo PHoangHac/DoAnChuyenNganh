@@ -1,5 +1,6 @@
 // import db from "../models/index";
 import AuthService from "../services/AuthService.js";
+import db from "../models/index";
 
 const authController = {
   //register
@@ -41,6 +42,54 @@ const authController = {
   DisplayAllUser: async (req, res) => {
     let data = await AuthService.GetAllUser();
     return res.status(200).send(data);
+  },
+  UpdateUser: async (req, res) => {
+    const { id } = req.params;
+    const image = req.file.path;
+    const data = req.body;
+    console.log(image);
+    try {
+      const FindUser = await db.User.findOne({
+        where: { id: id },
+      });
+      if (FindUser) {
+        FindUser.image = image;
+        FindUser.name = data.name;
+        FindUser.phone = data.phone;
+        FindUser.email = data.email;
+        await FindUser.save();
+        return res.status(200).send(FindUser);
+      }
+    } catch (error) {
+      return res.status(500).send(error);
+    }
+  },
+  OneUser: async (req, res) => {
+    try {
+      const { id } = req.params;
+      const FindUser = await db.User.findOne({
+        where: { id: id },
+      });
+      if (FindUser) {
+        return res.status(200).send(FindUser);
+      }
+    } catch (error) {
+      return res.status(500).send(error);
+    }
+  },
+  DeleteUser: async (req, res) => {
+    try {
+      const { id } = req.params;
+      const FindUser = await db.User.findOne({
+        where: { id: id },
+      });
+      if (FindUser) {
+        FindUser.destroy();
+        return res.status(200).json({ msg: "Delete Success !" });
+      }
+    } catch (error) {
+      return res.status(500).send(error);
+    }
   },
 };
 

@@ -73,6 +73,41 @@ const TourController = {
       return res.status(500).json(error);
     }
   },
+  DeleteTour: async (req, res) => {
+    const { id } = req.params;
+    try {
+      const FindOneTour = await db.TourInfo.findOne({
+        where: { id: id },
+      });
+      if (FindOneTour) {
+        FindOneTour.destroy();
+        return res.status(200).json({ msg: "Delete Success !" });
+      }
+    } catch (error) {
+      return res.status(500).json(error);
+    }
+  },
+  QueryParams: async (req, res) => {
+    const query = req.query;
+    try {
+      const findOneTour = await db.TourInfo.findAll({
+        include: [
+          { model: db.TypeOfTransport, attributes: ["nameTransport"] },
+          { model: db.Hotel, attributes: ["NameHotel"] },
+          {
+            model: db.Location,
+            attributes: ["country", "placeName", "descLocation"],
+            where: query,
+          },
+        ],
+        raw: true,
+        nest: true,
+      });
+      return res.status(200).json(findOneTour);
+    } catch (error) {
+      return res.status(500).json(error);
+    }
+  },
 };
 
 export default TourController;

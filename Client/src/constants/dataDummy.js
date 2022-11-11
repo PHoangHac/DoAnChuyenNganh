@@ -7,6 +7,9 @@ const places = [
       placeName: 'Capri & Sorrento',
       descLocation: ' coastal area within Liguria, in the northwest of Italy',
     },
+    TypeOfTransport: {
+      nameTransport: 'Airplane',
+    },
     price: 100.0,
     image: require('../assets/images/location1.jpg'),
     details: `Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Consequat nisl vel pretium lectus quam id leo. Velit euismod in pellentesque massa placerat duis ultricies lacus sed. Justo laoreet sit amet cursus sit.`,
@@ -18,6 +21,9 @@ const places = [
       country: 'Philippines',
       placeName: 'Capri & Sorrento',
       descLocation: ' coastal area within Liguria, in the northwest of Italy',
+    },
+    TypeOfTransport: {
+      nameTransport: 'Bus',
     },
     price: 200,
     image: require('../assets/images/location2.jpg'),
@@ -31,6 +37,9 @@ const places = [
       placeName: 'Capri & Sorrento',
       descLocation: ' coastal area within Liguria, in the northwest of Italy',
     },
+    TypeOfTransport: {
+      nameTransport: 'Train',
+    },
     price: 300,
     image: require('../assets/images/location3.jpg'),
     details: `Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Consequat nisl vel pretium lectus quam id leo. Velit euismod in pellentesque massa placerat duis ultricies lacus sed. Justo laoreet sit amet cursus sit.`,
@@ -42,6 +51,9 @@ const places = [
       country: 'Malaysia',
       placeName: 'Capri & Sorrento',
       descLocation: ' coastal area within Liguria, in the northwest of Italy',
+    },
+    TypeOfTransport: {
+      nameTransport: 'Yacht',
     },
     price: 400,
     image: require('../assets/images/location4.jpg'),
@@ -55,6 +67,9 @@ const places = [
       placeName: 'Capri & Sorrento',
       descLocation: ' coastal area within Liguria, in the northwest of Italy',
     },
+    TypeOfTransport: {
+      nameTransport: 'Airplane',
+    },
     price: 500,
     image: require('../assets/images/location4.jpg'),
     details: `Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Consequat nisl vel pretium lectus quam id leo. Velit euismod in pellentesque massa placerat duis ultricies lacus sed. Justo laoreet sit amet cursus sit.`,
@@ -66,6 +81,9 @@ const places = [
       country: 'Indonesia',
       placeName: 'Capri & Sorrento',
       descLocation: ' coastal area within Liguria, in the northwest of Italy',
+    },
+    TypeOfTransport: {
+      nameTransport: 'Yacht',
     },
     price: 600,
     image: require('../assets/images/location4.jpg'),

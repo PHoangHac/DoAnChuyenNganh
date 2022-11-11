@@ -33,6 +33,7 @@ import PayPalScreen from './views/Payment/PayPal';
 import ListItemSearch from './views/Search/SearchFix';
 import AdminDashBoard from './views/Admin';
 import UpdateTourScreen from './views/Admin/View/Tour/UpdateTourScreen';
+import UpdateUserScreen from './views/Admin/View/Users/UpdateUserScreen';
 
 import {AuthContext} from './context/AuthContext';
 
@@ -162,6 +163,10 @@ const Navigation = () => {
             <Stack.Screen
               name="UpdateTourScreen"
               component={UpdateTourScreen}
+            />
+            <Stack.Screen
+              name="UpdateUserScreen"
+              component={UpdateUserScreen}
             />
           </>
         ) : (

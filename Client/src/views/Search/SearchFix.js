@@ -1,4 +1,4 @@
-import React, {useEffect, useState, useRef} from 'react';
+import React, {useEffect, useState, useRef, useCallback} from 'react';
 import {
   View,
   Text,
@@ -11,8 +11,6 @@ import {
 import {icons} from '../../constants/index';
 import {places} from '../../constants/dataDummy';
 import FilterSearch from './ModelFilter';
-
-const dataCountry = ['Italy', 'Philippines', 'Malaysia', 'Indonesia'];
 
 const DropSearchDown = props => {
   const {dataSource} = props;
@@ -234,13 +232,9 @@ const StarIcons = [
 
 const SearchItemScreen = () => {
   const [dataFilter, setDataFilter] = useState(places);
-  // const [dataFilter2, setDataFilter2] = useState([]);
+  // -----Search textInput----//
   const [searching, setSearching] = useState(false);
   const [filtered, setFiltered] = useState(dataSource);
-  const [modalVisible, setModalVisible] = useState(false);
-  const [textInputS, setTextInputS] = useState('');
-  const [country, setCountry] = useState('');
-  const [price, setPrice] = useState([]);
   const [dataSource] = useState([
     'apple',
     'banana',
@@ -251,9 +245,15 @@ const SearchItemScreen = () => {
     'air',
     'bottle',
   ]);
+  // -----Search textInput----//
+  const [modalVisible, setModalVisible] = useState(false);
+  const [textInputS, setTextInputS] = useState('');
+  const [resultsFound, setResultsFound] = useState(true);
+  const [selectedCountry, setSelectedCountry] = useState(null);
+  const [selectedPrice, setSelectedPrice] = useState([0, 10000]);
+  const [selectedTransPost, setSelectedTransPost] = useState([]);
 
-  let home = country;
-
+  //-------Filter Search------//
   const onSearch = text => {
     if (text) {
       setTextInputS(text);
@@ -270,27 +270,70 @@ const SearchItemScreen = () => {
     }
   };
   const renderItem = ({item}) => <Item data={item} />;
+  //-------Filter Search------//
 
   const Reload = () => {
     setDataFilter(places);
-    setCountry('');
-    setPrice([]);
+    setSelectedCountry(null);
+    setSelectedPrice([0, 10000]);
+    setSelectedTransPost([]);
   };
 
-  useEffect(() => {
-    if (dataCountry.includes(home)) {
-      const data = dataFilter.filter(function (creature) {
-        return creature.location.country == home;
-      });
-      const dataNext = data;
-      setDataFilter(dataNext);
-    } else {
-      setDataFilter(places);
-      console.log('NO');
-    }
-  }, [home]);
+  //-------Filter-----//
+  const handleSelectCountry = value =>
+    !value ? null : setSelectedCountry(value);
 
-  console.log(price);
+  const handleFilterPrice = value => {
+    setSelectedPrice(value);
+  };
+
+  const handleFilterTransPost = value => {
+    setSelectedTransPost(value);
+  };
+
+  const FilterTour = useCallback(async () => {
+    let Result = places;
+
+    // price filter
+    const minPrice = selectedPrice[0];
+    const maxPrice = selectedPrice[1];
+    Result = Result.filter(
+      item => item.price >= minPrice && item.price <= maxPrice,
+    );
+
+    //Country filter
+    if (selectedCountry === null) {
+    } else {
+      Result = Result.filter(item => item.location.country === selectedCountry);
+    }
+
+    //TransPost Filter
+    if (selectedTransPost.length === 0) {
+    } else {
+      Result = Result.filter(
+        item =>
+          item.TypeOfTransport.nameTransport === selectedTransPost[0] ||
+          item.TypeOfTransport.nameTransport === selectedTransPost[1] ||
+          item.TypeOfTransport.nameTransport === selectedTransPost[2] ||
+          item.TypeOfTransport.nameTransport === selectedTransPost[3],
+      );
+    }
+
+    //Rating filter
+    // if (selectedRating) {
+    //   Result = Result.filter(
+    //     (item) => parseInt(item.rating) === parseInt(selectedRating)
+    //   );
+    // }
+
+    setDataFilter(Result);
+
+    !Result.length ? setResultsFound(false) : setResultsFound(true);
+  }, [selectedCountry, selectedPrice, selectedTransPost]);
+
+  useEffect(() => {
+    FilterTour();
+  }, [FilterTour, selectedCountry, selectedPrice, selectedTransPost]);
 
   return (
     <View
@@ -313,9 +356,9 @@ const SearchItemScreen = () => {
           modalVisible={modalVisible}
           setModalVisible={setModalVisible}
           onPress={Reload}
-          setCountry={setCountry}
-          setPrice={setPrice}
-          // onPressOut={SearchCountry}
+          setSelectedCountry={handleSelectCountry}
+          handleFilterPrice={handleFilterPrice}
+          handleFilterTransPost={handleFilterTransPost}
         />
       </View>
       <View
@@ -441,12 +484,32 @@ const SearchItemScreen = () => {
             height: '100%',
             width: '100%',
           }}>
-          <FlatList
-            contentContainerStyle={{paddingBottom: 60}}
-            data={dataFilter}
-            renderItem={renderItem}
-            keyExtractor={item => item.id}
-          />
+          {resultsFound === true ? (
+            <FlatList
+              contentContainerStyle={{paddingBottom: 60}}
+              data={dataFilter}
+              renderItem={renderItem}
+              keyExtractor={item => item.id}
+            />
+          ) : (
+            <View
+              style={{
+                height: '90%',
+                width: '100%',
+                // backgroundColor: 'gray',
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}>
+              <Text
+                style={{
+                  fontFamily: 'Inter-Black',
+                  fontSize: 24,
+                  color: 'black',
+                }}>
+                Not Found !
+              </Text>
+            </View>
+          )}
         </View>
       </View>
     </View>

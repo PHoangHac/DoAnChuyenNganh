@@ -52,7 +52,7 @@ const AdminDashBoard = () => {
       />
       <Tab.Screen
         name="Users"
-        component={StateScreen}
+        component={UserScreen}
         options={{
           tabBarIcon: ({color, focused}) => (
             <Icon
@@ -70,7 +70,7 @@ const AdminDashBoard = () => {
           ),
         }}
         name="State"
-        component={UserScreen}
+        component={StateScreen}
       />
     </Tab.Navigator>
   );

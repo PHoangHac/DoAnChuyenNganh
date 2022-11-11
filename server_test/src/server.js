@@ -2,7 +2,7 @@ import express from "express";
 import bodyParser from "body-parser";
 import viewEngine from "./config/viewEngine";
 import initWebRoutes from "./routes/web.js";
-import connecDB from "./config/connecDB";
+import ConNecDB from "./config/connecDB";
 import cors from "cors";
 // import path from "path";
 require("dotenv").config();
@@ -37,7 +37,7 @@ PayPalRoute(app);
 viewEngine(app);
 initWebRoutes(app);
 
-connecDB();
+ConNecDB();
 
 let port = process.env.PORT;
 
@@ -49,7 +49,7 @@ let port = process.env.PORT;
 // app.use("/img", express.static(path.join(__dirname, "public/images")));
 app.use("*/images", express.static("src/assets/images"));
 // app.use("*/public", express.static("public"));
-app.listen(port, "192.168.1.7", () => {
+app.listen(port, "192.168.1.3", () => {
   console.log("server running");
 });
 // app.listen(port, "192.168.1.13", () => {

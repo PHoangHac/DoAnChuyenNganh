@@ -12,7 +12,9 @@ let TourRoute = (app) => {
     .get("/GetAll", TourController.GetAllTour)
     // .post("/GetIdTour", TourController.GetIdTour)
     .get("/GetIdTour2/:id", TourController.GetIdTour2)
-    .post("/UpdateTour/:id", TourController.UpdateOneTour);
+    .post("/UpdateTour/:id", TourController.UpdateOneTour)
+    .delete("/DeleteTour/:id", TourController.DeleteTour)
+    .get("/FindWithCon", TourController.QueryParams);
 
   return app.use("/tour", router);
 };
