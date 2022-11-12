@@ -12,6 +12,7 @@ import {
   Dimensions,
   ActivityIndicator,
   BackHandler,
+  RefreshControl,
 } from 'react-native';
 
 import DeviceInfo from 'react-native-device-info';
@@ -31,25 +32,35 @@ const WDheight = Dimensions.get('window').height;
 
 // console.log('Chieu dai man hinh:' + WDheight, 'Chieu rong man hinh:' + WDwidth);
 
+const wait = timeout => {
+  return new Promise(resolve => setTimeout(resolve, timeout));
+};
+
+const StarIcons = [
+  <Image style={{height: 12, width: 12}} source={icons.staricon} />,
+  <Image style={{height: 12, width: 12}} source={icons.staricon} />,
+  <Image style={{height: 12, width: 12}} source={icons.staricon} />,
+  <Image style={{height: 12, width: 12}} source={icons.staricon} />,
+  <Image style={{height: 12, width: 12}} source={icons.staricon} />,
+];
+
 const HomeScreen = ({navigation}) => {
   const appName = DeviceInfo.getBrand();
   const [data, setData] = useState([]);
   const [dataTour, setDataTour] = useState([]);
   const [loading, setLoading] = useState(false);
-
   const {userInfo} = React.useContext(AuthContext);
 
-  // React.useEffect(() => {
-  //   const backHandler = BackHandler.addEventListener(
-  //     'hardwareBackPress',
-  //     () => true,
-  //   );
-  //   alert("Can't");
-  //   return () => backHandler.remove();
-  // }, []);
+  const [refreshing, setRefreshing] = React.useState(false);
 
-  // fetch data transport
-  useEffect(() => {
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    ListTransPort();
+    ListTour();
+    wait(1500).then(() => setRefreshing(false));
+  }, []);
+
+  const ListTransPort = () => {
     fetch(`${URL}/transport/GetAll`, {
       method: 'GET',
     })
@@ -57,9 +68,9 @@ const HomeScreen = ({navigation}) => {
       .then(json => setData(json))
       .catch(err => console.error(err))
       .finally(() => setLoading(true));
-  }, []);
+  };
 
-  useEffect(() => {
+  const ListTour = () => {
     fetch(`${URL}/tour/GetAll`, {
       method: 'GET',
     })
@@ -67,15 +78,13 @@ const HomeScreen = ({navigation}) => {
       .then(json => setDataTour(json))
       .catch(err => console.error(err))
       .finally(() => setLoading(true));
-  }, []);
+  };
 
-  const StarIcons = [
-    <Image style={{height: 12, width: 12}} source={icons.staricon} />,
-    <Image style={{height: 12, width: 12}} source={icons.staricon} />,
-    <Image style={{height: 12, width: 12}} source={icons.staricon} />,
-    <Image style={{height: 12, width: 12}} source={icons.staricon} />,
-    <Image style={{height: 12, width: 12}} source={icons.staricon} />,
-  ];
+  // fetch data transport
+  useEffect(() => {
+    ListTransPort();
+    ListTour();
+  }, []);
 
   const ListCategories = () => {
     return (
@@ -97,6 +106,7 @@ const HomeScreen = ({navigation}) => {
           data.map((icon, index) => {
             return (
               <TouchableOpacity
+                disabled={true}
                 style={{
                   backgroundColor: '#EFEFEF',
                   borderRadius: 10,
@@ -125,16 +135,8 @@ const HomeScreen = ({navigation}) => {
   };
 
   const Card = ({place}) => {
-    // console.log(typeof JSON.parse(place.images));
-    // console.log(place.Location.country)
-    // console.log(place.id)
     const pic = JSON.parse(place.images);
-    // console.log(typeof pic[0]);
-    // const filenames = pic.map(function (item) {
-    //   return item.path; // or file.originalname
-    // });
-    // console.log(filenames);
-    // console.log(pic)
+
     return (
       <TouchableOpacity
         onPress={() =>
@@ -242,23 +244,12 @@ const HomeScreen = ({navigation}) => {
             </View>
           </View>
         </View>
-        {/* <ImageBackground
-          style={{
-            height: 150,
-            width: 150,
-            borderRadius: 12,
-          }}
-          source={place.image}></ImageBackground> */}
       </TouchableOpacity>
     );
   };
 
   const PopularCard = ({place}) => {
     const pic = JSON.parse(place.images);
-    // console.log(typeof pic[0]);
-    // const filenames = pic.map(function (item) {
-    //   return item.path; // or file.originalname
-    // });
     return (
       <TouchableOpacity
         onPress={() =>
@@ -314,16 +305,6 @@ const HomeScreen = ({navigation}) => {
       </TouchableOpacity>
     );
   };
-
-  // const LoadingTour = ({ place }) => {
-  //   <View
-  //     style={{
-  //       justifyContent: 'center',
-  //       backgroundColor: '#fff',
-  //     }}>
-  //     <ActivityIndicator size="large" color="#1925C3" />
-  //   </View>
-  // }
 
   return (
     <View style={{flex: 100, backgroundColor: 'white'}}>
@@ -419,6 +400,9 @@ const HomeScreen = ({navigation}) => {
       {/* Scroll */}
       <View style={{flex: 75}}>
         <ScrollView
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+          }
           contentContainerStyle={{paddingBottom: 90}}
           style={{height: '100%', width: '100%'}}>
           {/* Categories */}
@@ -540,7 +524,11 @@ const HomeScreen = ({navigation}) => {
             </View>
           </View>
           <View style={{height: '8%'}}>
-            <View style={{justifyContent: 'center', alignItems: 'center'}}>
+            <TouchableOpacity
+              onPress={() => {
+                navigation.navigate('MapScreen');
+              }}
+              style={{justifyContent: 'center', alignItems: 'center'}}>
               <Image
                 style={{
                   height: 220,
@@ -548,7 +536,7 @@ const HomeScreen = ({navigation}) => {
                 }}
                 source={icons.mapHomeicon}
               />
-            </View>
+            </TouchableOpacity>
           </View>
         </ScrollView>
       </View>

@@ -7,10 +7,15 @@ import {
   TextInput,
   TouchableOpacity,
   FlatList,
+  RefreshControl,
 } from 'react-native';
 import {icons} from '../../constants/index';
 import {places} from '../../constants/dataDummy';
 import FilterSearch from './ModelFilter';
+
+const wait = timeout => {
+  return new Promise(resolve => setTimeout(resolve, timeout));
+};
 
 const DropSearchDown = props => {
   const {dataSource} = props;
@@ -253,6 +258,15 @@ const SearchItemScreen = () => {
   const [selectedPrice, setSelectedPrice] = useState([0, 10000]);
   const [selectedTransPost, setSelectedTransPost] = useState([]);
 
+  const [refreshing, setRefreshing] = useState(false);
+
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    Reload();
+    FilterTour();
+    wait(1500).then(() => setRefreshing(false));
+  }, []);
+
   //-------Filter Search------//
   const onSearch = text => {
     if (text) {
@@ -486,6 +500,9 @@ const SearchItemScreen = () => {
           }}>
           {resultsFound === true ? (
             <FlatList
+              refreshControl={
+                <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+              }
               contentContainerStyle={{paddingBottom: 60}}
               data={dataFilter}
               renderItem={renderItem}

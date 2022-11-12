@@ -115,7 +115,7 @@ const UnpaidScreen = ({navigation}) => {
             {/* Each of item */}
             {data.map((item, index) => {
               // item.Status == 1 ? console.log('true') : console.log('false');
-              // console.log(item.Status);
+              // console.log(item.totalCost);
               return (
                 <View
                   style={{
@@ -186,7 +186,7 @@ const UnpaidScreen = ({navigation}) => {
                         justifyContent: 'center',
                         alignItems: 'center',
                       }}>
-                      {item.Status == 1 ? (
+                      {item.Status === 'Default' || item.Status === 'Online' ? (
                         <TouchableOpacity
                           style={{
                             // paddingRight: 12,
@@ -215,6 +215,7 @@ const UnpaidScreen = ({navigation}) => {
                             navigation.navigate('PaymentScreen', {
                               bookingId: item.id,
                               statusPayment: item.Status,
+                              totalCost: item.totalCost,
                             })
                           }>
                           <Text

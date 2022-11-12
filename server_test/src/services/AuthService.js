@@ -10,9 +10,9 @@ const encodedToken = (id) => {
       // iat: new Date().getTime(),
       // exp: new Date().setDate(new Date().getDate() + 3),
     },
-    process.env.JWT_SCERET_KEY,
+    process.env.JWT_SECRET_KEY,
     {
-      expiresIn: "1h",
+      expiresIn: "1d",
     }
   );
 };

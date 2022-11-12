@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -10,9 +10,9 @@ import {
 import {SwipeListView} from 'react-native-swipe-list-view';
 import {icons, images} from '../../../../constants/index';
 import {URL} from '../../../../context/config';
-import moment from 'moment';
 import axios from 'axios';
 import Toast from 'react-native-toast-message';
+import {AuthContext} from '../../../../context/AuthContext';
 
 const wait = timeout => {
   return new Promise(resolve => setTimeout(resolve, timeout));
@@ -152,7 +152,9 @@ const renderItem = data => {
 const UserScreen = ({navigation}) => {
   const [DataTest, setDataTest] = useState([]);
   const [refreshing, setRefreshing] = React.useState(false);
+  const {userInfo} = useContext(AuthContext);
 
+  // console.log(userInfo.jwtToken);
   // console.log(DataTest);
 
   const onRefresh = React.useCallback(() => {
@@ -163,7 +165,11 @@ const UserScreen = ({navigation}) => {
 
   const OKK = () => {
     axios
-      .get(`${URL}/auth`)
+      .get(`${URL}/auth`, {
+        headers: {
+          Authorization: `Bearer ${userInfo.jwtToken}`,
+        },
+      })
       .then(res => {
         setDataTest(res.data);
         // console.log(res.data);

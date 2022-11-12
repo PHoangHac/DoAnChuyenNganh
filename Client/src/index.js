@@ -34,7 +34,7 @@ import ListItemSearch from './views/Search/SearchFix';
 import AdminDashBoard from './views/Admin';
 import UpdateTourScreen from './views/Admin/View/Tour/UpdateTourScreen';
 import UpdateUserScreen from './views/Admin/View/Users/UpdateUserScreen';
-
+import MapScreen from './views/Map/MapScreen';
 import {AuthContext} from './context/AuthContext';
 
 // variable
@@ -141,7 +141,20 @@ const Navigation = () => {
         ) : userInfo.jwtToken ? (
           <>
             {userInfo.user.roleName === 'Admin' && (
-              <Stack.Screen name="AdminDashBoard" component={AdminDashBoard} />
+              <>
+                <Stack.Screen
+                  name="AdminDashBoard"
+                  component={AdminDashBoard}
+                />
+                <Stack.Screen
+                  name="UpdateTourScreen"
+                  component={UpdateTourScreen}
+                />
+                <Stack.Screen
+                  name="UpdateUserScreen"
+                  component={UpdateUserScreen}
+                />
+              </>
             )}
             <Stack.Screen name="HomeTabs" component={HomeTabs} />
             <Stack.Screen name="DetailsScreen2" component={DetailsScreen2} />
@@ -160,14 +173,7 @@ const Navigation = () => {
             <Stack.Screen name="BillScreen" component={BillScreen} />
             <Stack.Screen name="UnpaidScreen" component={UnpaidScreen} />
             <Stack.Screen name="HistoriesScreen" component={HistoriesScreen} />
-            <Stack.Screen
-              name="UpdateTourScreen"
-              component={UpdateTourScreen}
-            />
-            <Stack.Screen
-              name="UpdateUserScreen"
-              component={UpdateUserScreen}
-            />
+            <Stack.Screen name="MapScreen" component={MapScreen} />
           </>
         ) : (
           <>

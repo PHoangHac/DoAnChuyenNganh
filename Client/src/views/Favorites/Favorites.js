@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -11,11 +11,49 @@ import {
 import {icons} from '../../constants/index';
 
 import {places} from '../../constants/dataDummy';
+import axios from 'axios';
+import querystring from 'querystring';
 
 const HEIGHT = Dimensions.get('window').height;
 const WIDTH = Dimensions.get('window').width;
 
 const Favorites = ({navigation}) => {
+  const [access_TokenPaypal, setAccess_TokenPaypal] = useState('');
+
+  // console.log(access_TokenPaypal);
+
+  const OK = async () => {
+    await axios
+      .post(
+        'https://api.sandbox.paypal.com/v1/oauth2/token',
+        querystring.stringify({grant_type: 'client_credentials'}),
+        {
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+          },
+          auth: {
+            username:
+              'AZAOI_MOCJiD_nI0YnQ-4knNWAizfuCkIPfLlD8xeq3MmQSFLJ6R9nFOrC5mJFEd_Mm6_3SWql68wdF5',
+            password:
+              'EK--oBhD3Zvz4FURSnS2NISIR-rX_AG2SDhnnMQLbhm1JPY16_PJr1_NtZ0ToiF3BRp0E1tXSSPn8sE2',
+          },
+        },
+      )
+      .then(response => {
+        // console.log('response', response.data);
+        setAccess_TokenPaypal(response.data.access_token);
+        // console.log(response.data);
+      })
+      .catch(err => {
+        // console.log('error', { ...err });
+        console.log('error', err);
+      });
+  };
+
+  useEffect(() => {
+    OK();
+  }, [OK]);
+
   // khoi tao state
 
   const StarIcons = [

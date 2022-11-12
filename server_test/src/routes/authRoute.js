@@ -12,7 +12,7 @@ let AuthRoutes = (app) => {
     .post("/SignIn", authController.signin)
     .get(
       "/",
-      // passport.authenticate("jwt", { session: false }),
+      passport.authenticate("jwt", { session: false }),
       authController.DisplayAllUser
     )
     .post("/LogOut", authController.Logout)

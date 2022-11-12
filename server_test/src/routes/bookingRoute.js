@@ -1,11 +1,16 @@
 import express from "express";
 import BookingController from "../controllers/BookingController.js";
+const passport = require("passport");
 
 let router = express.Router();
 
 let HotelRoute = (app) => {
   router
-    .post("/Create", BookingController.CreateBooking)
+    .post(
+      "/Create",
+
+      BookingController.CreateBooking
+    )
     .get("/DetailsBooking/:id", BookingController.GetIdBooking2)
     .get("/GetAll", BookingController.GetAllBooking)
     .get("/GetAllBookingUser/:id", BookingController.GetBookingByUser)

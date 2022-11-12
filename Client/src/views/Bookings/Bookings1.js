@@ -197,10 +197,10 @@ const BookingScreen2 = ({navigation, route}) => {
           idUser: userInfo.user.id,
           idTourInfo: route.params.idTour,
         });
-        // setDataFake(res.data);
         setTimeout(() => {
           navigation.navigate('PaymentScreen', {
             idBooking: res.data.message.id,
+            totalCost: res.data.message.totalCost,
           });
         }, 2000);
         // console.log(res.data.message.id);

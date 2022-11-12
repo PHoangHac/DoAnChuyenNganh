@@ -2,31 +2,46 @@
 import React, {useEffect, useState} from 'react';
 import axios from 'axios';
 //import core component
-import {View, Text, Image, TouchableOpacity, BackHandler} from 'react-native';
+import {
+  View,
+  Text,
+  Image,
+  TouchableOpacity,
+  BackHandler,
+  Modal,
+} from 'react-native';
 
 //import icons,images
 import {icons} from '../../constants/index';
-
 import DeviceInfo from 'react-native-device-info';
-
 import {URL} from '../../context/config';
-
 import {useNavigationState} from '@react-navigation/native';
-
 import Spinner from 'react-native-loading-spinner-overlay';
-
+import {WebView} from 'react-native-webview';
 import {AuthContext} from '../../context/AuthContext';
 
 const PaymentScreen = ({navigation, route}) => {
-  const {userInfo} = React.useContext(AuthContext);
-  const [defaultPayment, setDefaultPayment] = useState(false);
+  const {userInfo, access_TokenPaypal} = React.useContext(AuthContext);
+  const [defaultPayment, setDefaultPayment] = useState(false); //Default Method
   const [choose, setChoose] = useState(false);
-  const [choose2, setChoose2] = useState(false);
+  const [choose2, setChoose2] = useState(false); //Online Method
   const [choose3, setChoose3] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [access_Token, setAccess_Token] = useState(null);
+  const [approvalUrl, setPayPalUrl] = useState(null);
+  const [paymentId, setPaymentId] = useState(null);
+  const [modalVisible, setModalVisible] = useState(false);
   const appName = DeviceInfo.getBrand();
   const routes = useNavigationState(state => state.routes);
   const previousRoute = routes[routes.length - 2].name;
+
+  // console.log({
+  //   access_token: access_Token,
+  //   url: approvalUrl,
+  //   paymentId: paymentId,
+  // });
+
+  // console.log(access_TokenPaypal);
 
   const HasChooseDP = () => {
     setDefaultPayment(true);
@@ -57,24 +72,29 @@ const PaymentScreen = ({navigation, route}) => {
   };
 
   let id;
+  let Price;
   //----check nameScreen props from anotherScreen--//
   if (previousRoute === 'Bookings') {
     // console.log('bookings di qua');
     const idBK = route.params.idBooking;
+    const PriceBK = route.params.totalCost;
     id = idBK;
-    StopUserBack;
+    Price = PriceBK;
   } else if (previousRoute === 'UnpaidScreen') {
     // console.log('UnpaidScreen di qua');
     const idPMS = route.params.bookingId;
+    const PriceUS = route.params.totalCost;
     id = idPMS;
+    Price = PriceUS;
   }
   //----check id props from anotherScreen--//
+  // console.log(Price);
 
   const DefaultPayment = async () => {
     try {
       setTimeout(async () => {
         const res = await axios.put(`${URL}/booking/DefaultPayment/${id}`, {
-          Status: 1,
+          Status: 'Default',
         });
         const resBill = await axios.post(`${URL}/Bill/Create`, {
           idUser: userInfo.user.id,
@@ -85,8 +105,6 @@ const PaymentScreen = ({navigation, route}) => {
             idBill: resBill.data.id,
           });
         }, 1500);
-        // console.log(res.data);
-        // console.log(resBill.data.id);
       }, 1500);
       setLoading(true);
     } catch (error) {
@@ -94,15 +112,135 @@ const PaymentScreen = ({navigation, route}) => {
     }
   };
 
-  // console.log('currentRoute: ', previousRoute);
-  const StopUserBack = () => {
-    useEffect(() => {
-      const backHandler = BackHandler.addEventListener(
-        'hardwareBackPress',
-        () => true,
-      );
-      return () => backHandler.remove();
-    }, []);
+  const OnlinePayment = async () => {
+    setModalVisible(true);
+  };
+
+  useEffect(() => {
+    const dataDetail = {
+      intent: 'sale',
+      payer: {
+        payment_method: 'paypal',
+      },
+      redirect_urls: {
+        return_url: 'https://example.com',
+        cancel_url: 'https://example.com',
+      },
+      transactions: [
+        {
+          item_list: {
+            items: [
+              {
+                name: 'item',
+                sku: 'item',
+                price: Price,
+                currency: 'USD',
+                quantity: 1,
+              },
+            ],
+          },
+          amount: {
+            currency: 'USD',
+            total: Price,
+          },
+          description: 'This is the payment description.',
+        },
+      ],
+    };
+
+    axios
+      .post(
+        'https://api.sandbox.paypal.com/v1/oauth2/token',
+        {grant_type: 'client_credentials'},
+        {
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            Authorization: `Bearer ${access_TokenPaypal}`, // Your Authorization Value
+          },
+        },
+      )
+      .then(response => {
+        // console.log(response.data.access_token);
+        setAccess_Token(response.data.access_token);
+        axios
+          .post(
+            'https://api.sandbox.paypal.com/v1/payments/payment',
+            dataDetail, // you can get data details from https://developer.paypal.com/docs/api/payments/v1/
+            {
+              headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${response.data.access_token}`,
+              },
+            },
+          )
+          .then(response => {
+            const {id, links} = response.data;
+            const approvalUrl = links.find(data => data.rel == 'approval_url');
+            setPaymentId(id);
+            setPayPalUrl(approvalUrl.href);
+          })
+          .catch(err => {
+            console.log(err);
+          });
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  }, []);
+
+  const ThisOnNavigationStateChange = async webViewState => {
+    if (webViewState.url.includes('https://example.com/')) {
+      setPayPalUrl(null);
+
+      const {PayerID, paymentId} = webViewState.url;
+
+      fetch(
+        `https://api.sandbox.paypal.com/v1/payments/payment/${paymentId}/execute`,
+        {
+          method: 'POST',
+          body: {payer_id: PayerID},
+        },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${access_Token}`,
+          },
+        },
+      )
+        .then(res => res.json())
+        .then(response => {
+          if (response.name == 'INVALID_RESOURCE_ID') {
+            alert('Payment failed. Please Try Again');
+            setPayPalUrl(null);
+            navigation.goBack();
+          }
+          try {
+            setTimeout(async () => {
+              const res = await axios.put(
+                `${URL}/booking/DefaultPayment/${id}`,
+                {
+                  Status: 'Default',
+                },
+              );
+              const resBill = await axios.post(`${URL}/Bill/Create`, {
+                idUser: userInfo.user.id,
+                idBooking: id,
+              });
+              setTimeout(() => {
+                navigation.navigate('BillScreen', {
+                  idBill: resBill.data.id,
+                });
+              }, 1500);
+            }, 1500);
+            setLoading(true);
+          } catch (error) {
+            console.log(error);
+          }
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    }
   };
 
   return (
@@ -112,6 +250,26 @@ const PaymentScreen = ({navigation, route}) => {
         backgroundColor: '#E2E9E8',
       }}>
       <Spinner visible={loading} />
+      <Modal
+        animationType="slide"
+        visible={modalVisible}
+        tartInLoadingState={false}
+        onRequestClose={() => {
+          setModalVisible(!modalVisible);
+        }}>
+        <View
+          style={{
+            backgroundColor: '#F0FFFF',
+            height: '100%',
+            width: '100%',
+          }}>
+          <WebView
+            onNavigationStateChange={ThisOnNavigationStateChange}
+            startInLoadingState={false}
+            source={{uri: approvalUrl}}
+          />
+        </View>
+      </Modal>
       {/* Header */}
       <View
         style={{
@@ -374,7 +532,7 @@ const PaymentScreen = ({navigation, route}) => {
                       width: 45,
                       marginLeft: 10,
                     }}
-                    source={icons.visaicon}
+                    source={icons.PayPalIcon}
                   />
                   <Text
                     style={{
@@ -493,7 +651,7 @@ const PaymentScreen = ({navigation, route}) => {
             marginBottom: 30,
           }}>
           <TouchableOpacity
-            onPress={DefaultPayment}
+            onPress={defaultPayment === true ? DefaultPayment : OnlinePayment}
             style={{
               backgroundColor:
                 (defaultPayment || choose || choose2 || choose3) == true
