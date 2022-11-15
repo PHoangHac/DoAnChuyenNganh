@@ -6308,6 +6308,13 @@
   dependencies:
     "prop-types" "^15.7.2"
 
+"react-native-ratings@^8.1.0":
+  "integrity" "sha512-+QOJ4G3NjVkI1D+tk4EGx1dCvVfbD2nQdkrj9cXrcAoEiwmbep4z4bZbCKmWMpQ5h2dqbxABU8/eBnbDmvAc3g=="
+  "resolved" "https://registry.npmjs.org/react-native-ratings/-/react-native-ratings-8.1.0.tgz"
+  "version" "8.1.0"
+  dependencies:
+    "lodash" "^4.17.15"
+
 "react-native-reanimated@^2.10.0", "react-native-reanimated@>= 1.0.0":
   "integrity" "sha512-jKm3xz5nX7ABtHzzuuLmawP0pFWP77lXNdIC6AWOceBs23OHUaJ29p4prxr/7Sb588GwTbkPsYkDqVFaE3ezNQ=="
   "resolved" "https://registry.npmjs.org/react-native-reanimated/-/react-native-reanimated-2.10.0.tgz"
@@ -6345,6 +6352,11 @@
   "integrity" "sha512-JWkgGznlhfmA12MX+4WKe9kKQ2ejAiaes3hHdgeLExNkgP9/qybOtf7RAwnyY5Wkn5xkyOe82si/CSngNUUCFA=="
   "resolved" "https://registry.npmjs.org/react-native-select-dropdown/-/react-native-select-dropdown-3.0.1.tgz"
   "version" "3.0.1"
+
+"react-native-star-rating-bar-graph@^1.0.0":
+  "integrity" "sha512-X5zNvbQ6wIVuy//X/0sQ0ut4ac3jKva0IqJP3O/ZjMGLW8zlvJQu6M6/7QXHBPXMHmr/aAZ51xRNOFS0liNNwg=="
+  "resolved" "https://registry.npmjs.org/react-native-star-rating-bar-graph/-/react-native-star-rating-bar-graph-1.0.0.tgz"
+  "version" "1.0.0"
 
 "react-native-svg@^13.5.0", "react-native-svg@> 6.4.1":
   "integrity" "sha512-JWou/k4zfXRY6TsVgM4i30D0z54McqQ64D5cAfOzX17ThZwFjOheN24owmbAs7Y+naD0Bk5j409kT/6FZEop4g=="

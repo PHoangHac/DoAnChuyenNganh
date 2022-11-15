@@ -108,6 +108,44 @@ const TourController = {
       return res.status(500).json(error);
     }
   },
+  UpdateTourImage: async (req, res) => {
+    const { id } = req.params;
+    let filenames = req.files.map(function (file) {
+      return file.path; // or file.originalname
+    });
+    try {
+      const findOneTour = await db.TourInfo.findOne({
+        where: { id: id },
+      });
+      if (findOneTour) {
+        (findOneTour.images = filenames), await findOneTour.save();
+        return res.status(200).json({ msg: "Update Success !" });
+      }
+    } catch (error) {
+      return res.status(500).json(error);
+    }
+  },
+  // Reviewer: async (req, res) => {
+  //   const { id, idUser } = req.params;
+  //   const data = req.body;
+  //   try {
+  //     const review = await db.Review.create({
+  //       idUser: idUser,
+  //       comment: data.comment,
+  //       rating: data.rating,
+  //       Status: data.Status,
+  //     });
+  //     const findOneTour = await db.TourInfo.findOne({
+  //       where: { id: id },
+  //     });
+
+  //     findOneTour.idReview = review.id;
+  //     await findOneTour.save();
+  //     return res.status(200).json(findOneTour);
+  //   } catch (error) {
+  //     return res.status(500).json(error);
+  //   }
+  // },
 };
 
 export default TourController;

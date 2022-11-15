@@ -1,33 +1,204 @@
-import React, {useEffect, useState, useContext} from 'react';
+import React, {useEffect, useState, useContext, useCallback} from 'react';
 
 import {
   View,
   Text,
   TouchableOpacity,
   Image,
-  ScrollView,
   Dimensions,
+  RefreshControl,
 } from 'react-native';
 
-import {icons} from '../../constants/index';
+import {icons, images} from '../../constants/index';
 import {URL} from '../../context/config';
 import {AuthContext} from '../../context/AuthContext';
-import moment from 'moment';
+// import moment from 'moment';
+import {SwipeListView} from 'react-native-swipe-list-view';
+import axios from 'axios';
+import StatusCard from './childItemStatus';
+import Toast from 'react-native-toast-message';
+
+const wait = timeout => {
+  return new Promise(resolve => setTimeout(resolve, timeout));
+};
 
 const UnpaidScreen = ({navigation}) => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
   const {userInfo} = useContext(AuthContext);
+  const [refreshing, setRefreshing] = useState(false);
+
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    OKK();
+    wait(1500).then(() => setRefreshing(false));
+  }, []);
+
+  const OKK = () => {
+    axios
+      .get(`${URL}/booking/GetAllBookingUser/${userInfo.user.id}`)
+      .then(res => {
+        setData(res.data);
+        // console.log(res.data);
+      })
+      .catch(e => {
+        console.log('Error ', e);
+      });
+  };
+
+  const OK = data.map((item, index) => ({
+    key: `${index}`,
+    NameTour: item.TourInfo.NameTour,
+    totalCost: item.totalCost,
+    createdAt: item.createdAt,
+    Status: item.Status,
+    id: item.id,
+  }));
 
   useEffect(() => {
-    fetch(`${URL}/booking/GetAllBookingUser/${userInfo.user.id}`, {
-      method: 'GET',
-    })
-      .then(response => response.json())
-      .then(json => setData(json))
-      .catch(err => console.error(err))
-      .finally(() => setLoading(true));
-  }, []);
+    OKK();
+    const focusHandler = navigation.addListener('focus', () => {
+      OKK();
+    });
+    return focusHandler;
+  }, [navigation]);
+
+  const closeRow = (rowMap, rowKey) => {
+    // console.log(rowMap);
+    if (rowMap[rowKey]) {
+      rowMap[rowKey].closeRow();
+    }
+  };
+
+  const renderItem = data => <StatusCard data={data} navigation={navigation} />;
+
+  const DeleteTour = async id => {
+    await axios
+      .delete(`${URL}/booking/DeleteByUser/${id}/${userInfo.user.id}`)
+      .then(res => {
+        console.log(res.data);
+        Toast.show({
+          type: 'success',
+          text1: 'Status',
+          text2: 'DELETE SUCCESSFULLY ! 👋',
+          autoHide: true,
+          visibilityTime: 1500,
+        });
+        OKK();
+      });
+  };
+
+  const renderHiddenItem = (data, rowMap) => {
+    // console.log(data.item.id);
+
+    return (
+      <View
+        style={{
+          height: 120,
+          width: '100%',
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+          // borderColor: 'black',
+          // borderWidth: 1,
+          backgroundColor: 'white',
+          borderRadius: 8,
+        }}>
+        <View
+          style={{
+            height: '100%',
+            width: '58%',
+          }}>
+          {/* <Text>Left</Text> */}
+        </View>
+        <View
+          style={{
+            flexDirection: 'row',
+            // borderColor: 'black',
+            // borderWidth: 1,
+            height: '100%',
+            width: '42%',
+            justifyContent: 'space-between',
+            // backgroundColor: 'gray',
+          }}>
+          <View
+            style={{
+              // backgroundColor: 'yellow',
+              width:
+                data.item.Status === 'Default' || data.item.Status === 'Online'
+                  ? '50%'
+                  : '33.3%',
+              justifyContent: 'center',
+            }}>
+            <TouchableOpacity onPress={() => closeRow(rowMap, data.item.key)}>
+              <Image
+                style={{
+                  height:
+                    data.item.Status === 'Default' ||
+                    data.item.Status === 'Online'
+                      ? 48.5
+                      : 39.3,
+                  width:
+                    data.item.Status === 'Default' ||
+                    data.item.Status === 'Online'
+                      ? '65.5%'
+                      : '80%',
+                  alignSelf: 'center',
+                }}
+                source={icons.CancelIcon}
+              />
+            </TouchableOpacity>
+            {/* <Text>Close</Text> */}
+          </View>
+          <View
+            style={{
+              // backgroundColor: 'green',
+              width: data.item.Status === 'Default' ? '50%' : '33.3%',
+              justifyContent: 'center',
+            }}>
+            <TouchableOpacity>
+              <Image
+                style={{
+                  height:
+                    data.item.Status === 'Default' ||
+                    data.item.Status === 'Online'
+                      ? 48.5
+                      : 39.3,
+                  width:
+                    data.item.Status === 'Default' ||
+                    data.item.Status === 'Online'
+                      ? '65.5%'
+                      : '80%',
+                  alignSelf: 'center',
+                }}
+                source={icons.EditIcon}
+              />
+            </TouchableOpacity>
+          </View>
+          {data.item.Status === 'Default' || data.item.Status === 'Online' ? (
+            <View></View>
+          ) : (
+            <View
+              style={{
+                // backgroundColor: '#8B0000',
+                width: '33.3%',
+                justifyContent: 'center',
+              }}>
+              <TouchableOpacity onPress={() => DeleteTour(data.item.id)}>
+                <Image
+                  style={{
+                    height: 39.3,
+                    width: '80%',
+                    alignSelf: 'center',
+                  }}
+                  source={icons.TrashIcon}
+                />
+              </TouchableOpacity>
+            </View>
+          )}
+        </View>
+      </View>
+    );
+  };
 
   return (
     <View
@@ -98,147 +269,36 @@ const UnpaidScreen = ({navigation}) => {
           flex: 88,
           backgroundColor: 'white',
         }}>
-        {/* Scroll view */}
-        <ScrollView
+        <View
           style={{
             height: '100%',
-            width: '100%',
-            marginTop: 20,
+            width: '90%',
+            // paddingBottom: 65,
+            alignSelf: 'center',
           }}>
-          {/* container */}
-          <View
-            style={{
-              height: '100%',
-              width: '100%',
-              alignItems: 'center',
-            }}>
-            {/* Each of item */}
-            {data.map((item, index) => {
-              // item.Status == 1 ? console.log('true') : console.log('false');
-              // console.log(item.totalCost);
-              return (
-                <View
-                  style={{
-                    height: 120,
-                    width: '90%',
-                    backgroundColor: '#F0F8FF',
-                    borderRadius: 15,
-                    marginBottom: 15,
-                    elevation: 5,
-                  }}
-                  key={index}>
-                  {/* Container */}
-                  <View
-                    style={{
-                      flexDirection: 'row',
-                      height: '100%',
-                      width: '100%',
-                    }}>
-                    {/* title */}
-                    <View
-                      style={{
-                        height: '100%',
-                        width: '65%',
-                        // backgroundColor: 'red',
-                        // borderWidth: 1,
-                        // borderColor: 'black',
-                        flexDirection: 'column',
-                        justifyContent: 'space-evenly',
-                        // alignItems:"center"
-                        paddingLeft: 10,
-                      }}>
-                      <Text
-                        style={{
-                          fontFamily: 'Inter-Black',
-                          fontSize: 16,
-                          color: 'black',
-                        }}>
-                        {/* Visit 5 Days in Italy */}
-                        {item.TourInfo.NameTour}
-                      </Text>
-                      <Text
-                        style={{
-                          fontFamily: 'Inter-SemiBold',
-                          fontSize: 14,
-                          color: 'black',
-                        }}>
-                        $ {item.totalCost}
-                      </Text>
-                      <Text
-                        style={{
-                          fontFamily: 'Inter-Medium',
-                          fontSize: 13,
-                          color: 'black',
-                        }}>
-                        {/* 10:20 10/28/2022 */}
-                        {/* {item.TourInfo.createdAt} */}
-                        {moment(item.createdAt).format('LLL')}
-                      </Text>
-                    </View>
-                    {/* btn pay or not */}
-                    <View
-                      style={{
-                        height: '100%',
-                        width: '35%',
-                        // backgroundColor: 'yellow',
-                        // borderWidth: 1,
-                        // borderColor: 'red',
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                      }}>
-                      {item.Status === 'Default' || item.Status === 'Online' ? (
-                        <TouchableOpacity
-                          style={{
-                            // paddingRight: 12,
-                            backgroundColor: '#008000',
-                            borderRadius: 15,
-                          }}
-                          disabled={true}>
-                          <Text
-                            style={{
-                              fontFamily: 'Inter-ExtraBold',
-                              fontSize: 15,
-                              padding: 10,
-                              color: 'white',
-                            }}>
-                            Success !
-                          </Text>
-                        </TouchableOpacity>
-                      ) : (
-                        <TouchableOpacity
-                          style={{
-                            // paddingRight: 12,
-                            backgroundColor: '#C70039',
-                            borderRadius: 15,
-                          }}
-                          onPress={() =>
-                            navigation.navigate('PaymentScreen', {
-                              bookingId: item.id,
-                              statusPayment: item.Status,
-                              totalCost: item.totalCost,
-                            })
-                          }>
-                          <Text
-                            style={{
-                              fontFamily: 'Inter-ExtraBold',
-                              fontSize: 15,
-                              padding: 10,
-                              color: 'white',
-                            }}>
-                            Pay now !
-                          </Text>
-                        </TouchableOpacity>
-                      )}
-                    </View>
-                  </View>
-                </View>
-              );
-            })}
-
-            {/* End */}
-          </View>
-        </ScrollView>
+          <SwipeListView
+            refreshControl={
+              <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+            }
+            data={OK}
+            renderItem={renderItem}
+            renderHiddenItem={renderHiddenItem}
+            initialNumToRender={5}
+            removeClippedSubviews={false}
+            // leftOpenValue={75}
+            rightOpenValue={-150}
+            previewRowKey={'0'}
+            previewOpenValue={-40}
+            previewOpenDelay={3000}
+            // onRowDidOpen={onRowDidOpen}
+            swipeRowStyle={{
+              marginTop: 5,
+            }}
+            showsVerticalScrollIndicator={false}
+          />
+        </View>
       </View>
+      <Toast topOffset={10} />
     </View>
   );
 };

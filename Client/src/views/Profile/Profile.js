@@ -54,7 +54,7 @@ const Onboarding = ({navigation}) => {
           />
           <TouchableOpacity
             style={{
-              backgroundColor: 'white',
+              // backgroundColor: 'white',
               borderRadius: 20,
               right: 10,
             }}>
@@ -64,7 +64,7 @@ const Onboarding = ({navigation}) => {
                 width: 30,
                 margin: 2,
               }}
-              source={icons.bellicon}
+              // source={icons.bellicon}
             />
           </TouchableOpacity>
         </View>

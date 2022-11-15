@@ -49,10 +49,10 @@ module.exports = {
         type: Sequelize.JSON,
         allowNull: false,
         get() {
-          return this.getDataValue('images').split(';')
+          return this.getDataValue("images").split(";");
         },
         set(val) {
-          this.setDataValue('images', val.join(';'));
+          this.setDataValue("images", val.join(";"));
         },
       },
       idTypesOfTransport: {
@@ -64,6 +64,10 @@ module.exports = {
         type: Sequelize.INTEGER,
       },
       idLocation: {
+        allowNull: false,
+        type: Sequelize.INTEGER,
+      },
+      idReview: {
         allowNull: false,
         type: Sequelize.INTEGER,
       },

@@ -12,13 +12,18 @@ let AuthRoutes = (app) => {
     .post("/SignIn", authController.signin)
     .get(
       "/",
-      passport.authenticate("jwt", { session: false }),
+      // passport.authenticate("jwt", { session: false }),
       authController.DisplayAllUser
     )
     .post("/LogOut", authController.Logout)
     .get("/GetOne/:id", authController.OneUser)
     .delete("/Delete/:id", authController.DeleteUser)
-    .post("/Update/:id", UploadController.upload, authController.UpdateUser);
+    .post("/Update/:id", authController.UpdateUser)
+    .post(
+      "/UpdateImage/:id",
+      UploadController.upload,
+      authController.UpdateImage
+    );
 
   return app.use("/auth", router);
 };

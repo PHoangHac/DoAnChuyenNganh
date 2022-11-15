@@ -26,12 +26,12 @@ const WidthDevice = Dimensions.get('window').width;
 //   'Brazil',
 //   'England',
 // ];
-const data = [
-  {label: 'Italy', value: '1'},
-  {label: 'Philippines', value: '2'},
-  {label: 'Malaysia', value: '3'},
-  {label: 'Indonesia', value: '4'},
-];
+// const data = [
+//   {label: 'Italy', value: '0'},
+//   {label: 'Philippines', value: '1'},
+//   {label: 'Malaysia', value: '2'},
+//   {label: 'Indonesia', value: '3'},
+// ];
 
 const DATA = [
   {
@@ -67,6 +67,7 @@ const FilterSearch = ({
   setSelectedCountry,
   handleFilterPrice,
   handleFilterTransPost,
+  dataFilter,
   // setCountry,
   // setPrice,
   // onPressOut,
@@ -77,6 +78,21 @@ const FilterSearch = ({
   const [label, setLabel] = useState(null);
   const [products, setProducts] = useState(DATA);
   const [TransPort, setTransPort] = useState([]);
+
+  const result = dataFilter.reduce((unique, o) => {
+    if (!unique.some(obj => obj.Location.country === o.Location.country)) {
+      unique.push(o);
+    }
+    return unique;
+  }, []);
+  // console.log(result);
+
+  const OK = result.map((item, index) => ({
+    label: item.Location.country,
+    value: `${index}`,
+  }));
+
+  // console.log(OK);
 
   const handleChange = id => {
     let temp = products.map(product => {
@@ -412,7 +428,7 @@ const FilterSearch = ({
                   selectedTextStyle={styles.selectedTextStyle}
                   inputSearchStyle={styles.inputSearchStyle}
                   iconStyle={styles.iconStyle}
-                  data={data}
+                  data={OK}
                   search={false}
                   maxHeight={300}
                   labelField="label"

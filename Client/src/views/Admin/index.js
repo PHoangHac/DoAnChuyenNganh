@@ -63,7 +63,7 @@ const AdminDashBoard = () => {
           ),
         }}
       />
-      <Tab.Screen
+      {/* <Tab.Screen
         options={{
           tabBarIcon: ({color, focused}) => (
             <Icon name={'settings-applications'} size={32} color={color} />
@@ -71,7 +71,7 @@ const AdminDashBoard = () => {
         }}
         name="State"
         component={StateScreen}
-      />
+      /> */}
     </Tab.Navigator>
   );
 };

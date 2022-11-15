@@ -9,16 +9,18 @@ import {
   FlatList,
   RefreshControl,
 } from 'react-native';
-import {icons} from '../../constants/index';
-import {places} from '../../constants/dataDummy';
+import {icons, images} from '../../constants/index';
+// import {places} from '../../constants/dataDummy';
 import FilterSearch from './ModelFilter';
+import {URL} from '../../context/config';
+import axios from 'axios';
 
 const wait = timeout => {
   return new Promise(resolve => setTimeout(resolve, timeout));
 };
 
 const DropSearchDown = props => {
-  const {dataSource} = props;
+  const {Yeh} = props;
   return (
     <View
       style={{
@@ -35,8 +37,10 @@ const DropSearchDown = props => {
         width: '95%',
         alignSelf: 'center',
       }}>
-      {dataSource.length ? (
-        dataSource.map((item, index) => {
+      {Yeh.length ? (
+        Yeh.map((item, index) => {
+          // console.log(item.slice(0, 1));
+          // let idTour = parseInt(item.slice(0, 1));
           return (
             <View
               style={{
@@ -51,13 +55,14 @@ const DropSearchDown = props => {
               key={index}>
               <TouchableOpacity>
                 <Text
+                  numberOfLines={1}
                   style={{
                     color: 'black',
                     paddingHorizontal: 20,
                     fontSize: 20,
                     // backgroundColor: 'gray',
                   }}>
-                  {item}
+                  {item.slice(2, 100)}
                 </Text>
               </TouchableOpacity>
             </View>
@@ -89,8 +94,10 @@ const DropSearchDown = props => {
   );
 };
 
-const Item = ({data}) => {
-  // console.log(data);
+const Item = ({data, navigation}) => {
+  const pic = JSON.parse(data.images);
+
+  // console.log(data.NameTour.length);
 
   return (
     <View
@@ -101,6 +108,12 @@ const Item = ({data}) => {
         marginVertical: 10,
       }}>
       <TouchableOpacity
+        onPress={() =>
+          navigation.navigate('DetailsScreen2', {
+            id: data.id,
+            images: data.images,
+          })
+        }
         style={{
           height: '100%',
           width: '100%',
@@ -111,7 +124,9 @@ const Item = ({data}) => {
             width: '100%',
             borderRadius: 15,
           }}
-          source={data.image}
+          source={
+            pic.length === 0 ? images.NotFoundImg : {uri: `${URL}/${pic[0]}`}
+          }
         />
         <View
           style={{
@@ -133,7 +148,7 @@ const Item = ({data}) => {
               style={{
                 backgroundColor: 'white',
                 borderRadius: 15,
-                width: '90%',
+                width: '100%',
                 flexDirection: 'row',
               }}>
               <Image
@@ -146,12 +161,14 @@ const Item = ({data}) => {
                 source={icons.SignPostIcon}
               />
               <Text
+                numberOfLines={1}
                 style={{
                   padding: 5,
+                  fontSize: data.NameTour.length > 25 ? 12 : 14,
                   color: 'black',
                   fontFamily: 'Inter-Black',
                 }}>
-                {data.name}
+                {data.NameTour}
               </Text>
             </View>
             <View
@@ -176,7 +193,7 @@ const Item = ({data}) => {
                   color: 'black',
                   fontFamily: 'Inter-Black',
                 }}>
-                {data.location.country}
+                {data.Location.country}
               </Text>
             </View>
             <View
@@ -217,7 +234,7 @@ const Item = ({data}) => {
                   color: 'black',
                   fontFamily: 'Inter-Bold',
                 }}>
-                $ {data.price}
+                $ {data.PricePerson}
               </Text>
             </View>
           </View>
@@ -235,21 +252,8 @@ const StarIcons = [
   <Image style={{height: 12, width: 12}} source={icons.staricon} />,
 ];
 
-const SearchItemScreen = () => {
-  const [dataFilter, setDataFilter] = useState(places);
-  // -----Search textInput----//
-  const [searching, setSearching] = useState(false);
-  const [filtered, setFiltered] = useState(dataSource);
-  const [dataSource] = useState([
-    'apple',
-    'banana',
-    'cow',
-    'dex',
-    'zee',
-    'orange',
-    'air',
-    'bottle',
-  ]);
+const SearchItemScreen = ({navigation}) => {
+  const [dataFilter, setDataFilter] = useState([]);
   // -----Search textInput----//
   const [modalVisible, setModalVisible] = useState(false);
   const [textInputS, setTextInputS] = useState('');
@@ -257,8 +261,17 @@ const SearchItemScreen = () => {
   const [selectedCountry, setSelectedCountry] = useState(null);
   const [selectedPrice, setSelectedPrice] = useState([0, 10000]);
   const [selectedTransPost, setSelectedTransPost] = useState([]);
-
   const [refreshing, setRefreshing] = useState(false);
+  // -----Search textInput----//
+  const [searching, setSearching] = useState(false);
+  const [filtered, setFiltered] = useState(Yeh);
+  // const [dataSource] = useState(Yeh);
+
+  const Yeh = dataFilter.map((item, index) => {
+    return `${index}: ${item.NameTour}`;
+  });
+
+  // console.log(Yeh);
 
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
@@ -267,27 +280,36 @@ const SearchItemScreen = () => {
     wait(1500).then(() => setRefreshing(false));
   }, []);
 
+  const ListTour = () => {
+    fetch(`${URL}/tour/GetAll`, {
+      method: 'GET',
+    })
+      .then(response => response.json())
+      .then(json => setDataFilter(json))
+      .catch(err => console.error(err));
+  };
+
   //-------Filter Search------//
   const onSearch = text => {
     if (text) {
       setTextInputS(text);
       setSearching(true);
-      const temp = text.toLowerCase();
+      const temp = text.toLowerCase().toUpperCase();
 
-      const tempList = dataSource.filter(item => {
+      const tempList = Yeh.filter(item => {
         if (item.match(temp)) return item;
       });
       setFiltered(tempList);
     } else {
       setSearching(false);
-      setFiltered(dataSource);
+      setFiltered(Yeh);
     }
   };
-  const renderItem = ({item}) => <Item data={item} />;
+  const renderItem = ({item}) => <Item navigation={navigation} data={item} />;
   //-------Filter Search------//
 
   const Reload = () => {
-    setDataFilter(places);
+    setDataFilter(dataFilter);
     setSelectedCountry(null);
     setSelectedPrice([0, 10000]);
     setSelectedTransPost([]);
@@ -306,19 +328,26 @@ const SearchItemScreen = () => {
   };
 
   const FilterTour = useCallback(async () => {
-    let Result = places;
+    let Tour = await axios.get(`${URL}/tour/GetAll`);
+    let Result = Tour.data;
+
+    // const myValues = Object.keys(Result).map(key => Result[key]);
+
+    // console.log(myValues);
 
     // price filter
     const minPrice = selectedPrice[0];
     const maxPrice = selectedPrice[1];
     Result = Result.filter(
-      item => item.price >= minPrice && item.price <= maxPrice,
-    );
+      item => item.PricePerson >= minPrice && item.PricePerson <= maxPrice,
+    ).map(item => item);
 
     //Country filter
     if (selectedCountry === null) {
     } else {
-      Result = Result.filter(item => item.location.country === selectedCountry);
+      Result = Result.filter(
+        item => item.Location.country === selectedCountry,
+      ).map(item => item);
     }
 
     //TransPost Filter
@@ -347,6 +376,7 @@ const SearchItemScreen = () => {
 
   useEffect(() => {
     FilterTour();
+    // ListTour();
   }, [FilterTour, selectedCountry, selectedPrice, selectedTransPost]);
 
   return (
@@ -373,6 +403,7 @@ const SearchItemScreen = () => {
           setSelectedCountry={handleSelectCountry}
           handleFilterPrice={handleFilterPrice}
           handleFilterTransPost={handleFilterTransPost}
+          dataFilter={dataFilter}
         />
       </View>
       <View
@@ -481,7 +512,8 @@ const SearchItemScreen = () => {
           {searching && (
             <DropSearchDown
               onPress={() => setSearching(false)}
-              dataSource={filtered}
+              Yeh={filtered}
+              navigation={navigation}
             />
           )}
         </View>

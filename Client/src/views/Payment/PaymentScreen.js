@@ -1,5 +1,5 @@
 // import React
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, useContext} from 'react';
 import axios from 'axios';
 //import core component
 import {
@@ -19,9 +19,10 @@ import {useNavigationState} from '@react-navigation/native';
 import Spinner from 'react-native-loading-spinner-overlay';
 import {WebView} from 'react-native-webview';
 import {AuthContext} from '../../context/AuthContext';
+import querystring from 'querystring';
 
 const PaymentScreen = ({navigation, route}) => {
-  const {userInfo, access_TokenPaypal} = React.useContext(AuthContext);
+  const {userInfo} = useContext(AuthContext);
   const [defaultPayment, setDefaultPayment] = useState(false); //Default Method
   const [choose, setChoose] = useState(false);
   const [choose2, setChoose2] = useState(false); //Online Method
@@ -34,14 +35,6 @@ const PaymentScreen = ({navigation, route}) => {
   const appName = DeviceInfo.getBrand();
   const routes = useNavigationState(state => state.routes);
   const previousRoute = routes[routes.length - 2].name;
-
-  // console.log({
-  //   access_token: access_Token,
-  //   url: approvalUrl,
-  //   paymentId: paymentId,
-  // });
-
-  // console.log(access_TokenPaypal);
 
   const HasChooseDP = () => {
     setDefaultPayment(true);
@@ -88,7 +81,6 @@ const PaymentScreen = ({navigation, route}) => {
     Price = PriceUS;
   }
   //----check id props from anotherScreen--//
-  // console.log(Price);
 
   const DefaultPayment = async () => {
     try {
@@ -110,10 +102,6 @@ const PaymentScreen = ({navigation, route}) => {
     } catch (error) {
       console.log(error);
     }
-  };
-
-  const OnlinePayment = async () => {
-    setModalVisible(true);
   };
 
   useEffect(() => {
@@ -151,42 +139,66 @@ const PaymentScreen = ({navigation, route}) => {
     axios
       .post(
         'https://api.sandbox.paypal.com/v1/oauth2/token',
-        {grant_type: 'client_credentials'},
+        querystring.stringify({grant_type: 'client_credentials'}),
         {
           headers: {
             'Content-Type': 'application/x-www-form-urlencoded',
-            Authorization: `Bearer ${access_TokenPaypal}`, // Your Authorization Value
+          },
+          auth: {
+            username:
+              'AZAOI_MOCJiD_nI0YnQ-4knNWAizfuCkIPfLlD8xeq3MmQSFLJ6R9nFOrC5mJFEd_Mm6_3SWql68wdF5',
+            password:
+              'EK--oBhD3Zvz4FURSnS2NISIR-rX_AG2SDhnnMQLbhm1JPY16_PJr1_NtZ0ToiF3BRp0E1tXSSPn8sE2',
           },
         },
       )
       .then(response => {
-        // console.log(response.data.access_token);
-        setAccess_Token(response.data.access_token);
         axios
           .post(
-            'https://api.sandbox.paypal.com/v1/payments/payment',
-            dataDetail, // you can get data details from https://developer.paypal.com/docs/api/payments/v1/
+            'https://api.sandbox.paypal.com/v1/oauth2/token',
+            {grant_type: 'client_credentials'},
             {
               headers: {
-                'Content-Type': 'application/json',
-                Authorization: `Bearer ${response.data.access_token}`,
+                'Content-Type': 'application/x-www-form-urlencoded',
+                Authorization: `Bearer ${response.data.access_token}`, // Your Authorization Value
               },
             },
           )
           .then(response => {
-            const {id, links} = response.data;
-            const approvalUrl = links.find(data => data.rel == 'approval_url');
-            setPaymentId(id);
-            setPayPalUrl(approvalUrl.href);
+            // console.log(response.data.access_token);
+            setAccess_Token(response.data.access_token);
+            axios
+              .post(
+                'https://api.sandbox.paypal.com/v1/payments/payment',
+                dataDetail, // you can get data details from https://developer.paypal.com/docs/api/payments/v1/
+                {
+                  headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${response.data.access_token}`,
+                  },
+                },
+              )
+              .then(response => {
+                const {id, links} = response.data;
+                const approvalUrl = links.find(
+                  data => data.rel == 'approval_url',
+                );
+                setPaymentId(id);
+                setPayPalUrl(approvalUrl.href);
+              })
+              .catch(err => {
+                console.log(err);
+              });
           })
           .catch(err => {
             console.log(err);
           });
       })
       .catch(err => {
-        console.log(err);
+        // console.log('error', { ...err });
+        console.log('error', err);
       });
-  }, []);
+  }, [choose2, choose3]);
 
   const ThisOnNavigationStateChange = async webViewState => {
     if (webViewState.url.includes('https://example.com/')) {
@@ -241,6 +253,10 @@ const PaymentScreen = ({navigation, route}) => {
           console.log(err);
         });
     }
+  };
+
+  const OnlinePayment = async () => {
+    setModalVisible(true);
   };
 
   return (

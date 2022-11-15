@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -9,8 +9,25 @@ import {
 } from 'react-native';
 import {icons, images} from '../../../../constants/index';
 import {LineChart} from 'react-native-chart-kit';
+import axios from 'axios';
+import {URL} from '../../../../context/config';
 
 const HomeScreen = ({navigation}) => {
+  const [data, setData] = useState([]);
+  const [data2, setData2] = useState([]);
+
+  useEffect(() => {
+    axios.get(`${URL}/auth`).then(res => {
+      setData(res.data);
+    });
+
+    axios.get(`${URL}/tour/GetAll`).then(res => {
+      setData2(res.data);
+    });
+  }, []);
+
+  // console.log(data2.length);
+
   return (
     <View
       style={{
@@ -183,7 +200,7 @@ const HomeScreen = ({navigation}) => {
                         color: 'white',
                         fontSize: 24,
                       }}>
-                      120
+                      {data.length > 0 ? data.length : 'NaN'}
                     </Text>
                     <Text
                       style={{
@@ -203,6 +220,9 @@ const HomeScreen = ({navigation}) => {
                       alignItems: 'center',
                     }}>
                     <TouchableOpacity
+                      onPress={() => {
+                        navigation.navigate('Users');
+                      }}
                       style={{
                         backgroundColor: 'white',
                         borderRadius: 12,
@@ -241,7 +261,7 @@ const HomeScreen = ({navigation}) => {
                         color: 'white',
                         fontSize: 24,
                       }}>
-                      120
+                      {data2.length > 0 ? data2.length : 'NaN'}
                     </Text>
                     <Text
                       style={{
@@ -249,7 +269,7 @@ const HomeScreen = ({navigation}) => {
                         color: 'white',
                         fontSize: 18,
                       }}>
-                      Users
+                      Tour
                     </Text>
                   </View>
                   <View
@@ -261,6 +281,9 @@ const HomeScreen = ({navigation}) => {
                       alignItems: 'center',
                     }}>
                     <TouchableOpacity
+                      onPress={() => {
+                        navigation.navigate('Tour');
+                      }}
                       style={{
                         backgroundColor: 'white',
                         borderRadius: 12,
@@ -309,16 +332,16 @@ const HomeScreen = ({navigation}) => {
                         color: 'white',
                         fontSize: 24,
                       }}>
-                      120
+                      NaN
                     </Text>
-                    <Text
+                    {/* <Text
                       style={{
                         fontFamily: 'Inter-Bold',
                         color: 'white',
                         fontSize: 18,
                       }}>
                       Users
-                    </Text>
+                    </Text> */}
                   </View>
                   <View
                     style={{
@@ -328,7 +351,7 @@ const HomeScreen = ({navigation}) => {
                       justifyContent: 'center',
                       alignItems: 'center',
                     }}>
-                    <TouchableOpacity
+                    {/* <TouchableOpacity
                       style={{
                         backgroundColor: 'white',
                         borderRadius: 12,
@@ -341,7 +364,7 @@ const HomeScreen = ({navigation}) => {
                         }}>
                         Manager
                       </Text>
-                    </TouchableOpacity>
+                    </TouchableOpacity> */}
                   </View>
                 </View>
                 <View
@@ -367,16 +390,16 @@ const HomeScreen = ({navigation}) => {
                         color: 'white',
                         fontSize: 24,
                       }}>
-                      120
+                      NaN
                     </Text>
-                    <Text
+                    {/* <Text
                       style={{
                         fontFamily: 'Inter-Bold',
                         color: 'white',
                         fontSize: 18,
                       }}>
                       Users
-                    </Text>
+                    </Text> */}
                   </View>
                   <View
                     style={{
@@ -386,7 +409,7 @@ const HomeScreen = ({navigation}) => {
                       justifyContent: 'center',
                       alignItems: 'center',
                     }}>
-                    <TouchableOpacity
+                    {/* <TouchableOpacity
                       style={{
                         backgroundColor: 'white',
                         borderRadius: 12,
@@ -399,7 +422,7 @@ const HomeScreen = ({navigation}) => {
                         }}>
                         Manager
                       </Text>
-                    </TouchableOpacity>
+                    </TouchableOpacity> */}
                   </View>
                 </View>
               </View>

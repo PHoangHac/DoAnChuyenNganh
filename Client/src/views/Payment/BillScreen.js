@@ -28,7 +28,7 @@ const BillScreen = ({navigation, route}) => {
   //-----CREATE VARIABLE----//
   //-------GET ID WITH ROUTE.PARAMS-----///
   const idParams = route.params.idBill;
-  console.log('ID Bill: ' + idParams);
+  // console.log('ID Bill: ' + idParams);
   //-------GET ID WITH ROUTE.PARAMS-----///
   // setTimeout(() => {
   //   navigation.navigate('HomeTabs');
@@ -45,6 +45,7 @@ const BillScreen = ({navigation, route}) => {
     User = hello[5];
     Booking = hello[6];
   }
+
   //-----CHECK DATA EMPTY----//
   useEffect(() => {
     axios
@@ -451,7 +452,7 @@ const BillScreen = ({navigation, route}) => {
                   style={{
                     flexDirection: 'row',
                     // borderWidth: 1,
-                    // borderColor: 'red',
+                    // borderColor: 'red14',
                     justifyContent: 'space-between',
                     paddingHorizontal: 10,
                   }}>
@@ -547,8 +548,9 @@ const BillScreen = ({navigation, route}) => {
                     Tour Name
                   </Text>
                   <Text
+                    numberOfLines={1}
                     style={{
-                      fontSize: 14,
+                      fontSize: 10,
                       color: 'black',
                       fontFamily: 'Inter-SemiBold',
                     }}>

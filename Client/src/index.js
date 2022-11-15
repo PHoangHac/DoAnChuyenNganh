@@ -35,6 +35,8 @@ import AdminDashBoard from './views/Admin';
 import UpdateTourScreen from './views/Admin/View/Tour/UpdateTourScreen';
 import UpdateUserScreen from './views/Admin/View/Users/UpdateUserScreen';
 import MapScreen from './views/Map/MapScreen';
+import ReviewByTourScreen from './views/ReviewByTour/ReviewByTourScreen';
+import ReviewByUserScreen from './views/ReviewByTour/ReviewByUserScreen';
 import {AuthContext} from './context/AuthContext';
 
 // variable
@@ -124,9 +126,14 @@ const HomeTabs = () => {
 
 const Navigation = () => {
   const {userInfo, splashLoading} = useContext(AuthContext);
-  // if (userInfo.user.roleName === 'Admin') {
-  //   console.log('True');
+
+  // console.log(splashLoading);
+  // if (userInfo) {
+  //   console.log('true');
+  // } else {
+  //   console.log('false');
   // }
+
   return (
     <NavigationContainer>
       <Stack.Navigator
@@ -161,19 +168,19 @@ const Navigation = () => {
             <Stack.Screen name="ProfileDetail" component={ProfileDetail} />
             <Stack.Screen name="Bookings" component={Bookings2} />
             <Stack.Screen name="PayPalScreen" component={PayPalScreen} />
-            <Stack.Screen
-              // listeners={({navigation}) => {
-              //   if (!navigation.canGoBack()) {
-              //     console.log("we're on the initial screen");
-              //   }
-              // }}
-              name="PaymentScreen"
-              component={PaymentScreen}
-            />
+            <Stack.Screen name="PaymentScreen" component={PaymentScreen} />
             <Stack.Screen name="BillScreen" component={BillScreen} />
             <Stack.Screen name="UnpaidScreen" component={UnpaidScreen} />
             <Stack.Screen name="HistoriesScreen" component={HistoriesScreen} />
             <Stack.Screen name="MapScreen" component={MapScreen} />
+            <Stack.Screen
+              name="ReviewByTourScreen"
+              component={ReviewByTourScreen}
+            />
+            <Stack.Screen
+              name="ReviewByUserScreen"
+              component={ReviewByUserScreen}
+            />
           </>
         ) : (
           <>

@@ -18,17 +18,28 @@ const WDwidth = Dimensions.get('window').width;
 const WDheight = Dimensions.get('window').height;
 
 const SignUpScreen = ({navigation}) => {
-  const [hasOpacity, setHasOpacity] = React.useState(false);
+  const [hasOpacity, setHasOpacity] = useState(false);
 
   const [email, setEmail] = useState(null);
   const [phoneNumber, setPhoneNumber] = useState(null);
   const [password, setPassword] = useState(null);
   const [name, setName] = useState(null);
-  // const [roleName, setRoleName] = useState(null);
+  const [roleName, setRoleName] = useState('User');
   const [icon, setIcon] = useState('eye');
   const [show, setShow] = useState(true);
 
-  const {isLoading, Register} = useContext(AuthContext);
+  const {isLoading, check, setCheck, Register} = useContext(AuthContext);
+
+  // console.log(check);
+
+  if (check === true) {
+    setTimeout(() => {
+      setCheck(false);
+      navigation.navigate('SignIn');
+    }, 1000);
+  }
+
+  // console.log(userInfo.length);
 
   const changeIcon = () => {
     icon !== 'eye-off'
@@ -41,7 +52,7 @@ const SignUpScreen = ({navigation}) => {
   };
 
   const RemovePhone = () => {
-    setPhoneNumber('');
+    setName('');
   };
 
   return (
@@ -81,12 +92,12 @@ const SignUpScreen = ({navigation}) => {
           </View> */}
           <View style={styles.ViewInput}>
             <TextInput
-              placeholder="Enter your Phone"
-              keyboardType="numeric"
+              placeholder="Enter your name"
+              // keyboardType="numeric"
               // textContentType="telephoneNumber"
               autoCapitalize="none"
-              onChangeText={text => setPhoneNumber(text)}
-              value={phoneNumber}
+              onChangeText={text => setName(text)}
+              value={name}
               style={styles.InputStyle}></TextInput>
             <TouchableOpacity onPress={RemovePhone} style={styles.iconStyle}>
               <Icon size={30} name="close-box-outline" />
@@ -137,7 +148,7 @@ const SignUpScreen = ({navigation}) => {
           <TouchableOpacity
             // onPress={() => navigation.navigate('SignIn')}
             onPress={() => {
-              Register(email, password);
+              Register(email, password, name, roleName);
             }}
             style={styles.btnSignUp}>
             <Text

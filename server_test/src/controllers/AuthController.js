@@ -45,20 +45,20 @@ const authController = {
   },
   UpdateUser: async (req, res) => {
     const { id } = req.params;
-    const image = req.file.path;
+    // const image = req.file.path;
     const data = req.body;
-    console.log(image);
+    // console.log(image);
     try {
       const FindUser = await db.User.findOne({
         where: { id: id },
       });
       if (FindUser) {
-        FindUser.image = image;
+        // FindUser.image = image;
         FindUser.name = data.name;
         FindUser.phone = data.phone;
         FindUser.email = data.email;
         await FindUser.save();
-        return res.status(200).send(FindUser);
+        return res.status(200).send({ message: "Update SuccessFull !" });
       }
     } catch (error) {
       return res.status(500).send(error);
@@ -86,6 +86,24 @@ const authController = {
       if (FindUser) {
         FindUser.destroy();
         return res.status(200).json({ msg: "Delete Success !" });
+      }
+    } catch (error) {
+      return res.status(500).send(error);
+    }
+  },
+  UpdateImage: async (req, res) => {
+    const { id } = req.params;
+    const image = req.file.path;
+    // const data = req.body;
+    // console.log(image);
+    try {
+      const FindUser = await db.User.findOne({
+        where: { id: id },
+      });
+      if (FindUser) {
+        FindUser.image = image;
+        await FindUser.save();
+        return res.status(200).send({ message: "Update SuccessFull !" });
       }
     } catch (error) {
       return res.status(500).send(error);

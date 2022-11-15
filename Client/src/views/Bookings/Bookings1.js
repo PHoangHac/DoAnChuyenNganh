@@ -149,39 +149,13 @@ const BookingScreen2 = ({navigation, route}) => {
   const fotmaTime = currentDate.getHours() + ':' + currentDate.getMinutes();
   //=======================================
 
-  // Check thuong hieu nha san xuat
   const appName = DeviceInfo.getBrand();
-
-  // if (appName == 'Redmi') {
-  //   console.log('Chieu dai:' + HEIGHTDEVICE, 'Chieu rong' + WIGHTDEVICE);
-  // } else if (appName == 'google') {
-  //   console.log('Chieu dai:' + HEIGHTDEVICE, 'Chieu rong' + WIGHTDEVICE);
-  // }
-
-  // console.log('Chieu dai:' + HEIGHTDEVICE, 'Chieu rong' + WIGHTDEVICE);
-
   const NameTransport = route.params.transport;
-  // console.log(NameTransport);
-
   const {userInfo} = React.useContext(AuthContext);
-
-  // console.log(userInfo.user.id);
-
-  // console.log(route.params.idTour);
-
-  //------------API_POST----------//
-  // const [numOfAdult, setNumOfAdult] = useState(null);
-  // const [numOfChildren, setNumOfChildren] = useState(null);
-  // const [totalCostOfAdult, setTotalCostOfAdult] = useState(null);
-  // const [totalCostOfChildren, setTotalCostOfChildren] = useState(null);
-  // const [totalCost, setTotalCost] = useState(null);
-  // const [totalGuest, setTotalGuest] = useState(null);
   const [Status, setFeatured] = useState(false);
   const [loading, setLoading] = useState(false);
-  // const [idUser, setIdUser] = useState(undefined);
-  // const [idTourInfo, setIdTourInfo] = useState(undefined);
 
-  // const [dataFake, setDataFake] = useState([]);
+  // console.log(formatDate);
 
   const NewBooking = async () => {
     try {
@@ -194,6 +168,7 @@ const BookingScreen2 = ({navigation, route}) => {
           totalCost: TotalCost,
           totalGuest: numberA + numberC,
           Status,
+          StartedDay: chooseDate == true ? textDate : formatDate,
           idUser: userInfo.user.id,
           idTourInfo: route.params.idTour,
         });
@@ -210,31 +185,9 @@ const BookingScreen2 = ({navigation, route}) => {
       console.log(error);
     }
   };
-  //------------API_POST----------//
 
-  // useEffect(() => {
-  //   const timer = setTimeout(() => {
-  //     console.log(dataFake);
-  //   }, 3000);
-
-  //   return () => {
-  //     clearTimeout(timer);
-  //   };
-  // }, []);
-
-  // -------Automatic page switching-----//
-  // {
-  //   (!dataFake == '') & (loading == true)
-  //     ? setTimeout(() => {
-  //         console.log(dataFake);
-  //       }, 7000)
-  //     : console.log('chu truyen id');
-  // }
-
-  // navigation.navigate('PaymentScreen', {
-  //   bookingId: dataFake.message.id,
-  // });
-  // -------Automatic page switching-----//
+  var utc = new Date().toJSON().slice(0, 10).replace(/-/g, '/');
+  // console.log(textDate);
 
   return (
     // Container
@@ -403,7 +356,7 @@ const BookingScreen2 = ({navigation, route}) => {
                       mode={mode}
                       is24Hour={true}
                       onChange={onChange}
-                      minimumDate={new Date(2022, 11, 30)}
+                      minimumDate={new Date(utc)}
                     />
                   )}
                 </View>

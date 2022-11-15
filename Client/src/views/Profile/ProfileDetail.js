@@ -1,14 +1,66 @@
-import React from 'react';
+import React, {useContext, useState, useCallback, useEffect} from 'react';
 
 import {View, Text, TouchableOpacity, Image, Dimensions} from 'react-native';
 import {TextInput} from 'react-native-gesture-handler';
-
 import {icons, images} from '../../constants/index';
-
 import DeviceInfo from 'react-native-device-info';
+import {AuthContext} from '../../context/AuthContext';
+import {URL} from '../../context/config';
+import axios from 'axios';
+import Spinner from 'react-native-loading-spinner-overlay';
+import Toast from 'react-native-toast-message';
 
 const ProfileDetail = ({navigation}) => {
   const appName = DeviceInfo.getBrand();
+  const {userInfo} = useContext(AuthContext);
+  const [email, setEmail] = useState('');
+  const [name, setName] = useState('');
+  const [phone, setPhone] = useState('');
+  const [image, setImage] = useState('');
+  const [loading, setLoading] = useState(false);
+
+  // console.log(image);
+
+  const getByIdTour = useCallback(async () => {
+    const getData = await axios.get(`${URL}/auth/GetOne/${userInfo.user.id}`);
+    setEmail(getData.data.email);
+    setName(getData.data.name);
+    setPhone(getData.data.phone);
+    setImage(getData.data.image);
+  }, [userInfo.user.id]);
+
+  if (loading === true) {
+    setTimeout(() => {
+      console.log('Spinner stop running !');
+      setLoading(false);
+    }, 2500);
+  }
+
+  useEffect(() => {
+    getByIdTour();
+  }, [getByIdTour]);
+
+  const Update = async () => {
+    await axios
+      .post(`${URL}/auth/Update/${userInfo.user.id}`, {
+        name: name,
+        phone: phone,
+        email: email,
+        // image: OKK === undefined ? ImageUser : OKK.name,
+      })
+      .then(res => {
+        console.log(res.data);
+        setLoading(true);
+        setTimeout(() => {
+          Toast.show({
+            type: 'success',
+            text1: 'Status',
+            text2: 'UPDATE SUCCESSFULLY ! 👋',
+          });
+        }, 2500);
+      })
+      .catch(err => console.log(err));
+  };
 
   return (
     <View
@@ -21,6 +73,8 @@ const ProfileDetail = ({navigation}) => {
         width: Dimensions.get('window').width,
         height: Dimensions.get('window').height,
       }}>
+      <Spinner visible={loading} />
+
       {/* Header */}
       <View style={{flex: 17}}>
         {/* 50% backg */}
@@ -61,7 +115,7 @@ const ProfileDetail = ({navigation}) => {
           />
           <TouchableOpacity
             style={{
-              backgroundColor: 'white',
+              // backgroundColor: 'white',
               borderRadius: 20,
               right: 10,
             }}>
@@ -71,7 +125,7 @@ const ProfileDetail = ({navigation}) => {
                 width: 30,
                 margin: 2,
               }}
-              source={icons.bellicon}
+              // source={icons.bellicon}
             />
           </TouchableOpacity>
         </View>
@@ -143,6 +197,8 @@ const ProfileDetail = ({navigation}) => {
                 borderRadius: 10,
                 paddingLeft: 20,
               }}
+              value={name}
+              onChangeText={text => setName(text)}
               placeholder="Quoc Dung"
               placeholderTextColor={appName == 'Redmi' ? '#A4D5DE' : '#7E6FAA'}
             />
@@ -169,6 +225,8 @@ const ProfileDetail = ({navigation}) => {
                 borderRadius: 10,
                 paddingLeft: 20,
               }}
+              value={email}
+              onChangeText={text => setEmail(text)}
               placeholder="NGD@gmail.com"
               placeholderTextColor={appName == 'Redmi' ? '#A4D5DE' : '#7E6FAA'}
             />
@@ -195,7 +253,9 @@ const ProfileDetail = ({navigation}) => {
                 borderRadius: 10,
                 paddingLeft: 20,
               }}
-              placeholder="edit093289362"
+              value={phone}
+              onChangeText={text => setPhone(text)}
+              // placeholder="edit093289362"
               placeholderTextColor={appName == 'Redmi' ? '#A4D5DE' : '#7E6FAA'}
             />
           </View>
@@ -221,6 +281,8 @@ const ProfileDetail = ({navigation}) => {
                 alignItems: 'center',
               }}>
               <TextInput
+                editable={false}
+                selectTextOnFocus={false}
                 style={{
                   borderColor: '#838383',
                   borderWidth: 1,
@@ -279,6 +341,7 @@ const ProfileDetail = ({navigation}) => {
         }}>
         <View style={{height: '50%', width: '50%'}}>
           <TouchableOpacity
+            onPress={Update}
             style={{
               backgroundColor: '#171F1D',
               alignItems: 'center',
@@ -295,6 +358,7 @@ const ProfileDetail = ({navigation}) => {
           </TouchableOpacity>
         </View>
       </View>
+      <Toast topOffset={10} />
     </View>
   );
 };

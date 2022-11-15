@@ -164,7 +164,9 @@ const HomeScreen = ({navigation}) => {
               width: 150,
               borderRadius: 12,
             }}
-            source={{uri: `${URL}/${pic[0]}`}}
+            source={
+              pic.length === 0 ? images.NotFoundImg : {uri: `${URL}/${pic[0]}`}
+            }
           />
           {/* body */}
           <View
@@ -176,6 +178,7 @@ const HomeScreen = ({navigation}) => {
               paddingRight: 10,
             }}>
             <Text
+              numberOfLines={2}
               style={{
                 fontSize: 14,
                 fontFamily: 'Inter-Bold',
@@ -267,7 +270,9 @@ const HomeScreen = ({navigation}) => {
             overflow: 'hidden',
             padding: 5,
           }}
-          source={{uri: `${URL}/${pic[0]}`}}
+          source={
+            pic.length === 0 ? images.NotFoundImg : {uri: `${URL}/${pic[0]}`}
+          }
           // source={place.image}
         >
           <View
@@ -278,6 +283,7 @@ const HomeScreen = ({navigation}) => {
               borderRadius: 10,
               top: 5,
               flexDirection: 'row',
+              // width: '100%',
               // borderWidth: 1,
               // borderColor: 'red',
             }}>
@@ -292,11 +298,14 @@ const HomeScreen = ({navigation}) => {
               source={icons.locationicon}
             />
             <Text
+              numberOfLines={1}
               style={{
                 color: 'black',
                 fontSize: 16,
                 padding: 5,
                 fontFamily: 'Inter-SemiBold',
+                // alignSelf: 'center',
+                // backgroundColor: 'gray',
               }}>
               {place.Location.placeName}
             </Text>

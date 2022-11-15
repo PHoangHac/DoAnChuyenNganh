@@ -13,6 +13,7 @@ import {
   ImageBackground,
   Dimensions,
   FlatList,
+  TouchableHighlight,
 } from 'react-native';
 
 // // import function icons, images
@@ -135,6 +136,10 @@ const DetailsScreen2 = ({navigation, route}) => {
   // const previousRoute = routes[routes.length - 2].name;
   // console.log('currentRoute: ', previousRoute);
 
+  // if (NameTour.length >= 30) {
+  //   console.log('true');
+  // }
+
   return (
     // Container
     <View
@@ -226,13 +231,21 @@ const DetailsScreen2 = ({navigation, route}) => {
               justifyContent: 'center',
             }}>
             {/* Title */}
-            <View>
+            <View
+              style={
+                {
+                  // backgroundColor: 'gray',
+                }
+              }>
               <Text
+                numberOfLines={1}
+                ellipsizeMode="tail"
                 style={{
-                  fontSize: 22,
+                  fontSize: NameTour.length >= 30 ? 20 : 22,
                   color: 'black',
                   fontFamily: 'Inter-ExtraBold',
                   // backgroundColor: "gray"
+                  // marginBottom: NameTour.length >= 30 ? 10 : null,
                 }}>
                 {NameTour}
                 {/* ThaiLand */}
@@ -519,6 +532,161 @@ const DetailsScreen2 = ({navigation, route}) => {
             </View>
           </View>
           {/* End picture tour */}
+          {/* Star rating */}
+          <View
+            style={{
+              height: HEIGHTDEVICE / 5,
+              width: WIGHTDEVICE / 1.1,
+              // borderWidth: 1,
+              // borderColor: 'black',
+            }}>
+            {/* container */}
+            <TouchableOpacity
+              onPress={() => {
+                navigation.navigate('ReviewByTourScreen');
+              }}
+              style={{
+                height: '100%',
+                width: '100%',
+                flexDirection: 'column',
+              }}>
+              <View
+                style={{
+                  height: '30%',
+                  width: '100%',
+                  // backgroundColor: 'blue',
+                  justifyContent: 'center',
+                }}>
+                <Text
+                  style={{
+                    fontSize: 18,
+                    color: 'black',
+                    fontFamily: 'Inter-SemiBold',
+                  }}>
+                  Review
+                </Text>
+              </View>
+              <View
+                style={{
+                  height: '70%',
+                  width: '100%',
+                  // backgroundColor: 'orange',
+                  flexDirection: 'column',
+                }}>
+                <View
+                  style={{
+                    height: '30%',
+                    width: '100%',
+                    flexDirection: 'row',
+                    // backgroundColor: 'blue',
+                    // borderWidth: 1,
+                    // borderColor: 'black',
+                    justifyContent: 'space-between',
+                  }}>
+                  <View
+                    style={{
+                      height: '100%',
+                      // width: '70%',
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                    }}>
+                    <View>
+                      <Image
+                        style={{
+                          height: 40,
+                          width: 40,
+                        }}
+                        source={images.user}
+                      />
+                    </View>
+                    <View
+                      style={{
+                        flexDirection: 'column',
+                        paddingLeft: 10,
+                      }}>
+                      <Text
+                        style={{
+                          fontFamily: 'Inter-Medium',
+                          color: 'black',
+                          fontSize: 12,
+                        }}>
+                        User name
+                      </Text>
+                      <Text
+                        style={{
+                          fontFamily: 'Inter-Medium',
+                          color: 'black',
+                          fontSize: 10,
+                        }}>
+                        A Hour ago
+                      </Text>
+                    </View>
+                  </View>
+                  <View
+                    style={{
+                      height: '100%',
+                      // width: '30%',
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                      backgroundColor: 'black',
+                      borderRadius: 6,
+                      // justifyContent: 'space-evenly',
+                    }}>
+                    <Text
+                      style={{
+                        color: 'white',
+                        paddingRight: 10,
+                        paddingLeft: 10,
+                        fontSize: 12,
+                      }}>
+                      4.0
+                    </Text>
+                    <Image
+                      style={{
+                        height: 18,
+                        width: 18,
+                        tintColor: 'white',
+                        marginRight: 10,
+                      }}
+                      source={icons.Start2Icon}
+                    />
+                  </View>
+                </View>
+                <View
+                  style={{
+                    height: '70%',
+                    width: '100%',
+                    flexDirection: 'row',
+                    // borderWidth: 1,
+                    // borderColor: 'black',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}>
+                  <View
+                    style={{
+                      height: '80%',
+                      width: '100%',
+                    }}>
+                    <Text
+                      style={{
+                        fontFamily: 'Inter-Regular',
+                        color: 'black',
+                        fontSize: 13,
+                      }}
+                      numberOfLines={3}
+                      ellipsizeMode="tail">
+                      Lorem Ipsum is simply dummy text of the printing and
+                      typesetting industry. Lorem Ipsum has been the industry's
+                      standard dummy text ever since the 1500s, when an unknown
+                      printer took a galley of type and scrambled it to make a
+                      type specimen book.
+                    </Text>
+                  </View>
+                </View>
+              </View>
+            </TouchableOpacity>
+          </View>
+          {/* End Star rating */}
           {/* Map */}
           <View
             style={{

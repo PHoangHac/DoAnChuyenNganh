@@ -121,7 +121,7 @@ const BookingController = {
     try {
       const { id } = req.params;
       const FindAll = await db.Booking.findAll({
-        where: { idUser: id, Status: 1 },
+        where: { idUser: id, Status: "Default" || "Online" },
         include: [
           {
             model: db.TourInfo,
@@ -142,6 +142,18 @@ const BookingController = {
         nest: true,
       });
       return res.status(200).json(FindAll);
+    } catch (error) {}
+  },
+  DeleteBooking: async (req, res) => {
+    const { id, idUser } = req.params;
+    try {
+      const FindOne = await db.Booking.findOne({
+        where: { id: id, idUser: idUser },
+      });
+      if (FindOne) {
+        FindOne.destroy();
+        return res.status(200).json({ msg: "Delete SuccessFull !" });
+      }
     } catch (error) {
       return res.status(500).json(error);
     }

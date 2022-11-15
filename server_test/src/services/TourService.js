@@ -86,6 +86,10 @@ const TourService = {
             { model: db.TypeOfTransport, attributes: ["nameTransport"] },
             { model: db.Hotel, attributes: ["NameHotel"] },
             {
+              model: db.Review,
+              attributes: ["comment", "rating", "Status", "idUser"],
+            },
+            {
               model: db.Location,
               attributes: ["country", "placeName", "descLocation"],
             },

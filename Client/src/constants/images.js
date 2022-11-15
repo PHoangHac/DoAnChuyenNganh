@@ -9,6 +9,7 @@ export const onboardImage1 = require('../assets/images/onboardImage1.jpg');
 export const LoginBG = require('../assets/images/loginBG.png');
 export const user = require('../assets/images/user.png');
 export const mapIconItem = require('../assets/images/Rectangle_12.png');
+export const NotFoundImg = require('../assets/images/NotFoundImg.jpg');
 
 export default {
   images1,
@@ -22,4 +23,5 @@ export default {
   user,
   onboardImage1,
   mapIconItem,
+  NotFoundImg,
 };

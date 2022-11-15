@@ -14,7 +14,13 @@ let TourRoute = (app) => {
     .get("/GetIdTour2/:id", TourController.GetIdTour2)
     .post("/UpdateTour/:id", TourController.UpdateOneTour)
     .delete("/DeleteTour/:id", TourController.DeleteTour)
-    .get("/FindWithCon", TourController.QueryParams);
+    .get("/FindWithCon", TourController.QueryParams)
+    .post(
+      "/UpdateImageTour/:id",
+      UploadController.uploads,
+      TourController.UpdateTourImage
+    );
+  // .post("/ReviewTour/:id/:idUser", TourController.Reviewer);
 
   return app.use("/tour", router);
 };

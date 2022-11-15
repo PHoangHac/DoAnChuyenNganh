@@ -59,6 +59,7 @@ const EditIcon = require('../assets/icons/edit.png');
 const EditIcon2 = require('../assets/icons/edit-2.png');
 const TrashIcon = require('../assets/icons/trash-bin.png');
 const PayPalIcon = require('../assets/icons/paypal.png');
+const Start2Icon = require('../assets/icons/star1.png');
 
 export default {
   travelicon,
@@ -122,4 +123,5 @@ export default {
   TrashIcon,
   EditIcon2,
   PayPalIcon,
+  Start2Icon,
 };

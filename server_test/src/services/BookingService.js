@@ -2,7 +2,7 @@ import db from "../models/index";
 
 const BookingService = {
   CreateBooking: (data) => {
-    return new Promise(async (resolve, rejct) => {
+    return new Promise(async (resolve, reject) => {
       try {
         const bookingData = {};
 
@@ -13,6 +13,7 @@ const BookingService = {
             Children: data.Children,
             AdultTotalCost: data.AdultTotalCost,
             ChildrenTotalCost: data.ChildrenTotalCost,
+            StartedDay: data.StartedDay,
             totalCost: data.totalCost,
             totalGuest: data.totalGuest,
             Status: data.Status,
@@ -29,7 +30,7 @@ const BookingService = {
 
         resolve(bookingData);
       } catch (e) {
-        rejct(e);
+        reject(e);
       }
     });
   },

@@ -50,7 +50,7 @@ const AuthService = {
   },
 
   SignInUser: (email, password) => {
-    return new Promise(async (resolve, rejct) => {
+    return new Promise(async (resolve, reject) => {
       try {
         const userData = {};
         // Check email
@@ -98,7 +98,7 @@ const AuthService = {
         }
         resolve(userData);
       } catch (e) {
-        rejct(e);
+        reject(e);
       }
     });
   },

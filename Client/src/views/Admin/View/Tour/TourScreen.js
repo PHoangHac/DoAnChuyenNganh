@@ -106,6 +106,7 @@ const renderItem = data => {
               width: '75%',
               // backgroundColor: 'blue',
               justifyContent: 'center',
+              paddingLeft: 5,
             }}>
             <Text
               style={{

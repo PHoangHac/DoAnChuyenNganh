@@ -91,6 +91,54 @@ const places = [
   },
 ];
 
+const Review = [
+  {
+    id: 1,
+    username: 'Hoang',
+    image: 'picture 1',
+    rating: 5,
+    descripton:
+      'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Consequat nisl vel pretium lectus quam id leo. Velit euismod in pellentesque',
+    createAt: 'a hour ago',
+  },
+  {
+    id: 2,
+    username: 'Hoang',
+    image: 'picture 1',
+    rating: 5,
+    descripton:
+      'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Consequat nisl vel pretium lectus quam id leo. Velit euismod in pellentesq',
+    createAt: 'a hour ago',
+  },
+  {
+    id: 3,
+    username: 'Hoang',
+    image: 'picture 1',
+    rating: 5,
+    descripton:
+      'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Consequat nisl vel pretium',
+    createAt: 'a hour ago',
+  },
+  {
+    id: 4,
+    username: 'Hoang',
+    image: 'picture 1',
+    rating: 5,
+    descripton:
+      'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore.',
+    createAt: 'a hour ago',
+  },
+  {
+    id: 5,
+    username: 'Hoang',
+    image: 'picture 1',
+    rating: 5,
+    descripton:
+      'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Consequat nisl vel pretium lectus quam id leo. Velit euismod in pellentesque',
+    createAt: 'a hour ago',
+  },
+];
+
 const FListData = [
   {
     key: '12f3asdjq2j1jwdnalknwafnwo12321rfgfsF',
@@ -230,4 +278,4 @@ const FoodList = [
   },
 ];
 
-export {places, FListData, FoodList};
+export {places, FListData, FoodList, Review};

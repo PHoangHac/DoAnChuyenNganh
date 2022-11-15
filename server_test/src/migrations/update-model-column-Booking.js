@@ -10,6 +10,7 @@ module.exports = {
       queryInterface.addColumn("Bookings", "totalCost", Sequelize.INTEGER),
       queryInterface.addColumn("Bookings", "totalGuest", Sequelize.INTEGER),
       queryInterface.addColumn("Bookings", "AdultTotalCost", Sequelize.INTEGER),
+      queryInterface.addColumn("Bookings", "StartedDay", Sequelize.STRING),
       queryInterface.addColumn(
         "Bookings",
         "ChildrenTotalCost",
@@ -23,6 +24,7 @@ module.exports = {
       queryInterface.addColumn("Bookings", "totalCost", Sequelize.INTEGER),
       queryInterface.addColumn("Bookings", "totalGuest", Sequelize.INTEGER),
       queryInterface.addColumn("Bookings", "AdultTotalCost", Sequelize.INTEGER),
+      queryInterface.addColumn("Bookings", "StartedDay", Sequelize.STRING),
       queryInterface.addColumn(
         "Bookings",
         "ChildrenTotalCost",
