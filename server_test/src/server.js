@@ -15,7 +15,7 @@ import LocationRoute from "./routes/locationRoute.js";
 import BookingRoute from "./routes/bookingRoute.js";
 import BillRoute from "./routes/billRoute.js";
 import PayPalRoute from "./routes/PayPalRoute.js";
-import ReviewRoute from "./routes/reviewRoute";
+// import ReviewRoute from "./routes/reviewRoute";
 //---------GET ROUTE-----------//
 
 let app = express();
@@ -33,7 +33,7 @@ LocationRoute(app);
 BookingRoute(app);
 BillRoute(app);
 PayPalRoute(app);
-ReviewRoute(app);
+// ReviewRoute(app);
 //----------USE ROUTE---------//
 
 viewEngine(app);

@@ -11,7 +11,7 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
       User.hasMany(models.Booking, { foreignKey: "idUser" });
       User.hasMany(models.Bill, { foreignKey: "idUser" });
-      User.hasMany(models.Review, { foreignKey: "idUser" });
+      // User.hasMany(models.Review, { foreignKey: "idUser" });
     }
   }
   User.init(

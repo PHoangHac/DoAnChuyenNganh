@@ -2,7 +2,7 @@ import db from "../models/index";
 
 const TourService = {
   CreateTour: (data, imageData) => {
-    return new Promise(async (resolve, rejct) => {
+    return new Promise(async (resolve, reject) => {
       try {
         const tourData = {};
 
@@ -38,7 +38,7 @@ const TourService = {
 
         resolve(tourData);
       } catch (e) {
-        rejct(e);
+        reject(e);
       }
     });
   },
@@ -85,10 +85,6 @@ const TourService = {
           include: [
             { model: db.TypeOfTransport, attributes: ["nameTransport"] },
             { model: db.Hotel, attributes: ["NameHotel"] },
-            {
-              model: db.Review,
-              attributes: ["comment", "rating", "Status", "idUser"],
-            },
             {
               model: db.Location,
               attributes: ["country", "placeName", "descLocation"],

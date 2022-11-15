@@ -543,7 +543,7 @@ const DetailsScreen2 = ({navigation, route}) => {
             {/* container */}
             <TouchableOpacity
               onPress={() => {
-                navigation.navigate('ReviewByTourScreen');
+                navigation.navigate('ReviewByUserScreen');
               }}
               style={{
                 height: '100%',

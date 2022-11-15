@@ -125,27 +125,6 @@ const TourController = {
       return res.status(500).json(error);
     }
   },
-  // Reviewer: async (req, res) => {
-  //   const { id, idUser } = req.params;
-  //   const data = req.body;
-  //   try {
-  //     const review = await db.Review.create({
-  //       idUser: idUser,
-  //       comment: data.comment,
-  //       rating: data.rating,
-  //       Status: data.Status,
-  //     });
-  //     const findOneTour = await db.TourInfo.findOne({
-  //       where: { id: id },
-  //     });
-
-  //     findOneTour.idReview = review.id;
-  //     await findOneTour.save();
-  //     return res.status(200).json(findOneTour);
-  //   } catch (error) {
-  //     return res.status(500).json(error);
-  //   }
-  // },
 };
 
 export default TourController;

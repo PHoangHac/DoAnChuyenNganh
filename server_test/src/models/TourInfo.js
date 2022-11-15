@@ -17,11 +17,11 @@ module.exports = (sequelize, DataTypes) => {
       TourInfo.belongsTo(models.Hotel, { foreignKey: "idHotel" });
       TourInfo.belongsTo(models.Location, { foreignKey: "idLocation" });
       // TourInfo.belongsToMany(models.Review, { through: ReviewTour });
-      TourInfo.belongsToMany(
-        models.Review,
-        { through: "ReviewTour" },
-        { foreignKey: "idTourInfo" }
-      );
+      // TourInfo.belongsToMany(
+      //   models.Review,
+      //   { through: "ReviewTour" },
+      //   { foreignKey: "idTourInfo" }
+      // );
     }
   }
   TourInfo.init(
