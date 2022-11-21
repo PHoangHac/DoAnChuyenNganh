@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useContext} from 'react';
 import {
   View,
   Text,
@@ -9,14 +9,62 @@ import {
 } from 'react-native';
 import {icons} from '../../constants/index';
 import {Rating, AirbnbRating} from 'react-native-ratings';
+import {AuthContext} from '../../context/AuthContext';
+import axios from 'axios';
+import Spinner from 'react-native-loading-spinner-overlay';
+import {URL} from '../../context/config';
+import Toast from 'react-native-toast-message';
 
-const ReviewByUserScreen = ({navigation}) => {
+const ReviewByUserScreen = ({navigation, route}) => {
   const [textReview, setTextReview] = useState('');
+  const [RatingStar, setRatingStar] = useState(0);
+  const [loading, setLoading] = useState(false);
+  const {userInfo} = useContext(AuthContext);
+
   const ratingCompleted = rating => {
-    console.log('Rating is: ' + rating);
+    // console.log('Rating is: ' + rating);
+    setRatingStar(rating);
   };
 
-  //   console.log(textReview.length);
+  // console.log(userInfo.user.id);
+
+  const Review = async () => {
+    try {
+      if (RatingStar === 0) {
+        Toast.show({
+          type: 'error',
+          text1: 'Status',
+          text2: 'YOU HAVE`T PICK START ! 👋',
+          autoHide: true,
+          visibilityTime: 1500,
+        });
+      } else {
+        await axios
+          .post(`${URL}/Review/Create`, {
+            Comment: textReview,
+            Rating: RatingStar,
+            idUser: userInfo.user.id,
+            idTourInfo: route.params.idTour,
+          })
+          .then(res => {
+            // console.log(res.data);
+            setLoading(true);
+            setTimeout(() => {
+              navigation.goBack();
+            }, 2500);
+          });
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  if (loading === true) {
+    setTimeout(() => {
+      console.log('Spinner stop running !');
+      setLoading(false);
+    }, 2500);
+  }
 
   return (
     <View
@@ -30,6 +78,7 @@ const ReviewByUserScreen = ({navigation}) => {
         width: Dimensions.get('window').width,
         height: Dimensions.get('window').height,
       }}>
+      <Spinner visible={loading} />
       <View
         style={{
           flex: 10,
@@ -60,8 +109,8 @@ const ReviewByUserScreen = ({navigation}) => {
               }}>
               <Image
                 style={{
-                  height: 45,
-                  width: 45,
+                  height: 40,
+                  width: 40,
                 }}
                 source={icons.ArrowBackIcon}
               />
@@ -97,6 +146,7 @@ const ReviewByUserScreen = ({navigation}) => {
         <Rating
           showRating={true}
           fractions={2}
+          startingValue={0}
           ratingTextColor="teal"
           style={{
             height: '100%',
@@ -175,6 +225,7 @@ const ReviewByUserScreen = ({navigation}) => {
             justifyContent: 'center',
           }}>
           <TouchableOpacity
+            onPress={Review}
             style={{
               backgroundColor: '#0000CD',
               borderRadius: 8,
@@ -191,6 +242,7 @@ const ReviewByUserScreen = ({navigation}) => {
           </TouchableOpacity>
         </View>
       </View>
+      <Toast topOffset={10} />
     </View>
   );
 };

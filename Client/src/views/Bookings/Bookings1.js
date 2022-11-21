@@ -40,6 +40,9 @@ const BookingScreen2 = ({navigation, route}) => {
   // Khởi tạo trạng thái
   const [numberA, setNumberA] = useState(1);
   const [numberC, setNumberC] = useState(0);
+  const [CheckNumber, setCheckNumber] = useState(false);
+
+  // console.log(numberA);
 
   const [money, setMoney] = useState(route.params.price);
 
@@ -50,12 +53,18 @@ const BookingScreen2 = ({navigation, route}) => {
 
   // Hàm thay giảm số lượng người lớn
   const DecreaseAdult = () => {
-    if (numberA <= 0) {
-      alert('Please choose a number greater than 0!');
+    if (numberA < 1) {
+      setNumberA(1);
+
+      // console.log('true');
+      // setCheckNumber(true);
+      // alert('Please choose a number greater than 0!');
     } else {
       setNumberA(numberA - 1);
     }
   };
+
+  // console.log(CheckNumber);
 
   // Hàm thay tăng số lượng trẻ em
 
@@ -838,7 +847,7 @@ const BookingScreen2 = ({navigation, route}) => {
                   backgroundColor: loading == true ? '#C1C1C1' : '#00008B',
                   borderRadius: 12,
                 }}
-                disabled={loading == true ? true : false}
+                disabled={loading == true || numberA < 0 ? true : false}
                 // onPress={() => navigation.navigate('PaymentScreen')}
                 onPress={NewBooking}>
                 <Text

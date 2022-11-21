@@ -37,6 +37,7 @@ import UpdateUserScreen from './views/Admin/View/Users/UpdateUserScreen';
 import MapScreen from './views/Map/MapScreen';
 import ReviewByTourScreen from './views/ReviewByTour/ReviewByTourScreen';
 import ReviewByUserScreen from './views/ReviewByTour/ReviewByUserScreen';
+import CreateHotelScreen from './views/Admin/View/Location/NewHotel';
 import {AuthContext} from './context/AuthContext';
 
 // variable
@@ -160,6 +161,10 @@ const Navigation = () => {
                 <Stack.Screen
                   name="UpdateUserScreen"
                   component={UpdateUserScreen}
+                />
+                <Stack.Screen
+                  name="CreateHotelScreen"
+                  component={CreateHotelScreen}
                 />
               </>
             )}

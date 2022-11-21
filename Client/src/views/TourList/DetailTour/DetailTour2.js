@@ -1,6 +1,6 @@
 // import React
 import React, {useState, useEffect, useCallback} from 'react';
-
+import moment from 'moment';
 import axios from 'axios';
 
 // import component core from react-native
@@ -82,7 +82,8 @@ const DetailsScreen2 = ({navigation, route}) => {
 
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState([]);
-
+  const [dataReview, setDataReview] = useState([]);
+  const [IdTour, setIdTour] = useState('');
   const [NameTour, setNameTour] = useState([]);
   const [totalTime, setTotalTime] = useState('');
   const [Description, setDescription] = useState('');
@@ -91,6 +92,26 @@ const DetailsScreen2 = ({navigation, route}) => {
   const [Hotel, setHotel] = useState({});
   const [Location, setLocation] = useState({});
   const [transPort, setTransPort] = useState({});
+
+  let RatingStar, Comment, UserName, createAt;
+
+  if (dataReview.length === 0) {
+    // console.log('Data empty');
+  } else {
+    RatingStar = dataReview[0].Rating;
+    Comment = dataReview[0].Comment;
+    UserName = dataReview[0].User.name;
+    createAt = dataReview[0].createdAt;
+  }
+
+  // if (RatingStar === undefined) {
+  //   console.log('true');
+  // } else {
+  //   console.log('Rating star:', RatingStar);
+  //   console.log('false');
+  // }
+  // console.log(typeof RatingStar);
+  // console.log('Rating star:', RatingStar);
 
   const pic = JSON.parse(route.params.images);
 
@@ -103,6 +124,19 @@ const DetailsScreen2 = ({navigation, route}) => {
   useEffect(() => {
     setNumLines(textShown ? undefined : 3);
   }, [textShown]);
+
+  useEffect(() => {
+    axios
+      .get(`${URL}/Review/GetNewReview/${IdTour}`)
+      .then(res => {
+        setDataReview(res.data);
+      })
+      .catch(e => {
+        console.log('Error ', e);
+      });
+  }, [IdTour]);
+
+  // console.log(dataReview[0]);
 
   const onTextLayout = useCallback(
     e => {
@@ -118,6 +152,7 @@ const DetailsScreen2 = ({navigation, route}) => {
     const getData = await axios.get(
       `${URL}/tour/GetIdTour2/${route.params.id}`,
     );
+    setIdTour(getData.data.id);
     setNameTour(getData.data.NameTour);
     setTotalTime(getData.data.totalTime);
     setDescription(getData.data.Description);
@@ -533,159 +568,214 @@ const DetailsScreen2 = ({navigation, route}) => {
           </View>
           {/* End picture tour */}
           {/* Star rating */}
-          <View
-            style={{
-              height: HEIGHTDEVICE / 5,
-              width: WIGHTDEVICE / 1.1,
-              // borderWidth: 1,
-              // borderColor: 'black',
-            }}>
-            {/* container */}
-            <TouchableOpacity
-              onPress={() => {
-                navigation.navigate('ReviewByUserScreen');
-              }}
+          {dataReview.length === 0 ? (
+            <View
               style={{
-                height: '100%',
-                width: '100%',
-                flexDirection: 'column',
+                height: HEIGHTDEVICE / 5,
+                width: WIGHTDEVICE / 1.1,
+                // borderWidth: 1,
+                // borderColor: 'black',
               }}>
               <View
                 style={{
-                  height: '30%',
+                  height: '100%',
                   width: '100%',
-                  // backgroundColor: 'blue',
-                  justifyContent: 'center',
-                }}>
-                <Text
-                  style={{
-                    fontSize: 18,
-                    color: 'black',
-                    fontFamily: 'Inter-SemiBold',
-                  }}>
-                  Review
-                </Text>
-              </View>
-              <View
-                style={{
-                  height: '70%',
-                  width: '100%',
-                  // backgroundColor: 'orange',
                   flexDirection: 'column',
                 }}>
                 <View
                   style={{
                     height: '30%',
                     width: '100%',
-                    flexDirection: 'row',
-                    // backgroundColor: 'blue',
-                    // borderWidth: 1,
-                    // borderColor: 'black',
-                    justifyContent: 'space-between',
                   }}>
-                  <View
+                  <Text
                     style={{
-                      height: '100%',
-                      // width: '70%',
-                      flexDirection: 'row',
-                      alignItems: 'center',
+                      fontSize: 18,
+                      color: 'black',
+                      fontFamily: 'Inter-SemiBold',
                     }}>
-                    <View>
-                      <Image
-                        style={{
-                          height: 40,
-                          width: 40,
-                        }}
-                        source={images.user}
-                      />
-                    </View>
-                    <View
-                      style={{
-                        flexDirection: 'column',
-                        paddingLeft: 10,
-                      }}>
-                      <Text
-                        style={{
-                          fontFamily: 'Inter-Medium',
-                          color: 'black',
-                          fontSize: 12,
-                        }}>
-                        User name
-                      </Text>
-                      <Text
-                        style={{
-                          fontFamily: 'Inter-Medium',
-                          color: 'black',
-                          fontSize: 10,
-                        }}>
-                        A Hour ago
-                      </Text>
-                    </View>
-                  </View>
-                  <View
+                    Review
+                  </Text>
+                </View>
+
+                <TouchableOpacity
+                  onPress={() => {
+                    navigation.navigate('ReviewByTourScreen', {
+                      idTour: IdTour,
+                    });
+                  }}
+                  style={{
+                    height: '30%',
+                    width: '100%',
+                  }}>
+                  <Text>No Comment</Text>
+                  <Text>Comment Now !</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          ) : (
+            <View
+              style={{
+                height: HEIGHTDEVICE / 5,
+                width: WIGHTDEVICE / 1.1,
+                // borderWidth: 1,
+                // borderColor: 'black',
+              }}>
+              {/* container */}
+              <TouchableOpacity
+                onPress={() => {
+                  navigation.navigate('ReviewByTourScreen', {
+                    idTour: IdTour,
+                  });
+                  // navigation.navigate('ReviewByUserScreen');
+                }}
+                style={{
+                  height: '100%',
+                  width: '100%',
+                  flexDirection: 'column',
+                }}>
+                <View
+                  style={{
+                    height: '30%',
+                    width: '100%',
+                    // backgroundColor: 'blue',
+                    justifyContent: 'center',
+                  }}>
+                  <Text
                     style={{
-                      height: '100%',
-                      // width: '30%',
-                      flexDirection: 'row',
-                      alignItems: 'center',
-                      backgroundColor: 'black',
-                      borderRadius: 6,
-                      // justifyContent: 'space-evenly',
+                      fontSize: 18,
+                      color: 'black',
+                      fontFamily: 'Inter-SemiBold',
                     }}>
-                    <Text
-                      style={{
-                        color: 'white',
-                        paddingRight: 10,
-                        paddingLeft: 10,
-                        fontSize: 12,
-                      }}>
-                      4.0
-                    </Text>
-                    <Image
-                      style={{
-                        height: 18,
-                        width: 18,
-                        tintColor: 'white',
-                        marginRight: 10,
-                      }}
-                      source={icons.Start2Icon}
-                    />
-                  </View>
+                    Review
+                  </Text>
                 </View>
                 <View
                   style={{
                     height: '70%',
                     width: '100%',
-                    flexDirection: 'row',
-                    // borderWidth: 1,
-                    // borderColor: 'black',
-                    alignItems: 'center',
-                    justifyContent: 'center',
+                    // backgroundColor: 'orange',
+                    flexDirection: 'column',
                   }}>
                   <View
                     style={{
-                      height: '80%',
+                      height: '30%',
                       width: '100%',
+                      flexDirection: 'row',
+                      // backgroundColor: 'blue',
+                      // borderWidth: 1,
+                      // borderColor: 'black',
+                      justifyContent: 'space-between',
                     }}>
-                    <Text
+                    <View
                       style={{
-                        fontFamily: 'Inter-Regular',
-                        color: 'black',
-                        fontSize: 13,
-                      }}
-                      numberOfLines={3}
-                      ellipsizeMode="tail">
-                      Lorem Ipsum is simply dummy text of the printing and
+                        height: '100%',
+                        // width: '70%',
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                      }}>
+                      <View>
+                        <Image
+                          style={{
+                            height: 40,
+                            width: 40,
+                          }}
+                          source={images.user}
+                        />
+                      </View>
+                      <View
+                        style={{
+                          flexDirection: 'column',
+                          paddingLeft: 10,
+                        }}>
+                        <Text
+                          style={{
+                            fontFamily: 'Inter-Medium',
+                            color: 'black',
+                            fontSize: 12,
+                          }}>
+                          {/* User name */}
+                          {dataReview.length === 0 ? 'NaN' : UserName}
+                        </Text>
+                        <Text
+                          style={{
+                            fontFamily: 'Inter-Medium',
+                            color: 'black',
+                            fontSize: 10,
+                          }}>
+                          {/* A Hour ago */}
+                          {dataReview.length === 0
+                            ? 'NaN'
+                            : moment(createAt).format('MMM Do YY')}
+                        </Text>
+                      </View>
+                    </View>
+                    <View
+                      style={{
+                        height: '100%',
+                        // width: '30%',
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                        backgroundColor: 'black',
+                        borderRadius: 6,
+                        // justifyContent: 'space-evenly',
+                      }}>
+                      <Text
+                        style={{
+                          color: 'white',
+                          paddingRight: 10,
+                          paddingLeft: 10,
+                          fontSize: 12,
+                        }}>
+                        {/* 4.0 */}
+                        {dataReview.length === 0 ? 'NaN' : RatingStar}
+                      </Text>
+                      <Image
+                        style={{
+                          height: 18,
+                          width: 18,
+                          tintColor: 'white',
+                          marginRight: 10,
+                        }}
+                        source={icons.Start2Icon}
+                      />
+                    </View>
+                  </View>
+                  <View
+                    style={{
+                      height: '70%',
+                      width: '100%',
+                      flexDirection: 'row',
+                      // borderWidth: 1,
+                      // borderColor: 'black',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                    }}>
+                    <View
+                      style={{
+                        height: '80%',
+                        width: '100%',
+                      }}>
+                      <Text
+                        style={{
+                          fontFamily: 'Inter-Regular',
+                          color: 'black',
+                          fontSize: 13,
+                        }}
+                        numberOfLines={3}
+                        ellipsizeMode="tail">
+                        {/* Lorem Ipsum is simply dummy text of the printing and
                       typesetting industry. Lorem Ipsum has been the industry's
                       standard dummy text ever since the 1500s, when an unknown
                       printer took a galley of type and scrambled it to make a
-                      type specimen book.
-                    </Text>
+                      type specimen book. */}
+                        {dataReview.length === 0 ? 'NaN' : Comment}
+                      </Text>
+                    </View>
                   </View>
                 </View>
-              </View>
-            </TouchableOpacity>
-          </View>
+              </TouchableOpacity>
+            </View>
+          )}
           {/* End Star rating */}
           {/* Map */}
           <View

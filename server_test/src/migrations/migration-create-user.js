@@ -25,6 +25,9 @@ module.exports = {
       image: {
         type: Sequelize.STRING,
       },
+      CantReview: {
+        type: Sequelize.BOOLEAN,
+      },
       roleName: {
         type: Sequelize.ENUM("Admin", "User"),
       },

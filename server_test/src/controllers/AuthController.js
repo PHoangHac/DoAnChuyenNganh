@@ -109,6 +109,23 @@ const authController = {
       return res.status(500).send(error);
     }
   },
+  UpdateReviewUser: async (req, res) => {
+    const { id } = req.params;
+    try {
+      const FindUser = await db.User.findOne({
+        where: { id: id },
+      });
+      if (FindUser) {
+        FindUser.CantReview = req.body.CantReview;
+        await FindUser.save();
+        return res
+          .status(200)
+          .send({ message: "Update SuccessFull !", FindUser });
+      }
+    } catch (error) {
+      return res.status(500).send(error);
+    }
+  },
 };
 
 export default authController;

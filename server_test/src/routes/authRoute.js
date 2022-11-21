@@ -23,7 +23,8 @@ let AuthRoutes = (app) => {
       "/UpdateImage/:id",
       UploadController.upload,
       authController.UpdateImage
-    );
+    )
+    .post("/UpdateReviewUser/:id", authController.UpdateReviewUser);
 
   return app.use("/auth", router);
 };

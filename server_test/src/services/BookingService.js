@@ -7,7 +7,7 @@ const BookingService = {
         const bookingData = {};
 
         // validate
-        if (!data.Adult == "" || !data.Children == "") {
+        if (!data.Adult == 0 || !data.Children == 0) {
           let booking = await db.Booking.create({
             Adult: data.Adult,
             Children: data.Children,
@@ -25,7 +25,8 @@ const BookingService = {
           bookingData.booking = booking;
         } else {
           bookingData.errCode = 1;
-          bookingData.errMessage = "Some Field is empty !";
+          bookingData.errMessage =
+            "The number of Adult or Children more than 0 !";
         }
 
         resolve(bookingData);

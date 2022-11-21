@@ -11,7 +11,8 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
       User.hasMany(models.Booking, { foreignKey: "idUser" });
       User.hasMany(models.Bill, { foreignKey: "idUser" });
-      // User.hasMany(models.Review, { foreignKey: "idUser" });
+      User.hasMany(models.Review, { foreignKey: "idUser" });
+      User.hasMany(models.CantReview, { foreignKey: "idUser" });
     }
   }
   User.init(
@@ -21,6 +22,7 @@ module.exports = (sequelize, DataTypes) => {
       name: DataTypes.STRING,
       phone: DataTypes.STRING,
       image: DataTypes.STRING,
+      CantReview: DataTypes.BOOLEAN,
       roleName: DataTypes.ENUM("Admin", "User"),
     },
     {

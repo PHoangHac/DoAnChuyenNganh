@@ -1,32 +1,12 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import {View, Text, TouchableOpacity, Image, FlatList} from 'react-native';
 import {icons, images} from '../../constants/index';
 import {Review} from '../../constants/dataDummy';
+import axios from 'axios';
+import {URL} from '../../context/config';
+import moment from 'moment';
 
 const Item = ({data}) => {
-  // const pic = JSON.parse(data.images);
-
-  // console.log(data.NameTour.length);
-
-  // // 275
-  // const check =
-  //   'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Consequat nisl vel pretium lectus quam id leo. Velit euismod in pellentesque massa placerat duis ultricies lacus sed. Justo laoreet sit amet cursus sit';
-  // // 200
-  // const check2 =
-  //   'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Consequat nisl vel pretium lectus quam id leo. Velit euismod in pellentesque';
-  // // 150
-  // const check3 =
-  //   'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Consequat nisl vel pretium';
-  // //100
-  // const check4 =
-  //   'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore.';
-  // //50
-  // const check5 = 'Lorem ipsum dolor sit amet, consectetur adipiscing';
-
-  // console.log(check5.length);
-  // if(data.descripton.length )
-  // console.log(data.descripton);
-
   return (
     <View
       style={{
@@ -90,7 +70,8 @@ const Item = ({data}) => {
                   color: 'black',
                   fontSize: 14,
                 }}>
-                User name
+                {/* User name */}
+                {data.User.name}
               </Text>
               <Text
                 style={{
@@ -98,7 +79,8 @@ const Item = ({data}) => {
                   color: 'black',
                   fontSize: 12,
                 }}>
-                A hour ago
+                {/* A hour ago */}
+                {moment(data.createdAt).startOf('hour').fromNow()}
               </Text>
             </View>
           </View>
@@ -123,7 +105,7 @@ const Item = ({data}) => {
                   paddingLeft: 10,
                   fontSize: 14,
                 }}>
-                4.0
+                {data.Rating.toFixed(1)}
               </Text>
               <Image
                 style={{
@@ -143,13 +125,14 @@ const Item = ({data}) => {
         <View
           style={{
             height:
-              data.descripton.length == 200
+              data.Comment.length == 200
                 ? 120
-                : data.descripton.length <= 100
+                : data.Comment.length <= 100
                 ? 80
-                : data.descripton.length <= 150
+                : data.Comment.length <= 150
                 ? 100
                 : 120,
+            // 120,
             width: '100%',
             // borderWidth: 1,
             // borderColor: 'black',
@@ -167,7 +150,8 @@ const Item = ({data}) => {
                 fontSize: 13,
                 lineHeight: 18,
               }}>
-              {data.descripton}
+              {/* {data.descripton} */}
+              {data.Comment}
             </Text>
           </View>
         </View>
@@ -176,8 +160,71 @@ const Item = ({data}) => {
   );
 };
 
-const ReviewByTourScreen = ({navigation}) => {
+const ReviewByTourScreen = ({navigation, route}) => {
+  const [Data, setData] = useState([]);
+  let StateRating;
   const renderItem = ({item}) => <Item navigation={navigation} data={item} />;
+
+  const OKK = () => {
+    axios
+      .get(`${URL}/Review/GetAllByTour/${route.params.idTour}`)
+      .then(res => {
+        setData(res.data);
+      })
+      .catch(e => {
+        console.log('Error ', e);
+      });
+  };
+
+  useEffect(() => {
+    OKK();
+    const focusHandler = navigation.addListener('focus', () => {
+      OKK();
+    });
+    return focusHandler;
+  }, [navigation]);
+
+  const okk = Data.map(item => {
+    return item.Rating;
+  });
+
+  const averageStar =
+    okk.reduce((accumulator, value) => {
+      return accumulator + value;
+    }, 0) / Data.length;
+
+  switch (true) {
+    case averageStar == 5:
+      StateRating = 'Great !';
+      break;
+    case averageStar >= 4:
+      StateRating = 'Good !';
+      break;
+    case averageStar >= 3:
+      StateRating = 'Okay !';
+      break;
+    case averageStar >= 2:
+      StateRating = 'Not Bad !';
+      break;
+    case averageStar >= 1:
+      StateRating = 'bad !';
+      break;
+    case averageStar <= 1:
+      StateRating = 'Terrible !';
+      break;
+    default:
+      StateRating = 'No Review !';
+      break;
+  }
+
+  // if (isNaN(averageStar)) {
+  //   console.log('true');
+  // } else {
+  //   console.log('false');
+  // }
+
+  // console.log(isNaN(averageStar));
+
   return (
     <View
       style={{
@@ -213,8 +260,8 @@ const ReviewByTourScreen = ({navigation}) => {
               }}>
               <Image
                 style={{
-                  height: 45,
-                  width: 45,
+                  height: 40,
+                  width: 40,
                 }}
                 source={icons.ArrowBackIcon}
               />
@@ -223,7 +270,7 @@ const ReviewByTourScreen = ({navigation}) => {
           <View
             style={{
               height: '100%',
-              width: '80%',
+              width: '60%',
               justifyContent: 'center',
               paddingLeft: 40,
               //   alignItems: 'center',
@@ -236,6 +283,28 @@ const ReviewByTourScreen = ({navigation}) => {
               }}>
               Guest Review
             </Text>
+          </View>
+          <View
+            style={{
+              height: '100%',
+              width: '20%',
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}>
+            <TouchableOpacity
+              onPress={() => {
+                navigation.navigate('ReviewByUserScreen', {
+                  idTour: route.params.idTour,
+                });
+              }}>
+              <Image
+                style={{
+                  height: 40,
+                  width: 40,
+                }}
+                source={icons.AddIcon}
+              />
+            </TouchableOpacity>
           </View>
         </View>
       </View>
@@ -268,7 +337,8 @@ const ReviewByTourScreen = ({navigation}) => {
                 color: 'black',
                 fontSize: 16,
               }}>
-              4.5/5 - Good
+              {isNaN(averageStar) ? 0 : averageStar.toFixed(1)}/5 -{' '}
+              {StateRating}
             </Text>
           </View>
           <View
@@ -283,7 +353,7 @@ const ReviewByTourScreen = ({navigation}) => {
                 color: 'black',
                 fontSize: 12,
               }}>
-              Total 2000 Reviews
+              Total {Data.length} Reviews
             </Text>
           </View>
         </View>
@@ -308,7 +378,7 @@ const ReviewByTourScreen = ({navigation}) => {
             //   <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
             // }
             // contentContainerStyle={{paddingBottom: 60}}
-            data={Review}
+            data={Data}
             renderItem={renderItem}
             keyExtractor={item => item.id}
           />

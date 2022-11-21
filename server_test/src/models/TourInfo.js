@@ -16,12 +16,8 @@ module.exports = (sequelize, DataTypes) => {
       TourInfo.hasMany(models.Booking, { foreignKey: "idTourInfo" });
       TourInfo.belongsTo(models.Hotel, { foreignKey: "idHotel" });
       TourInfo.belongsTo(models.Location, { foreignKey: "idLocation" });
-      // TourInfo.belongsToMany(models.Review, { through: ReviewTour });
-      // TourInfo.belongsToMany(
-      //   models.Review,
-      //   { through: "ReviewTour" },
-      //   { foreignKey: "idTourInfo" }
-      // );
+      TourInfo.hasMany(models.Review, { foreignKey: "idTourInfo" });
+      TourInfo.hasMany(models.CantReview, { foreignKey: "idTourInfo" });
     }
   }
   TourInfo.init(

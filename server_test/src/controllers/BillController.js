@@ -31,7 +31,7 @@ const BillController = {
         attributes: ["id", "DatePayment", "TimePayment", "idUser", "idBooking"],
         where: { id: id },
         include: [
-          { model: db.User, attributes: ["name", "phone"] },
+          { model: db.User, attributes: ["id", "name", "phone"] },
           {
             model: db.Booking,
             attributes: ["id", "totalCost", "totalGuest"],

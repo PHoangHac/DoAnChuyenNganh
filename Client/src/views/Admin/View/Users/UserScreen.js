@@ -20,7 +20,7 @@ const wait = timeout => {
 
 const renderItem = data => {
   // const pic = JSON.parse(data.item.images);
-  // console.log(data.item.name);
+  // console.log(data.item.email.length);
   return (
     <>
       {data.item.roleName === 'User' && (
@@ -94,6 +94,7 @@ const renderItem = data => {
                   }}>
                   <Text
                     style={{
+                      fontSize: data.item.email.length >= 23 ? 12 : 14,
                       color: 'white',
                       paddingLeft: 10,
                       fontFamily: 'Inter-Bold',
@@ -341,6 +342,9 @@ const UserScreen = ({navigation}) => {
               // justifyContent: 'center',
             }}>
             <TouchableOpacity
+              onPress={() => {
+                navigation.navigate('CreateHotelScreen');
+              }}
               style={{
                 height: '100%',
                 width: '100%',

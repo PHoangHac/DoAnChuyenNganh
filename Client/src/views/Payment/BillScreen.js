@@ -1,5 +1,5 @@
 // import React
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useContext} from 'react';
 
 // import core component
 import {
@@ -13,16 +13,16 @@ import {
 
 //import icons
 import {icons} from '../../constants/index';
-
 import {URL} from '../../context/config';
-
 import axios from 'axios';
+import {AuthContext} from '../../context/AuthContext';
 
 const HEIGHTDEVICE = Dimensions.get('window').height;
 const WidthDevice = Dimensions.get('window').width;
 
 const BillScreen = ({navigation, route}) => {
   const [data, setData] = useState([]);
+  const {userInfo} = useContext(AuthContext);
   //-----CREATE VARIABLE----//
   let User, Booking, DatePayment, TimePayment, Code;
   //-----CREATE VARIABLE----//
@@ -45,8 +45,24 @@ const BillScreen = ({navigation, route}) => {
     User = hello[5];
     Booking = hello[6];
   }
-
   //-----CHECK DATA EMPTY----//
+
+  // const DefaultPayment = async () => {
+  //   try {
+  //     await axios
+  //       .post(`${URL}/Review/CheckReview`, {
+  //         Status: 1,
+  //         idUser: userInfo.user.id,
+  //         idTourInfo: Booking.TourInfo.id,
+  //       })
+  //       .then(res => {
+  //         // console.log(res.data);
+  //       });
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
+
   useEffect(() => {
     axios
       .get(`${URL}/Bill/GetOneBill/${idParams}`)
@@ -57,13 +73,16 @@ const BillScreen = ({navigation, route}) => {
       .catch(err => {
         console.log(err);
       });
-
     const backHandler = BackHandler.addEventListener(
       'hardwareBackPress',
       () => true,
     );
     return () => backHandler.remove();
   }, [idParams.id]);
+
+  // useEffect(() => {
+  //   DefaultPayment();
+  // }, [data]);
 
   return (
     <View
