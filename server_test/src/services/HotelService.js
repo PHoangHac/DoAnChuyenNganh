@@ -6,14 +6,14 @@ const HotelService = {
       try {
         const hotelData = {};
 
-        let hotel = await db.Hotel.create({
+        await db.Hotel.create({
           NameHotel: data.NameHotel,
           images: data.images,
         });
         hotelData.errCode = 0;
         hotelData.errMessage = "Create hotel successfully !";
 
-        resolve(hotel);
+        resolve(hotelData);
       } catch (e) {
         reject(e);
       }

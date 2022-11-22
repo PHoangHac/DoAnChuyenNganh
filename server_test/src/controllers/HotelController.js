@@ -14,7 +14,6 @@ const HotelController = {
     return res.status(200).json({
       errCode: hotelData.errCode,
       message: hotelData.errMessage,
-      message: hotelData.hotel,
     });
   },
   GetAllHotel: async (req, res) => {

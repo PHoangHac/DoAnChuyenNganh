@@ -13,7 +13,8 @@ let TransportRoute = (app) => {
       UploadController.upload,
       TransportController.CreateTransport
     )
-    .get("/GetAll", TransportController.GetAllTransport);
+    .get("/GetAll", TransportController.GetAllTransport)
+    .get("/GetOne/:id", TransportController.GetOne);
   // .post("/GetAll", authController.signin)
   // .get(
   //   "/",

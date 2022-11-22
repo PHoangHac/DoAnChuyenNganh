@@ -45,7 +45,7 @@ const UpdateTourScreen = ({navigation, route}) => {
         PricePerson: PricePerson,
       })
       .then(res => {
-        console.log(typeof res.data);
+        // console.log(typeof res.data);
         setLoading(true);
         setTimeout(() => {
           Toast.show({
@@ -60,7 +60,7 @@ const UpdateTourScreen = ({navigation, route}) => {
 
   if (loading === true) {
     setTimeout(() => {
-      console.log('Spinner stop running !');
+      // console.log('Spinner stop running !');
       setLoading(false);
     }, 2500);
   }

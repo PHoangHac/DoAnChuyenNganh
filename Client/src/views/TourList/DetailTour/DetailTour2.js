@@ -61,25 +61,6 @@ const wait = timeout => {
   return new Promise(resolve => setTimeout(resolve, timeout));
 };
 
-// Component
-const CardPicture = ({FListData}) => {
-  return (
-    <TouchableOpacity>
-      <Image
-        style={{
-          width: 100,
-          height: 100,
-          borderRadius: 15,
-          // marginHorizontal: 10,
-          marginRight: 10,
-        }}
-        // source={FListData.imageUrl}
-        source={{uri: `${URL}/${FListData}`}}
-      />
-    </TouchableOpacity>
-  );
-};
-
 const DetailsScreen2 = ({navigation, route}) => {
   const [showMoreButton, setShowMoreButton] = useState(false);
   const [textShown, setTextShown] = useState(false);
@@ -113,7 +94,8 @@ const DetailsScreen2 = ({navigation, route}) => {
   }
 
   const pic = JSON.parse(route.params.images);
-  const datanamearr = Object.keys(pic).map(key => pic[key]);
+  const dataPicture = Object.keys(pic).map(key => pic[key]);
+
   const toggleTextShown = () => {
     setTextShown(!textShown);
   };
@@ -213,6 +195,29 @@ const DetailsScreen2 = ({navigation, route}) => {
     getOneByTourUser();
     wait(500).then(() => setRefreshing(false));
   }, []);
+
+  // Component
+  const CardPicture = ({FListData}) => {
+    return (
+      <TouchableOpacity>
+        <Image
+          style={{
+            width: 100,
+            height: 100,
+            borderRadius: 15,
+            // marginHorizontal: 10,
+            marginRight: 10,
+          }}
+          // source={FListData.imageUrl}
+          source={
+            dataPicture.length === 0
+              ? images.NotFoundImg
+              : {uri: `${URL}/${FListData}`}
+          }
+        />
+      </TouchableOpacity>
+    );
+  };
 
   return (
     // Container
@@ -610,7 +615,7 @@ const DetailsScreen2 = ({navigation, route}) => {
               /> */}
               <FlatList
                 // contentContainerStyle={{paddingHorizontal: 5}}
-                data={datanamearr}
+                data={dataPicture}
                 horizontal
                 showsHorizontalScrollIndicator={false}
                 renderItem={({item}) => <CardPicture FListData={item} />}

@@ -1,15 +1,26 @@
-import React, {useContext} from 'react';
+import React, {useContext, useState, useCallback, useEffect} from 'react';
 import {View, Text, Image, TouchableOpacity} from 'react-native';
-
+import axios from 'axios';
 import {icons, images} from '../../constants/index';
-
+import {URL} from '../../context/config';
 //------AuthContext-----//
 import {AuthContext} from '../../context/AuthContext';
 //------AuthContext-----//
 import Spinner from 'react-native-loading-spinner-overlay';
 
 const Onboarding = ({navigation}) => {
+  const [image, setImage] = useState('');
   const {isLoading, Logout, userInfo} = useContext(AuthContext);
+  // console.log(image);
+
+  const getByIdUser = useCallback(async () => {
+    const getData = await axios.get(`${URL}/auth/GetOne/${userInfo.user.id}`);
+    setImage(getData.data.image);
+  }, [userInfo.user.id]);
+
+  useEffect(() => {
+    getByIdUser();
+  }, [getByIdUser]);
 
   return (
     <View style={{flex: 100, backgroundColor: 'white'}}>
@@ -49,8 +60,10 @@ const Onboarding = ({navigation}) => {
               borderWidth: 5,
               borderColor: 'white',
               borderRadius: 55,
+              height: 120,
+              width: 120,
             }}
-            source={images.user}
+            source={{uri: `${URL}/${image}`}}
           />
           <TouchableOpacity
             style={{

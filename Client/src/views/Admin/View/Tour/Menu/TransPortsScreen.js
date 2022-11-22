@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -9,10 +9,17 @@ import {
   Dimensions,
 } from 'react-native';
 import {icons, images} from '../../../../../constants/index';
+import {URL} from '../../../../../context/config';
+import axios from 'axios';
 import DocumentPicker from 'react-native-document-picker';
+import Spinner from 'react-native-loading-spinner-overlay';
+import Toast from 'react-native-toast-message';
 
 const NewTransPortScreen = ({navigation}) => {
   const [singleFile, setSingleFile] = useState([]);
+  // const [Data, setData] = useState([]);
+  const [nameTsp, setNameTsp] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   const OKK = singleFile[0];
 
@@ -24,13 +31,81 @@ const NewTransPortScreen = ({navigation}) => {
       setSingleFile(results);
     } catch (err) {
       if (DocumentPicker.isCancel(err)) {
-        alert('User cancel select file!');
+        // alert('User cancel select file!');
       } else {
         console.log(JSON.stringify(err));
         throw err;
       }
     }
   };
+
+  const CreateTransPort = async () => {
+    if (nameTsp === null) {
+      Toast.show({
+        type: 'error',
+        text1: 'Status',
+        text2: 'SOME FIELD EMPTY ! 👋',
+        autoHide: true,
+        visibilityTime: 1500,
+      });
+    } else if (singleFile.length === 0) {
+      Toast.show({
+        type: 'error',
+        text1: 'Status',
+        text2: 'PICTURE NOT CHOOSE ! 👋',
+        autoHide: true,
+        visibilityTime: 1500,
+      });
+    } else {
+      try {
+        const data = new FormData();
+        singleFile.forEach((item, i) => {
+          data.append('file', {
+            uri: item.uri,
+            type: 'image/jpeg',
+            name: item.filename || `filename${i}.jpg`,
+          });
+        });
+        await axios({
+          method: 'POST',
+          url: `${URL}/Upload/upload-single`,
+          data: data,
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        })
+          .then(res => {
+            axios
+              .post(`${URL}/transport/Create`, {
+                nameTransport: nameTsp,
+                image: `src/assets/images/` + res.data,
+              })
+              .then(res => {
+                console.log(res.data);
+                setLoading(true);
+                setTimeout(() => {
+                  Toast.show({
+                    type: 'success',
+                    text1: 'Status',
+                    text2: 'CREATE SUCCESSFULLY ! 👋',
+                  });
+                }, 2500);
+              });
+          })
+          .catch(err => console.log(err));
+        // console.log(response.data);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  };
+
+  if (loading === true) {
+    setTimeout(() => {
+      // console.log('Spinner stop running !');
+      setLoading(false);
+    }, 2500);
+  }
 
   const RemoveFile = () => {
     setSingleFile([]);
@@ -45,6 +120,7 @@ const NewTransPortScreen = ({navigation}) => {
         width: Dimensions.get('window').width,
         height: Dimensions.get('window').height,
       }}>
+      <Spinner visible={loading} />
       {/* Header */}
       <View
         style={{
@@ -189,6 +265,8 @@ const NewTransPortScreen = ({navigation}) => {
                   borderRadius: 8,
                   paddingLeft: 10,
                 }}
+                value={nameTsp}
+                onChangeText={text => setNameTsp(text)}
                 placeholder="Enter here......"
                 placeholderTextColor={'black'}
               />
@@ -199,7 +277,7 @@ const NewTransPortScreen = ({navigation}) => {
           {/* Images */}
           <View
             style={{
-              height: 400,
+              height: 250,
               width: '90%',
               //   backgroundColor: 'blue',
               alignSelf: 'center',
@@ -207,7 +285,7 @@ const NewTransPortScreen = ({navigation}) => {
             }}>
             <View
               style={{
-                height: '8%',
+                height: '20%',
                 width: '100%',
                 justifyContent: 'center',
                 // backgroundColor: 'blue',
@@ -222,7 +300,7 @@ const NewTransPortScreen = ({navigation}) => {
             </View>
             <View
               style={{
-                height: '92%',
+                height: '80%',
                 width: '100%',
                 flexDirection: 'row',
                 justifyContent: 'space-between',
@@ -236,7 +314,7 @@ const NewTransPortScreen = ({navigation}) => {
                 }}>
                 <View
                   style={{
-                    height: '40%',
+                    height: '55%',
                     width: '100%',
                     flexDirection: 'column',
                     justifyContent: 'space-evenly',
@@ -273,7 +351,7 @@ const NewTransPortScreen = ({navigation}) => {
                 </View>
                 <View
                   style={{
-                    height: '60%',
+                    height: '45%',
                     width: '100%',
                     // backgroundColor: 'yellow',
                   }}></View>
@@ -294,6 +372,20 @@ const NewTransPortScreen = ({navigation}) => {
             </View>
           </View>
           {/* End Images */}
+
+          {/* <View
+            style={{
+              height: 200,
+              width: '100%',
+              backgroundColor: 'blue',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}>
+            <Image
+              source={{uri: `${URL}/${Data.image}`}}
+              style={{height: 150, width: 150, borderRadius: 12}}
+            />
+          </View> */}
         </ScrollView>
       </View>
 
@@ -305,6 +397,7 @@ const NewTransPortScreen = ({navigation}) => {
           alignItems: 'center',
         }}>
         <TouchableOpacity
+          onPress={CreateTransPort}
           style={{
             backgroundColor: 'blue',
             borderRadius: 12,
@@ -320,6 +413,7 @@ const NewTransPortScreen = ({navigation}) => {
           </Text>
         </TouchableOpacity>
       </View>
+      <Toast topOffset={10} />
     </View>
   );
 };

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {
   View,
   Text,
@@ -9,8 +9,59 @@ import {
   Dimensions,
 } from 'react-native';
 import {icons, images} from '../../../../../constants';
+import axios from 'axios';
+import {URL} from '../../../../../context/config';
+import Spinner from 'react-native-loading-spinner-overlay';
+import Toast from 'react-native-toast-message';
 
 const NewLocationScreen = ({navigation}) => {
+  const [NameCountry, setNameCountry] = useState(null);
+  const [PlaceName, setPlaceName] = useState(null);
+  const [Desc, setDesc] = useState(null);
+  const [loading, setLoading] = useState(false);
+
+  const CreateLocation = async () => {
+    if (NameCountry === null || PlaceName === null || Desc === null) {
+      Toast.show({
+        type: 'error',
+        text1: 'Status',
+        text2: 'SOME FIELD EMPTY ! 👋',
+        autoHide: true,
+        visibilityTime: 1500,
+      });
+    } else {
+      try {
+        axios
+          .post(`${URL}/location/Create`, {
+            country: NameCountry,
+            placeName: PlaceName,
+            descLocation: Desc,
+          })
+          .then(res => {
+            console.log(res.data);
+            setLoading(true);
+            setTimeout(() => {
+              Toast.show({
+                type: 'success',
+                text1: 'Status',
+                text2: 'CREATE SUCCESSFULLY ! 👋',
+              });
+            }, 2500);
+          })
+          .catch(err => console.log(err));
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  };
+
+  if (loading === true) {
+    setTimeout(() => {
+      // console.log('Spinner stop running !');
+      setLoading(false);
+    }, 2500);
+  }
+
   return (
     <View
       style={{
@@ -20,6 +71,7 @@ const NewLocationScreen = ({navigation}) => {
         width: Dimensions.get('window').width,
         height: Dimensions.get('window').height,
       }}>
+      <Spinner visible={loading} />
       {/* Header */}
       <View
         style={{
@@ -164,6 +216,8 @@ const NewLocationScreen = ({navigation}) => {
                   borderRadius: 8,
                   paddingLeft: 10,
                 }}
+                value={NameCountry}
+                onChangeText={text => setNameCountry(text)}
                 placeholder="Enter here......"
                 placeholderTextColor={'black'}
               />
@@ -210,6 +264,8 @@ const NewLocationScreen = ({navigation}) => {
                   borderRadius: 8,
                   paddingLeft: 10,
                 }}
+                value={PlaceName}
+                onChangeText={text => setPlaceName(text)}
                 placeholder="Enter here......"
                 placeholderTextColor={'black'}
               />
@@ -257,6 +313,8 @@ const NewLocationScreen = ({navigation}) => {
                   paddingLeft: 10,
                   textAlignVertical: 'top',
                 }}
+                value={Desc}
+                onChangeText={text => setDesc(text)}
                 multiline={true}
                 numberOfLines={5}
                 maxLength={250}
@@ -277,6 +335,7 @@ const NewLocationScreen = ({navigation}) => {
           alignItems: 'center',
         }}>
         <TouchableOpacity
+          onPress={CreateLocation}
           style={{
             backgroundColor: 'blue',
             borderRadius: 12,
@@ -292,6 +351,7 @@ const NewLocationScreen = ({navigation}) => {
           </Text>
         </TouchableOpacity>
       </View>
+      <Toast topOffset={10} />
     </View>
   );
 };

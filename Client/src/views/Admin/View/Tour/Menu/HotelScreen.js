@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -10,11 +10,17 @@ import {
 } from 'react-native';
 import {icons, images} from '../../../../../constants/index';
 import {DataFakeImg} from '../../../../../constants/dataDummy';
+import {URL} from '../../../../../context/config';
+import DocumentPicker from 'react-native-document-picker';
+import axios from 'axios';
+import Spinner from 'react-native-loading-spinner-overlay';
+import Toast from 'react-native-toast-message';
 
 const NewHotelScreen = ({navigation}) => {
-  const [singleFile, setSingleFile] = useState([]);
   const [multipleFile, setMultipleFile] = useState([]);
-
+  // const [Data, setData] = useState([]);
+  const [nameTsp, setNameTsp] = useState(null);
+  const [loading, setLoading] = useState(false);
   const SelectedMultipleFile = async () => {
     try {
       const results = await DocumentPicker.pickMultiple({
@@ -31,6 +37,73 @@ const NewHotelScreen = ({navigation}) => {
     }
   };
 
+  const CreateHotel = async () => {
+    if (nameTsp === null) {
+      Toast.show({
+        type: 'error',
+        text1: 'Status',
+        text2: 'SOME FIELD EMPTY ! 👋',
+        autoHide: true,
+        visibilityTime: 1500,
+      });
+    } else if (multipleFile.length === 0) {
+      Toast.show({
+        type: 'error',
+        text1: 'Status',
+        text2: 'PICTURE NOT CHOOSE ! 👋',
+        autoHide: true,
+        visibilityTime: 1500,
+      });
+    } else {
+      try {
+        const data = new FormData();
+        multipleFile.forEach((item, i) => {
+          data.append('MultipleFiles', {
+            uri: item.uri,
+            type: 'image/jpeg',
+            name: item.filename || `filename${i}.jpg`,
+          });
+        });
+        const res = await axios({
+          method: 'POST',
+          url: `${URL}/Upload/upload-multiple`,
+          data: data,
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        })
+          .then(res => {
+            axios
+              .post(`${URL}/hotel/Create`, {
+                NameHotel: nameTsp,
+                images: res.data.split(' '),
+              })
+              .then(res => {
+                console.log(res.data);
+                setLoading(true);
+                setTimeout(() => {
+                  Toast.show({
+                    type: 'success',
+                    text1: 'Status',
+                    text2: 'CREATE SUCCESSFULLY ! 👋',
+                  });
+                }, 2500);
+              });
+          })
+          .catch(err => console.log(err));
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  };
+
+  if (loading === true) {
+    setTimeout(() => {
+      // console.log('Spinner stop running !');
+      setLoading(false);
+    }, 2500);
+  }
+
   const RemoveFile = () => {
     setSingleFile([]);
     setMultipleFile([]);
@@ -44,6 +117,7 @@ const NewHotelScreen = ({navigation}) => {
         width: Dimensions.get('window').width,
         height: Dimensions.get('window').height,
       }}>
+      <Spinner visible={loading} />
       {/* Header */}
       <View
         style={{
@@ -188,6 +262,8 @@ const NewHotelScreen = ({navigation}) => {
                   borderRadius: 8,
                   paddingLeft: 10,
                 }}
+                value={nameTsp}
+                onChangeText={text => setNameTsp(text)}
                 placeholder="Enter here......"
                 placeholderTextColor={'black'}
               />
@@ -355,6 +431,7 @@ const NewHotelScreen = ({navigation}) => {
           alignItems: 'center',
         }}>
         <TouchableOpacity
+          onPress={CreateHotel}
           style={{
             backgroundColor: 'blue',
             borderRadius: 12,
@@ -370,6 +447,7 @@ const NewHotelScreen = ({navigation}) => {
           </Text>
         </TouchableOpacity>
       </View>
+      <Toast topOffset={10} />
     </View>
   );
 };

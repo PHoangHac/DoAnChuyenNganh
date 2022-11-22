@@ -1,7 +1,7 @@
 import db from "../models/index";
 
 const TourService = {
-  CreateTour: (data, imageData) => {
+  CreateTour: (data) => {
     return new Promise(async (resolve, reject) => {
       try {
         const tourData = {};
@@ -23,7 +23,7 @@ const TourService = {
             Departureday: data.Departureday, // Thời gian khởi hành
             Description: data.Description,
             PricePerson: data.PricePerson,
-            images: imageData,
+            images: data.images,
             idTypesOfTransport: data.idTypesOfTransport,
             idHotel: data.idHotel,
             idLocation: data.idLocation,

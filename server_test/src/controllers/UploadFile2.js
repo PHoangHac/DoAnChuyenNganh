@@ -28,7 +28,7 @@ export let handleUpdLoadMultipleFile = async (req, res, next) => {
 
   // Loop through all the uploaded images and display them on frontend
   for (index = 0, len = files.length; index < len; ++index) {
-    result += `${files[index].filename}`;
+    result += `src/assets/images/${files[index].filename} `;
   }
   // result += '<hr/><a href="./">Upload more images</a>';
   res.send(result);

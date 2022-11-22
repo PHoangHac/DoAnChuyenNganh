@@ -57,6 +57,7 @@ const authController = {
         FindUser.name = data.name;
         FindUser.phone = data.phone;
         FindUser.email = data.email;
+        FindUser.image = data.image;
         await FindUser.save();
         return res.status(200).send({ message: "Update SuccessFull !" });
       }
@@ -92,8 +93,8 @@ const authController = {
     }
   },
   UpdateImage: async (req, res) => {
-    const { id } = req.params;
-    const image = req.file.path;
+    // const { id } = req.params;
+    // const image = req.file.path;
     // const data = req.body;
     // console.log(image);
     try {
@@ -101,7 +102,7 @@ const authController = {
         where: { id: id },
       });
       if (FindUser) {
-        FindUser.image = image;
+        FindUser.image = req.body.image;
         await FindUser.save();
         return res.status(200).send({ message: "Update SuccessFull !" });
       }

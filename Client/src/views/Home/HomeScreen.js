@@ -86,50 +86,30 @@ const HomeScreen = ({navigation}) => {
     ListTour();
   }, []);
 
-  const ListCategories = () => {
+  const ListCategories = ({data}) => {
+    // console.log(data);
     return (
       <View
         style={{
           flexDirection: 'row',
           justifyContent: 'space-evenly',
-          top: 10,
+          marginHorizontal: 5,
         }}>
-        {data == '' ? (
-          <View
-            style={{
-              justifyContent: 'center',
-              backgroundColor: '#fff',
-            }}>
-            <ActivityIndicator size="large" color="#1925C3" />
-          </View>
-        ) : (
-          data.map((icon, index) => {
-            return (
-              <TouchableOpacity
-                disabled={true}
-                style={{
-                  backgroundColor: '#EFEFEF',
-                  borderRadius: 10,
-                  elevation: 5,
-                  // borderWidth: 1,
-                  // borderColor: 'black',
-                }}
-                key={index}
-                onPress={() => {
-                  navigation.navigate('PayPalScreen', {
-                    totalCost: '20.00',
-                  });
-                }}>
-                <View style={{padding: 5}}>
-                  <Image
-                    style={{height: 50, width: 50}}
-                    source={{uri: `${URL}/${icon.image}`}}
-                  />
-                </View>
-              </TouchableOpacity>
-            );
-          })
-        )}
+        <View
+          disabled={true}
+          style={{
+            backgroundColor: '#EFEFEF',
+            borderRadius: 10,
+            // padding: 5,
+            // elevation: 5,
+            // borderWidth: 1,
+            // borderColor: 'black',
+          }}>
+          <Image
+            style={{height: 50, width: 50}}
+            source={{uri: `${URL}/${data.image}`}}
+          />
+        </View>
       </View>
     );
   };
@@ -433,7 +413,14 @@ const HomeScreen = ({navigation}) => {
               </Text>
             </View>
             {/* Type */}
-            <ListCategories />
+            {/* <ListCategories /> */}
+            <FlatList
+              contentContainerStyle={{paddingHorizontal: 10}}
+              data={data}
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              renderItem={({item}) => <ListCategories data={item} />}
+            />
           </View>
           {/* Recommend */}
           <View

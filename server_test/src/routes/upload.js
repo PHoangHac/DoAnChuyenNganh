@@ -15,11 +15,14 @@ const storage = multer.diskStorage({
   },
 
   // By default, multer removes file extensions so let's add them back
-  filename: function (req, file, cb) {
-    cb(
-      null,
-      file.fieldname + "-" + Date.now() + path.extname(file.originalname)
-    );
+  // filename: function (req, file, cb) {
+  //   cb(
+  //     null,
+  //     file.fieldname + "-" + Date.now() + path.extname(file.originalname)
+  //   );
+  // },
+  filename: (req, file, cb) => {
+    cb(null, Date.now() + path.extname(file.originalname)); // 10/20/2020.png
   },
 });
 

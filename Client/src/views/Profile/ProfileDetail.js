@@ -4,6 +4,7 @@ import {View, Text, TouchableOpacity, Image, Dimensions} from 'react-native';
 import {TextInput} from 'react-native-gesture-handler';
 import {icons, images} from '../../constants/index';
 import DeviceInfo from 'react-native-device-info';
+import DocumentPicker from 'react-native-document-picker';
 import {AuthContext} from '../../context/AuthContext';
 import {URL} from '../../context/config';
 import axios from 'axios';
@@ -18,8 +19,26 @@ const ProfileDetail = ({navigation}) => {
   const [phone, setPhone] = useState('');
   const [image, setImage] = useState('');
   const [loading, setLoading] = useState(false);
+  const [singleFile, setSingleFile] = useState([]);
 
+  const OKK = singleFile[0];
   // console.log(image);
+
+  const SelectedSingleFile = async () => {
+    try {
+      const results = await DocumentPicker.pick({
+        type: [DocumentPicker.types.allFiles],
+      });
+      setSingleFile(results);
+    } catch (err) {
+      if (DocumentPicker.isCancel(err)) {
+        // alert('User cancel select file!');
+      } else {
+        console.log(JSON.stringify(err));
+        throw err;
+      }
+    }
+  };
 
   const getByIdTour = useCallback(async () => {
     const getData = await axios.get(`${URL}/auth/GetOne/${userInfo.user.id}`);
@@ -31,7 +50,7 @@ const ProfileDetail = ({navigation}) => {
 
   if (loading === true) {
     setTimeout(() => {
-      console.log('Spinner stop running !');
+      // console.log('Spinner stop running !');
       setLoading(false);
     }, 2500);
   }
@@ -41,25 +60,54 @@ const ProfileDetail = ({navigation}) => {
   }, [getByIdTour]);
 
   const Update = async () => {
-    await axios
-      .post(`${URL}/auth/Update/${userInfo.user.id}`, {
-        name: name,
-        phone: phone,
-        email: email,
-        // image: OKK === undefined ? ImageUser : OKK.name,
-      })
-      .then(res => {
-        console.log(res.data);
-        setLoading(true);
-        setTimeout(() => {
-          Toast.show({
-            type: 'success',
-            text1: 'Status',
-            text2: 'UPDATE SUCCESSFULLY ! 👋',
+    if (name === '' || phone === '' || email === '') {
+      Toast.show({
+        type: 'error',
+        text1: 'Status',
+        text2: 'SOME FIELD EMPTY ! 👋',
+      });
+    } else {
+      try {
+        const data = new FormData();
+        singleFile.forEach((item, i) => {
+          data.append('file', {
+            uri: item.uri,
+            type: 'image/jpeg',
+            name: item.filename || `filename${i}.jpg`,
           });
-        }, 2500);
-      })
-      .catch(err => console.log(err));
+        });
+        await axios({
+          method: 'POST',
+          url: `${URL}/Upload/upload-single`,
+          data: data,
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        }).then(res => {
+          axios
+            .post(`${URL}/auth/Update/${userInfo.user.id}`, {
+              name: name,
+              phone: phone,
+              email: email,
+              image: `src/assets/images/` + res.data,
+            })
+            .then(res => {
+              console.log(res.data);
+              setLoading(true);
+              setTimeout(() => {
+                Toast.show({
+                  type: 'success',
+                  text1: 'Status',
+                  text2: 'UPDATE SUCCESSFULLY ! 👋',
+                });
+              }, 2500);
+            })
+            .catch(err => console.log(err));
+        });
+      } catch (error) {
+        console.log(error);
+      }
+    }
   };
 
   return (
@@ -110,8 +158,10 @@ const ProfileDetail = ({navigation}) => {
               borderWidth: 5,
               borderColor: 'white',
               borderRadius: 55,
+              height: 120,
+              width: 120,
             }}
-            source={images.user}
+            source={singleFile.length > 0 ? OKK : {uri: `${URL}/${image}`}}
           />
           <TouchableOpacity
             style={{
@@ -145,7 +195,7 @@ const ProfileDetail = ({navigation}) => {
               width: '100%',
               height: 30,
             }}>
-            <TouchableOpacity>
+            <TouchableOpacity onPress={SelectedSingleFile}>
               <Text
                 style={{
                   color: 'black',
@@ -199,7 +249,7 @@ const ProfileDetail = ({navigation}) => {
               }}
               value={name}
               onChangeText={text => setName(text)}
-              placeholder="Quoc Dung"
+              placeholder="Your Name"
               placeholderTextColor={appName == 'Redmi' ? '#A4D5DE' : '#7E6FAA'}
             />
           </View>

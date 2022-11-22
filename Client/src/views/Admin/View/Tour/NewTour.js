@@ -14,15 +14,63 @@ import {places, DataFakeImg} from '../../../../constants/dataDummy';
 import {Dropdown} from 'react-native-element-dropdown';
 import {URL} from '../../../../context/config';
 import DocumentPicker from 'react-native-document-picker';
+import axios from 'axios';
+import Spinner from 'react-native-loading-spinner-overlay';
+import Toast from 'react-native-toast-message';
 
 const wait = timeout => {
   return new Promise(resolve => setTimeout(resolve, timeout));
 };
 
 const NewTourScreen = ({navigation}) => {
-  const [singleFile, setSingleFile] = useState([]);
   const [multipleFile, setMultipleFile] = useState([]);
-  const [refreshing, setRefreshing] = React.useState(false);
+  const [refreshing, setRefreshing] = useState(false);
+  const [DataTSP, setDataTSP] = useState([]);
+  const [DataLCT, setDataLCT] = useState([]);
+  const [DataHotel, setDataHotel] = useState([]);
+  const [value, setValue] = useState(null);
+  const [value2, setValue2] = useState(null);
+  const [value3, setValue3] = useState(null);
+  const [TSPId, setTSPId] = useState(null);
+  const [LCTId, setLCTId] = useState(null);
+  const [HotelId, setHotelId] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [NameTour, setNameTour] = useState(null);
+  const [Abbreviation, setAbbreviation] = useState(null);
+  const [totalTime, setTotalTime] = useState(null);
+  const [Description, setDescription] = useState(null);
+  const [DeparTureDay, setDeparTureDay] = useState(null);
+  const [PricePerson, setPricePerson] = useState(null);
+
+  useEffect(() => {
+    axios.get(`${URL}/transport/GetAll`).then(res => setDataTSP(res.data));
+
+    axios.get(`${URL}/hotel/GetAll`).then(res => setDataHotel(res.data));
+
+    axios.get(`${URL}/location/GetAll`).then(res => setDataLCT(res.data));
+  }, []);
+
+  const OK = DataTSP.map((item, index) => ({
+    label: item.nameTransport,
+    id: item.id,
+    value: `${index}`,
+  }));
+
+  const OK2 = DataLCT.map((item, index) => ({
+    label: item.placeName,
+    country: item.country,
+    descLocation: item.descLocation,
+    id: item.id,
+    value: `${index}`,
+  }));
+
+  const OK3 = DataHotel.map((item, index) => ({
+    label: item.NameHotel,
+    id: item.id,
+    value: `${index}`,
+  }));
+
+  // console.log(OK3);
 
   const SelectedMultipleFile = async () => {
     try {
@@ -40,8 +88,95 @@ const NewTourScreen = ({navigation}) => {
     }
   };
 
+  const CreateTour = async () => {
+    if (
+      NameTour === null ||
+      Abbreviation === null ||
+      totalTime === null ||
+      DeparTureDay === null ||
+      totalTime === null ||
+      PricePerson === null
+    ) {
+      Toast.show({
+        type: 'error',
+        text1: 'Status',
+        text2: 'SOME FIELD EMPTY ! 👋',
+        autoHide: true,
+        visibilityTime: 1500,
+      });
+    } else if (multipleFile.length === 0) {
+      Toast.show({
+        type: 'error',
+        text1: 'Status',
+        text2: 'PICTURE NOT CHOOSE ! 👋',
+        autoHide: true,
+        visibilityTime: 1500,
+      });
+    } else {
+      try {
+        const data = new FormData();
+        multipleFile.forEach((item, i) => {
+          data.append('MultipleFiles', {
+            uri: item.uri,
+            type: 'image/jpeg',
+            name: item.filename || `filename${i}.jpg`,
+          });
+        });
+        const res = await axios({
+          method: 'POST',
+          url: `${URL}/Upload/upload-multiple`,
+          data: data,
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        })
+          .then(res => {
+            axios
+              .post(`${URL}/tour/Create`, {
+                NameTour: NameTour,
+                abbreviation: Abbreviation,
+                totalTime: totalTime,
+                Departureday: DeparTureDay,
+                Description: Description,
+                PricePerson: PricePerson,
+                idTypesOfTransport: TSPId,
+                idHotel: HotelId,
+                idLocation: LCTId,
+                images: res.data.split(' '),
+              })
+              .then(res => {
+                console.log(res.data);
+                setLoading(true);
+                setTimeout(() => {
+                  Toast.show({
+                    type: 'success',
+                    text1: 'Status',
+                    text2: 'CREATE SUCCESSFULLY ! 👋',
+                  });
+                }, 2500);
+              });
+          })
+          .catch(err => console.log(err));
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  };
+  if (loading === true) {
+    setTimeout(() => {
+      // console.log('Spinner stop running !');
+      setLoading(false);
+    }, 2500);
+  }
+
+  if (loading === true) {
+    setTimeout(() => {
+      // console.log('Spinner stop running !');
+      setLoading(false);
+    }, 2500);
+  }
+
   const RemoveFile = () => {
-    setSingleFile([]);
     setMultipleFile([]);
   };
 
@@ -61,6 +196,8 @@ const NewTourScreen = ({navigation}) => {
         width: Dimensions.get('window').width,
         height: Dimensions.get('window').height,
       }}>
+      <Spinner visible={loading} />
+
       {/* Header */}
       <View
         style={{
@@ -209,6 +346,8 @@ const NewTourScreen = ({navigation}) => {
                   borderRadius: 8,
                   paddingLeft: 10,
                 }}
+                value={NameTour}
+                onChangeText={text => setNameTour(text)}
                 placeholder="Enter here......"
                 placeholderTextColor={'black'}
               />
@@ -255,6 +394,8 @@ const NewTourScreen = ({navigation}) => {
                   borderRadius: 8,
                   paddingLeft: 10,
                 }}
+                value={Abbreviation}
+                onChangeText={text => setAbbreviation(text)}
                 placeholder="Enter here......"
                 placeholderTextColor={'black'}
               />
@@ -301,6 +442,8 @@ const NewTourScreen = ({navigation}) => {
                   borderRadius: 8,
                   paddingLeft: 10,
                 }}
+                value={totalTime}
+                onChangeText={text => setTotalTime(text)}
                 placeholder="Enter here......"
                 placeholderTextColor={'black'}
               />
@@ -347,6 +490,8 @@ const NewTourScreen = ({navigation}) => {
                   borderRadius: 8,
                   paddingLeft: 10,
                 }}
+                value={DeparTureDay}
+                onChangeText={text => setDeparTureDay(text)}
                 placeholder="Enter here......"
                 placeholderTextColor={'black'}
               />
@@ -357,10 +502,10 @@ const NewTourScreen = ({navigation}) => {
           {/* Description */}
           <View
             style={{
-              height: 100,
+              height: 200,
               width: '90%',
-              //   backgroundColor: 'blue',
-              marginVertical: 10,
+              // backgroundColor: 'blue',
+              // marginVertical: 10,
               flexDirection: 'column',
               alignSelf: 'center',
             }}>
@@ -391,8 +536,14 @@ const NewTourScreen = ({navigation}) => {
                   borderColor: 'black',
                   borderWidth: 1,
                   borderRadius: 8,
+                  paddingLeft: 10,
+                  textAlignVertical: 'top',
                 }}
                 multiline={true}
+                numberOfLines={5}
+                maxLength={380}
+                value={Description}
+                onChangeText={text => setDescription(text)}
                 placeholder="Enter here......"
                 placeholderTextColor={'black'}
               />
@@ -437,8 +588,10 @@ const NewTourScreen = ({navigation}) => {
                   borderColor: 'black',
                   borderWidth: 1,
                   borderRadius: 8,
+                  paddingLeft: 10,
                 }}
-                multiline={true}
+                value={PricePerson}
+                onChangeText={text => setPricePerson(text)}
                 placeholder="Enter here......"
                 placeholderTextColor={'black'}
               />
@@ -507,18 +660,18 @@ const NewTourScreen = ({navigation}) => {
                     width: 20,
                     height: 20,
                   }}
-                  //   data={OK}
+                  data={OK}
                   search={false}
                   maxHeight={300}
                   labelField="label"
                   valueField="value"
                   placeholder={'Select item'}
                   // searchPlaceholder="Search..."
-                  //   value={value}
-                  //   onChange={item => {
-                  //     setValue(item.value);
-                  //     setLabel(item.label);
-                  //   }}
+                  value={value}
+                  onChange={item => {
+                    setValue(item.value);
+                    setTSPId(item.id);
+                  }}
                 />
               </View>
 
@@ -605,18 +758,18 @@ const NewTourScreen = ({navigation}) => {
                     width: 20,
                     height: 20,
                   }}
-                  //   data={OK}
+                  data={OK3}
                   search={false}
                   maxHeight={300}
                   labelField="label"
                   valueField="value"
                   placeholder={'Select item'}
                   // searchPlaceholder="Search..."
-                  //   value={value}
-                  //   onChange={item => {
-                  //     setValue(item.value);
-                  //     setLabel(item.label);
-                  //   }}
+                  value={value2}
+                  onChange={item => {
+                    setValue2(item.value);
+                    setHotelId(item.id);
+                  }}
                 />
               </View>
 
@@ -703,18 +856,18 @@ const NewTourScreen = ({navigation}) => {
                     width: 20,
                     height: 20,
                   }}
-                  //   data={OK}
+                  data={OK2}
                   search={false}
                   maxHeight={300}
                   labelField="label"
                   valueField="value"
                   placeholder={'Select item'}
                   // searchPlaceholder="Search..."
-                  //   value={value}
-                  //   onChange={item => {
-                  //     setValue(item.value);
-                  //     setLabel(item.label);
-                  //   }}
+                  value={value3}
+                  onChange={item => {
+                    setValue3(item.value);
+                    setLCTId(item.id);
+                  }}
                 />
               </View>
 
@@ -900,6 +1053,7 @@ const NewTourScreen = ({navigation}) => {
           alignItems: 'center',
         }}>
         <TouchableOpacity
+          onPress={CreateTour}
           style={{
             backgroundColor: 'blue',
             borderRadius: 12,
@@ -915,6 +1069,7 @@ const NewTourScreen = ({navigation}) => {
           </Text>
         </TouchableOpacity>
       </View>
+      <Toast topOffset={10} />
     </View>
   );
 };
