@@ -135,7 +135,7 @@ const BookingController = {
     try {
       const { id } = req.params;
       const FindAll = await db.Booking.findAll({
-        where: { idUser: id, Status: "Default" || "Online" },
+        where: { idUser: id, Status: ["Default", "Online"] },
         include: [
           {
             model: db.TourInfo,
@@ -161,7 +161,10 @@ const BookingController = {
   AllBookingWithDone: async (req, res) => {
     try {
       const FindAll = await db.Booking.findAll({
-        where: { Status: "Default" || "Online" },
+        // where: { Status: "Default" & "Online" },
+        where: {
+          Status: ["Default", "Online"],
+        },
         raw: true,
         nest: true,
       });

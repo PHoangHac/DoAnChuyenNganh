@@ -31,7 +31,15 @@ const HomeScreen = ({navigation}) => {
     });
   }, []);
 
-  // console.log(data2.length);
+  const okk = data3.map(item => {
+    return item.totalCost;
+  });
+
+  const TotalCost = okk.reduce((accumulator, value) => {
+    return accumulator + value;
+  }, 0);
+
+  // console.log(TotalCost);
 
   return (
     <View
@@ -325,7 +333,7 @@ const HomeScreen = ({navigation}) => {
                   }}>
                   <View
                     style={{
-                      height: '60%',
+                      height: '100%',
                       width: '100%',
                       // backgroundColor: 'white',
                       justifyContent: 'center',
@@ -337,39 +345,16 @@ const HomeScreen = ({navigation}) => {
                         color: 'white',
                         fontSize: 24,
                       }}>
-                      NaN
+                      $ {isNaN(TotalCost) ? 'NaN' : TotalCost}
                     </Text>
-                    {/* <Text
+                    <Text
                       style={{
                         fontFamily: 'Inter-Bold',
                         color: 'white',
                         fontSize: 18,
                       }}>
-                      Users
-                    </Text> */}
-                  </View>
-                  <View
-                    style={{
-                      height: '40%',
-                      width: '100%',
-                      // backgroundColor: 'orange',
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                    }}>
-                    {/* <TouchableOpacity
-                      style={{
-                        backgroundColor: 'white',
-                        borderRadius: 12,
-                      }}>
-                      <Text
-                        style={{
-                          padding: 8,
-                          color: 'black',
-                          fontFamily: 'Inter-ExtraBold',
-                        }}>
-                        Manager
-                      </Text>
-                    </TouchableOpacity> */}
+                      Total Cost
+                    </Text>
                   </View>
                 </View>
                 <View

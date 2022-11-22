@@ -91,6 +91,33 @@ const places = [
   },
 ];
 
+const DataFakeImg = [
+  {
+    id: '1',
+    image: require('../assets/images/NotFoundImg.jpg'),
+  },
+  {
+    id: '2',
+    image: require('../assets/images/NotFoundImg.jpg'),
+  },
+  {
+    id: '3',
+    image: require('../assets/images/NotFoundImg.jpg'),
+  },
+  {
+    id: '4',
+    image: require('../assets/images/NotFoundImg.jpg'),
+  },
+  {
+    id: '5',
+    image: require('../assets/images/NotFoundImg.jpg'),
+  },
+  {
+    id: '6',
+    image: require('../assets/images/NotFoundImg.jpg'),
+  },
+];
+
 const Review = [
   {
     id: 1,
@@ -278,4 +305,4 @@ const FoodList = [
   },
 ];
 
-export {places, FListData, FoodList, Review};
+export {places, FListData, FoodList, Review, DataFakeImg};

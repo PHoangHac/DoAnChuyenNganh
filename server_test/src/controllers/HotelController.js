@@ -3,7 +3,7 @@ import HotelService from "../services/HotelService.js";
 import db from "../models/index";
 
 const HotelController = {
-  Createhotel: async (req, res) => {
+  CreateHotel: async (req, res) => {
     let data = req.body;
     // console.log(req.files);
     // let filenames = req.files.map(function (file) {
@@ -14,6 +14,7 @@ const HotelController = {
     return res.status(200).json({
       errCode: hotelData.errCode,
       message: hotelData.errMessage,
+      message: hotelData.hotel,
     });
   },
   GetAllHotel: async (req, res) => {

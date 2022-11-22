@@ -200,9 +200,9 @@ const ReviewByUserScreen = ({navigation, route}) => {
           <TextInput
             multiline={true}
             numberOfLines={10}
+            maxLength={200}
             onChangeText={text => setTextReview(text)}
             value={textReview}
-            maxLength={200}
             style={{
               height: 200,
               textAlignVertical: 'top',

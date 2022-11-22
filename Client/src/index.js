@@ -37,7 +37,10 @@ import UpdateUserScreen from './views/Admin/View/Users/UpdateUserScreen';
 import MapScreen from './views/Map/MapScreen';
 import ReviewByTourScreen from './views/ReviewByTour/ReviewByTourScreen';
 import ReviewByUserScreen from './views/ReviewByTour/ReviewByUserScreen';
-import CreateHotelScreen from './views/Admin/View/Location/NewHotel';
+import NewTourScreen from './views/Admin/View/Tour/NewTour';
+import NewLocationScreen from './views/Admin/View/Tour/Menu/LocationScreen';
+import NewHotelScreen from './views/Admin/View/Tour/Menu/HotelScreen';
+import NewTransPortScreen from './views/Admin/View/Tour/Menu/TransPortsScreen';
 import {AuthContext} from './context/AuthContext';
 
 // variable
@@ -162,9 +165,18 @@ const Navigation = () => {
                   name="UpdateUserScreen"
                   component={UpdateUserScreen}
                 />
+                <Stack.Screen name="NewTourScreen" component={NewTourScreen} />
                 <Stack.Screen
-                  name="CreateHotelScreen"
-                  component={CreateHotelScreen}
+                  name="NewLocationScreen"
+                  component={NewLocationScreen}
+                />
+                <Stack.Screen
+                  name="NewHotelScreen"
+                  component={NewHotelScreen}
+                />
+                <Stack.Screen
+                  name="NewTransPortScreen"
+                  component={NewTransPortScreen}
                 />
               </>
             )}

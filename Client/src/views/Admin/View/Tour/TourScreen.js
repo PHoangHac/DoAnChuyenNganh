@@ -118,7 +118,7 @@ const renderItem = data => {
                 backgroundColor: 'white',
                 borderRadius: 15,
               }}>
-              {data.item.PricePerson} / Person
+              $ {data.item.PricePerson} / Person
             </Text>
           </View>
         </View>
@@ -312,6 +312,9 @@ const TourScreen = ({navigation}) => {
               // justifyContent: 'center',
             }}>
             <TouchableOpacity
+              onPress={() => {
+                navigation.navigate('NewTourScreen');
+              }}
               style={{
                 height: '100%',
                 width: '100%',

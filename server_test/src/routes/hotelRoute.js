@@ -8,7 +8,7 @@ let router = express.Router();
 
 let HotelRoute = (app) => {
   router
-    .post("/Create", UploadController.uploads, HotelController.Createhotel)
+    .post("/Create", UploadController.uploads, HotelController.CreateHotel)
     .get("/GetAll", HotelController.GetAllHotel)
     .get("/GetOne/:id", HotelController.GetOneHotel);
   // .post("/GetAll", authController.signin)
