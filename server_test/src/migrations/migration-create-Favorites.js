@@ -2,24 +2,15 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable("Bookings", {
+    await queryInterface.createTable("Favorites", {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER,
       },
-      Adult: {
-        type: Sequelize.INTEGER,
-      },
-      Children: {
-        type: Sequelize.INTEGER,
-      },
       Status: {
         type: Sequelize.BOOLEAN,
-      },
-      StartedDay: {
-        type: Sequelize.STRING,
       },
       idUser: {
         type: Sequelize.INTEGER,
@@ -27,6 +18,7 @@ module.exports = {
       idTourInfo: {
         type: Sequelize.INTEGER,
       },
+      ///
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,
@@ -38,6 +30,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable("Bookings");
+    await queryInterface.dropTable("Favorites");
   },
 };

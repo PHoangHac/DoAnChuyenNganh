@@ -16,7 +16,8 @@ let HotelRoute = (app) => {
     .get("/GetAllBookingUser/:id", BookingController.GetBookingByUser)
     .put("/DefaultPayment/:id", BookingController.DefaultPayment)
     .get("/PaymentSuccess/:id", BookingController.AllBookingPaymentSuccess)
-    .delete("/DeleteByUser/:id/:idUser", BookingController.DeleteBooking);
+    .delete("/DeleteByUser/:id/:idUser", BookingController.DeleteBooking)
+    .get("/AllWithSuccess", BookingController.AllBookingWithDone);
   // .post("/GetAll", authController.signin)
   // .get(
   //   "/",

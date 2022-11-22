@@ -228,12 +228,11 @@ const PaymentScreen = ({navigation, route}) => {
           }
           try {
             setTimeout(async () => {
-              const res = await axios.put(
-                `${URL}/booking/DefaultPayment/${id}`,
-                {
-                  Status: 'Default',
-                },
-              );
+              await axios
+                .put(`${URL}/booking/DefaultPayment/${id}`, {
+                  Status: 'Online',
+                })
+                .then(res => console.log(res.data));
               const resBill = await axios.post(`${URL}/Bill/Create`, {
                 idUser: userInfo.user.id,
                 idBooking: id,

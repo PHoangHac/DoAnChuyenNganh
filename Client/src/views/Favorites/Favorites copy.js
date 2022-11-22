@@ -1,4 +1,4 @@
-import React, {useEffect, useState, useContext, useCallback} from 'react';
+import React, {useEffect, useState, useContext} from 'react';
 import {
   View,
   Text,
@@ -6,10 +6,9 @@ import {
   TouchableOpacity,
   FlatList,
   Dimensions,
-  RefreshControl,
 } from 'react-native';
 
-import {icons, images} from '../../constants/index';
+import {icons} from '../../constants/index';
 import {URL} from '../../context/config';
 import {places} from '../../constants/dataDummy';
 import axios from 'axios';
@@ -18,14 +17,9 @@ import {AuthContext} from '../../context/AuthContext';
 const HEIGHT = Dimensions.get('window').height;
 const WIDTH = Dimensions.get('window').width;
 
-const wait = timeout => {
-  return new Promise(resolve => setTimeout(resolve, timeout));
-};
-
 const Favorites = ({navigation}) => {
   const [data, setData] = useState([]);
   const {userInfo} = useContext(AuthContext);
-  const [refreshing, setRefreshing] = useState(false);
 
   const AllFar = () => {
     axios
@@ -39,33 +33,11 @@ const Favorites = ({navigation}) => {
       });
   };
 
-  const FavoriteDis = async id => {
-    setTimeout(() => {
-      onRefresh();
-    }, 500);
-    await axios
-      .post(`${URL}/Favorite/DisFAR/${userInfo.user.id}/${id}`, {
-        Status: 0,
-      })
-      .then(res => {
-        console.log(res.data);
-      })
-      .catch(err => {
-        console.log(err);
-      });
-  };
-
   useEffect(() => {
     AllFar();
   }, []);
 
-  const onRefresh = useCallback(() => {
-    setRefreshing(true);
-    AllFar();
-    wait(1500).then(() => setRefreshing(false));
-  }, []);
-
-  // console.log(data);
+  console.log(data);
 
   const StarIcons = [
     <Image style={{height: 14, width: 14}} source={icons.staricon} />,
@@ -79,7 +51,7 @@ const Favorites = ({navigation}) => {
   const numColumns = 2;
 
   // Component
-  const Card = ({data}) => {
+  const Card = ({place}) => {
     return (
       <TouchableOpacity
         style={{
@@ -106,10 +78,10 @@ const Favorites = ({navigation}) => {
                   width: 180,
                   borderRadius: 10,
                 }}
-                source={images.NotFoundImg}
+                source={place.image}
               />
               <TouchableOpacity
-                onPress={() => FavoriteDis(data.TourInfo.id)}
+                // onPress={() => console.log('favouries')}
                 style={{
                   position: 'absolute',
                   right: 5,
@@ -138,8 +110,7 @@ const Favorites = ({navigation}) => {
                   color: 'black',
                   fontFamily: 'Inter-Bold',
                 }}>
-                {data.TourInfo.NameTour}
-                {/* {place.name} */}
+                {place.name}
               </Text>
             </View>
             {/* Star */}
@@ -173,7 +144,7 @@ const Favorites = ({navigation}) => {
                   color: 'black',
                   fontFamily: 'Inter-ExtraBold',
                 }}>
-                $ {data.TourInfo.PricePerson} USD
+                $ {place.price} USD
               </Text>
             </View>
           </View>
@@ -188,7 +159,6 @@ const Favorites = ({navigation}) => {
       <View
         style={{
           flex: 10,
-          backgroundColor: '#00008B',
         }}>
         {/* Container */}
         <View
@@ -217,7 +187,6 @@ const Favorites = ({navigation}) => {
                   borderWidth: 1,
                   borderColor: '#838383',
                   borderRadius: 10,
-                  tintColor: 'white',
                 }}
                 source={icons.ArrowBackIcon}
               />
@@ -226,7 +195,6 @@ const Favorites = ({navigation}) => {
               style={{
                 fontSize: 18,
                 fontWeight: 'bold',
-                color: 'white',
               }}>
               Favourites
             </Text>
@@ -238,10 +206,6 @@ const Favorites = ({navigation}) => {
                 height: 40,
                 width: 40,
                 marginRight: 15,
-                // tintColor: 'white',
-                padding: 5,
-                backgroundColor: 'white',
-                borderRadius: 12,
               }}
               source={icons.cartTouricon}
             />
@@ -255,12 +219,9 @@ const Favorites = ({navigation}) => {
         }}>
         <View>
           <FlatList
-            refreshControl={
-              <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-            }
             contentContainerStyle={{paddingBottom: HEIGHT / 2.5}}
-            data={data}
-            renderItem={({item}) => <Card data={item} />}
+            data={places}
+            renderItem={({item}) => <Card place={item} />}
             keyExtractor={item => item.id}
             numColumns={numColumns}
           />

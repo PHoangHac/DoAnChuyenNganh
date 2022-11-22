@@ -7,7 +7,8 @@ let BillRoute = (app) => {
   router
     .post("/Create", BillController.CreateBill)
     .get("/GetOneBill/:id", BillController.GetIdBill)
-    .get("/GetAll", BillController.GetAllBill);
+    .get("/GetAll", BillController.GetAllBill)
+    .get("/GetAllWithPayment", BillController.GetAllBillWithPayment);
 
   return app.use("/Bill", router);
 };

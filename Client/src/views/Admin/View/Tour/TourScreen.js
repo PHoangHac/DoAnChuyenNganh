@@ -49,7 +49,9 @@ const renderItem = data => {
               width: '100%',
               borderRadius: 8,
             }}
-            source={{uri: `${URL}/${pic[0]}`}}
+            source={
+              pic.length === 0 ? images.NotFoundImg : {uri: `${URL}/${pic[0]}`}
+            }
           />
         </View>
         <View

@@ -24,6 +24,7 @@ module.exports = (sequelize, DataTypes) => {
       ChildrenTotalCost: DataTypes.INTEGER,
       totalCost: DataTypes.INTEGER,
       totalGuest: DataTypes.INTEGER,
+      StartedDay: DataTypes.STRING,
       idUser: DataTypes.INTEGER,
       idTourInfo: DataTypes.INTEGER,
     },

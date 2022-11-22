@@ -532,7 +532,7 @@ const HomeScreen = ({navigation}) => {
               )}
             </View>
           </View>
-          <View style={{height: '8%'}}>
+          {/* <View style={{height: '8%'}}>
             <TouchableOpacity
               onPress={() => {
                 navigation.navigate('MapScreen');
@@ -546,7 +546,7 @@ const HomeScreen = ({navigation}) => {
                 source={icons.mapHomeicon}
               />
             </TouchableOpacity>
-          </View>
+          </View> */}
         </ScrollView>
       </View>
     </View>

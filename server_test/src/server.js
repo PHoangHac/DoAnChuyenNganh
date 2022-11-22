@@ -17,6 +17,7 @@ import BillRoute from "./routes/billRoute.js";
 import PayPalRoute from "./routes/PayPalRoute.js";
 import ReviewRoute from "./routes/reviewRoute.js";
 import UploadRouter from "./routes/Upload.js";
+import FavoriteRoute from "./routes/favorite.js";
 //---------GET ROUTE-----------//
 
 let app = express();
@@ -36,6 +37,7 @@ BillRoute(app);
 PayPalRoute(app);
 ReviewRoute(app);
 UploadRouter(app);
+FavoriteRoute(app);
 //----------USE ROUTE---------//
 
 viewEngine(app);
@@ -53,7 +55,7 @@ let port = process.env.PORT;
 // app.use("/img", express.static(path.join(__dirname, "public/images")));
 app.use("*/images", express.static("src/assets/images"));
 // app.use("*/public", express.static("public"));
-app.listen(port, "192.168.1.7", () => {
+app.listen(port, "192.168.1.9", () => {
   console.log("server running");
 });
 // app.listen(port, "192.168.1.13", () => {

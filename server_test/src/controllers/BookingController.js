@@ -6,13 +6,27 @@ import BookingService from "../services/BookingService";
 const BookingController = {
   CreateBooking: async (req, res) => {
     let data = req.body;
-
-    let bookingData = await BookingService.CreateBooking(data);
-    return res.status(200).json({
-      errCode: bookingData.errCode,
-      message: bookingData.errMessage,
-      message: bookingData.booking,
-    });
+    try {
+      if (!data.Adult == 0) {
+        const booking = await db.Booking.create({
+          Adult: data.Adult,
+          Children: data.Children,
+          AdultTotalCost: data.AdultTotalCost,
+          ChildrenTotalCost: data.ChildrenTotalCost,
+          StartedDay: data.StartedDay,
+          totalCost: data.totalCost,
+          totalGuest: data.totalGuest,
+          Status: data.Status,
+          idUser: data.idUser,
+          idTourInfo: data.idTourInfo,
+        });
+        return res.status(200).send(booking);
+      } else {
+        return res.status(400).send({ msg: "Required More than 1 Adult !" });
+      }
+    } catch (error) {
+      return res.status(400).send(error);
+    }
   },
   GetAllBooking: async (req, res) => {
     let data = await BookingService.GetAll();
@@ -138,6 +152,16 @@ const BookingController = {
             ],
           },
         ],
+        raw: true,
+        nest: true,
+      });
+      return res.status(200).json(FindAll);
+    } catch (error) {}
+  },
+  AllBookingWithDone: async (req, res) => {
+    try {
+      const FindAll = await db.Booking.findAll({
+        where: { Status: "Default" || "Online" },
         raw: true,
         nest: true,
       });

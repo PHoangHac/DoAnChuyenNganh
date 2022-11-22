@@ -88,7 +88,7 @@ const HomeTabs = () => {
         component={ListItemSearch}
       />
       <Tab.Screen
-        name="Discover"
+        name="Favorite"
         component={FavoritesScreen}
         options={{
           tabBarIcon: ({color, focused}) => (

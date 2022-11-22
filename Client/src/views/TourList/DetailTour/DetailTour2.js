@@ -1,5 +1,5 @@
 // import React
-import React, {useState, useEffect, useCallback} from 'react';
+import React, {useState, useEffect, useCallback, useContext} from 'react';
 import moment from 'moment';
 import axios from 'axios';
 
@@ -14,7 +14,9 @@ import {
   Dimensions,
   FlatList,
   TouchableHighlight,
+  RefreshControl,
 } from 'react-native';
+import {AuthContext} from '../../../context/AuthContext';
 
 // // import function icons, images
 import {images, icons} from '../../../constants/index';
@@ -55,9 +57,12 @@ const StarIcons = [
   <Image style={{height: 20, width: 20}} source={icons.staricon} />,
 ];
 
+const wait = timeout => {
+  return new Promise(resolve => setTimeout(resolve, timeout));
+};
+
 // Component
 const CardPicture = ({FListData}) => {
-  // console.log(FListData)
   return (
     <TouchableOpacity>
       <Image
@@ -89,12 +94,15 @@ const DetailsScreen2 = ({navigation, route}) => {
   const [Description, setDescription] = useState('');
   const [PricePerson, setPricePerson] = useState('');
   const [Images, setImages] = useState('');
+  const [Status, setStatus] = useState('');
   const [Hotel, setHotel] = useState({});
   const [Location, setLocation] = useState({});
   const [transPort, setTransPort] = useState({});
+  const [refreshing, setRefreshing] = React.useState(false);
+  const {userInfo} = useContext(AuthContext);
 
+  // console.log('Status far:', typeof Status);
   let RatingStar, Comment, UserName, createAt;
-
   if (dataReview.length === 0) {
     // console.log('Data empty');
   } else {
@@ -104,19 +112,8 @@ const DetailsScreen2 = ({navigation, route}) => {
     createAt = dataReview[0].createdAt;
   }
 
-  // if (RatingStar === undefined) {
-  //   console.log('true');
-  // } else {
-  //   console.log('Rating star:', RatingStar);
-  //   console.log('false');
-  // }
-  // console.log(typeof RatingStar);
-  // console.log('Rating star:', RatingStar);
-
   const pic = JSON.parse(route.params.images);
-
   const datanamearr = Object.keys(pic).map(key => pic[key]);
-
   const toggleTextShown = () => {
     setTextShown(!textShown);
   };
@@ -135,8 +132,6 @@ const DetailsScreen2 = ({navigation, route}) => {
         console.log('Error ', e);
       });
   }, [IdTour]);
-
-  // console.log(dataReview[0]);
 
   const onTextLayout = useCallback(
     e => {
@@ -163,17 +158,61 @@ const DetailsScreen2 = ({navigation, route}) => {
     setTransPort(getData.data.TypeOfTransport);
   }, [route.params]);
 
+  const getOneByTourUser = useCallback(async () => {
+    const getData = await axios
+      .get(`${URL}/Favorite/GetOne/${userInfo.user.id}/${route.params.id}`)
+      .catch(err => console.log(err));
+
+    if (getData === undefined) {
+      // console.log('true');
+    } else {
+      setStatus(getData.data.Status);
+    }
+    // console.log(getData);
+  });
+
   useEffect(() => {
     getByIdTour();
+    getOneByTourUser();
   }, [getByIdTour]);
 
-  // const routes = useNavigationState(state => state.routes);
-  // const previousRoute = routes[routes.length - 2].name;
-  // console.log('currentRoute: ', previousRoute);
+  const FavoriteEn = () => {
+    axios
+      .post(`${URL}/Favorite/Create`, {
+        Status: 1,
+        idUser: userInfo.user.id,
+        idTourInfo: route.params.id,
+      })
+      .then(res => {
+        // console.log(res.data);
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  };
 
-  // if (NameTour.length >= 30) {
-  //   console.log('true');
-  // }
+  const FavoriteDis = async () => {
+    // console.log('click this');
+    setTimeout(() => {
+      onRefresh();
+    }, 500);
+    await axios
+      .post(`${URL}/Favorite/DisFAR/${userInfo.user.id}/${route.params.id}`, {
+        Status: Status === 1 ? 0 : 1,
+      })
+      .then(res => {
+        // console.log(res.data);
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  };
+
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    getOneByTourUser();
+    wait(500).then(() => setRefreshing(false));
+  }, []);
 
   return (
     // Container
@@ -190,6 +229,9 @@ const DetailsScreen2 = ({navigation, route}) => {
         {/* ScrollView container */}
 
         <ScrollView
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+          }
           style={{
             height: HEIGHTDEVICE,
             width: WIGHTDEVICE,
@@ -210,7 +252,11 @@ const DetailsScreen2 = ({navigation, route}) => {
                 width: WIGHTDEVICE,
               }}
               // source={images.onboardImage1}
-              source={{uri: `${URL}/${pic[0]}`}}
+              source={
+                pic.length === 0
+                  ? images.NotFoundImg
+                  : {uri: `${URL}/${pic[0]}`}
+              }
               resizeMode="cover">
               <View
                 style={{
@@ -240,12 +286,17 @@ const DetailsScreen2 = ({navigation, route}) => {
                   style={{
                     backgroundColor: 'white',
                     borderRadius: 20,
-                  }}>
+                  }}
+                  onPress={
+                    Status.length === 0 || isNaN(Status)
+                      ? FavoriteEn
+                      : FavoriteDis
+                  }>
                   <Image
                     style={{
                       height: 32,
                       width: 32,
-                      tintColor: 'red',
+                      tintColor: Status === 1 ? 'red' : 'black',
                       margin: 2,
                     }}
                     source={icons.favoriteicon}

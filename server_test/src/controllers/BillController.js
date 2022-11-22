@@ -64,6 +64,17 @@ const BillController = {
       return res.status(500).json(error);
     }
   },
+  GetAllBillWithPayment: async (req, res) => {
+    try {
+      const AllBill = await db.Bill.findAll({
+        where: { Status: "Default" || "Online" },
+        raw: true,
+      });
+      return res.status(200).json(AllBill);
+    } catch (error) {
+      return res.status(500).json(error);
+    }
+  },
 };
 
 export default BillController;

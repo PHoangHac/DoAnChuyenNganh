@@ -19,8 +19,6 @@ const wait = timeout => {
 };
 
 const renderItem = data => {
-  // const pic = JSON.parse(data.item.images);
-  // console.log(data.item.email.length);
   return (
     <>
       {data.item.roleName === 'User' && (
@@ -54,7 +52,11 @@ const renderItem = data => {
                   width: '80%',
                   borderRadius: 8,
                 }}
-                source={{uri: `${URL}/${data.item.image}`}}
+                source={
+                  data.item.images === undefined
+                    ? images.NotFoundImg
+                    : {uri: `${URL}/${data.item.image}`}
+                }
               />
             </View>
             <View

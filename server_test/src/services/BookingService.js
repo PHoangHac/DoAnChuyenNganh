@@ -5,9 +5,9 @@ const BookingService = {
     return new Promise(async (resolve, reject) => {
       try {
         const bookingData = {};
-
+        console.log(data.Adult);
         // validate
-        if (!data.Adult == 0 || !data.Children == 0) {
+        if (!data.Adult == 0) {
           let booking = await db.Booking.create({
             Adult: data.Adult,
             Children: data.Children,
@@ -28,7 +28,6 @@ const BookingService = {
           bookingData.errMessage =
             "The number of Adult or Children more than 0 !";
         }
-
         resolve(bookingData);
       } catch (e) {
         reject(e);

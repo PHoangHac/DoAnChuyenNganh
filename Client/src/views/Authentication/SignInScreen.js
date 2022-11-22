@@ -33,17 +33,38 @@ const SignInScreen = ({navigation}) => {
   const [email, setEmail] = useState(null);
   const [password, setPassword] = useState(null);
 
+  // console.log(email);
+  // console.log(password);
+
   const [icon, setIcon] = useState('eye');
   const [show, setShow] = useState(true);
 
-  const {isLoading, Login} = useContext(AuthContext);
-  // console.log(show);
+  const {isLoading, Login, userInfo} = useContext(AuthContext);
 
-  const showToast = () => {
+  // console.log('Client Res: ', userInfo);
+  // console.log('Client Res: ', isLoading);
+
+  const LoginAuth = () => {
+    if (email === null || password === null) {
+      showToast('EMAIL OR PASSWORD FIELD EMPTY !');
+    } else Login(email, password);
+  };
+
+  const onChangeTextEmail = text => {
+    setEmail(text);
+  };
+
+  const onChangeTextPassword = text => {
+    setPassword(text);
+  };
+
+  const showToast = text => {
     Toast.show({
       type: 'error',
-      text1: 'This is some something 👋',
-      visibilityTime: 2000,
+      text1: 'Status',
+      text2: text,
+      autoHide: true,
+      visibilityTime: 1500,
     });
   };
 
@@ -77,7 +98,7 @@ const SignInScreen = ({navigation}) => {
             <TextInput
               autoComplete="off"
               placeholder="Your email"
-              onChangeText={text => setEmail(text)}
+              onChangeText={onChangeTextEmail}
               value={email}
               style={styles.InputStyle}></TextInput>
             <TouchableOpacity onPress={RemoveText} style={styles.iconStyle}>
@@ -89,7 +110,7 @@ const SignInScreen = ({navigation}) => {
             <TextInput
               placeholder="***********"
               secureTextEntry={show}
-              onChangeText={text => setPassword(text)}
+              onChangeText={onChangeTextPassword}
               value={password}
               style={styles.InputStyle}></TextInput>
             <TouchableOpacity onPress={changeIcon} style={styles.iconStyle}>
@@ -110,9 +131,7 @@ const SignInScreen = ({navigation}) => {
         <View style={styles.btnSignInContainer}>
           <TouchableOpacity
             // onPress={() => navigation.navigate('HomeTabs')}
-            onPress={() => {
-              Login(email, password);
-            }}
+            onPress={LoginAuth}
             style={styles.btnSignIn}>
             <Text
               style={{
@@ -150,7 +169,7 @@ const SignInScreen = ({navigation}) => {
               // onPress={() => {
               //   setHasOpacity(!hasOpacity);
               // }}
-              onPress={showToast}
+              // onPress={showToast}
               activeOpacity={0.2}
               style={[styles.btnSocial, {opacity: hasOpacity ? 0.5 : 1.0}]}>
               <Image source={icons.googleIcon2} />

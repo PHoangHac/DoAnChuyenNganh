@@ -14,6 +14,7 @@ import {images, icons} from '../../constants/index';
 import {AuthContext} from '../../context/AuthContext';
 import Spinner from 'react-native-loading-spinner-overlay';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import Toast from 'react-native-toast-message';
 const WDwidth = Dimensions.get('window').width;
 const WDheight = Dimensions.get('window').height;
 
@@ -23,6 +24,7 @@ const SignUpScreen = ({navigation}) => {
   const [email, setEmail] = useState(null);
   const [phoneNumber, setPhoneNumber] = useState(null);
   const [password, setPassword] = useState(null);
+  const [RePassword, setRePassword] = useState(null);
   const [name, setName] = useState(null);
   const [roleName, setRoleName] = useState('User');
   const [icon, setIcon] = useState('eye');
@@ -32,14 +34,30 @@ const SignUpScreen = ({navigation}) => {
 
   // console.log(check);
 
+  const Regis = () => {
+    if (email === null || password === null || RePassword == null) {
+      showToast('SOME FIELD EMPTY !');
+    } else if (password !== RePassword) {
+      showToast('Repeat Password not correct !');
+    } else Register(email, password, name, roleName);
+  };
+
   if (check === true) {
     setTimeout(() => {
       setCheck(false);
       navigation.navigate('SignIn');
-    }, 1000);
+    }, 2000);
   }
 
-  // console.log(userInfo.length);
+  const showToast = text => {
+    Toast.show({
+      type: 'error',
+      text1: 'Status',
+      text2: text,
+      autoHide: true,
+      visibilityTime: 1500,
+    });
+  };
 
   const changeIcon = () => {
     icon !== 'eye-off'
@@ -61,6 +79,8 @@ const SignUpScreen = ({navigation}) => {
       style={styles.ImagesBackground}
       resizeMode="stretch">
       <Spinner visible={isLoading} />
+      <Toast topOffset={20} />
+
       {/* SignUp View */}
       <SafeAreaView style={styles.SafeAreaStyles}>
         {/* SignUp Text */}
@@ -121,8 +141,8 @@ const SignUpScreen = ({navigation}) => {
             <TextInput
               placeholder="Repeat password"
               secureTextEntry={show}
-              onChangeText={text => setPassword(text)}
-              value={password}
+              onChangeText={text => setRePassword(text)}
+              value={RePassword}
               style={styles.InputStyle}></TextInput>
             <TouchableOpacity onPress={changeIcon} style={styles.iconStyle}>
               <Icon size={30} name={icon} />
@@ -147,9 +167,7 @@ const SignUpScreen = ({navigation}) => {
         <View style={styles.btnSignUpContainer}>
           <TouchableOpacity
             // onPress={() => navigation.navigate('SignIn')}
-            onPress={() => {
-              Register(email, password, name, roleName);
-            }}
+            onPress={Regis}
             style={styles.btnSignUp}>
             <Text
               style={{

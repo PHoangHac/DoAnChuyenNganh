@@ -33,6 +33,7 @@ import {URL} from '../../context/config';
 import {AuthContext} from '../../context/AuthContext';
 
 import Spinner from 'react-native-loading-spinner-overlay';
+import Toast from 'react-native-toast-message';
 
 const BookingScreen2 = ({navigation, route}) => {
   // console.log(route.params.transport);
@@ -51,15 +52,19 @@ const BookingScreen2 = ({navigation, route}) => {
     setNumberA(numberA + 1);
   };
 
+  // console.log(numberA);
   // Hàm thay giảm số lượng người lớn
   const DecreaseAdult = () => {
-    if (numberA < 1) {
+    if (numberA > 0) {
       setNumberA(1);
-
-      // console.log('true');
-      // setCheckNumber(true);
-      // alert('Please choose a number greater than 0!');
-    } else {
+      Toast.show({
+        type: 'error',
+        text1: 'Status',
+        text2: 'NUMBER ADULT MORE THAN 1 ! 👋',
+        autoHide: true,
+        visibilityTime: 2000,
+      });
+    } else if (numberA <= 0) {
       setNumberA(numberA - 1);
     }
   };
@@ -75,7 +80,7 @@ const BookingScreen2 = ({navigation, route}) => {
   // Hàm thay giảm số lượng trẻ em
   const DecreaseChildren = () => {
     if (numberC <= 0) {
-      alert('Please choose a number greater than 0!');
+      // alert('Please choose a number greater than 0!');
     } else {
       setNumberC(numberC - 1);
     }
@@ -164,7 +169,7 @@ const BookingScreen2 = ({navigation, route}) => {
   const [Status, setFeatured] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  // console.log(formatDate);
+  // console.log(numberC);
 
   const NewBooking = async () => {
     try {
@@ -181,10 +186,11 @@ const BookingScreen2 = ({navigation, route}) => {
           idUser: userInfo.user.id,
           idTourInfo: route.params.idTour,
         });
+        // console.log(res.data.id);
         setTimeout(() => {
           navigation.navigate('PaymentScreen', {
-            idBooking: res.data.message.id,
-            totalCost: res.data.message.totalCost,
+            idBooking: res.data.id,
+            totalCost: res.data.totalCost,
           });
         }, 2000);
         // console.log(res.data.message.id);
@@ -192,6 +198,7 @@ const BookingScreen2 = ({navigation, route}) => {
       setLoading(true);
     } catch (error) {
       console.log(error);
+      setLoading(false);
     }
   };
 
@@ -212,6 +219,7 @@ const BookingScreen2 = ({navigation, route}) => {
           flex: 10,
           borderWidth: 1,
           borderColor: 'black',
+          backgroundColor: '#00008B',
           width: '100%',
           justifyContent: 'center',
           alignItems: 'center',
@@ -227,7 +235,7 @@ const BookingScreen2 = ({navigation, route}) => {
           <TouchableOpacity
             style={{
               borderWidth: 0.5,
-              borderColor: 'black',
+              borderColor: 'white',
               borderRadius: 10,
               //   marginLeft: 20,
             }}
@@ -236,6 +244,7 @@ const BookingScreen2 = ({navigation, route}) => {
               style={{
                 height: 40,
                 width: 40,
+                tintColor: 'white',
               }}
               source={icons.ArrowBackIcon}
             />
@@ -245,7 +254,7 @@ const BookingScreen2 = ({navigation, route}) => {
               alignSelf: 'center',
               fontSize: 20,
               fontFamily: 'Inter-Bold',
-              color: 'black',
+              color: 'white',
               //   marginRight: 130,
             }}>
             Details Booking
@@ -844,10 +853,11 @@ const BookingScreen2 = ({navigation, route}) => {
               <TouchableOpacity
                 style={{
                   // backgroundColor: '#00008B',
-                  backgroundColor: loading == true ? '#C1C1C1' : '#00008B',
+                  backgroundColor:
+                    loading == true || numberA < 1 ? '#C1C1C1' : '#00008B',
                   borderRadius: 12,
                 }}
-                disabled={loading == true || numberA < 0 ? true : false}
+                disabled={loading == true || numberA < 1 ? true : false}
                 // onPress={() => navigation.navigate('PaymentScreen')}
                 onPress={NewBooking}>
                 <Text
@@ -865,6 +875,7 @@ const BookingScreen2 = ({navigation, route}) => {
           </View>
         </ScrollView>
       </View>
+      <Toast topOffset={10} />
       {/* END Body */}
     </View>
   );

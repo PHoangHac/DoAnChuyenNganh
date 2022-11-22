@@ -15,6 +15,7 @@ import {URL} from '../../../../context/config';
 const HomeScreen = ({navigation}) => {
   const [data, setData] = useState([]);
   const [data2, setData2] = useState([]);
+  const [data3, setData3] = useState([]);
 
   useEffect(() => {
     axios.get(`${URL}/auth`).then(res => {
@@ -23,6 +24,10 @@ const HomeScreen = ({navigation}) => {
 
     axios.get(`${URL}/tour/GetAll`).then(res => {
       setData2(res.data);
+    });
+
+    axios.get(`${URL}/booking/AllWithSuccess`).then(res => {
+      setData3(res.data);
     });
   }, []);
 

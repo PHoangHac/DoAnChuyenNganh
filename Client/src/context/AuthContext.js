@@ -12,12 +12,12 @@ export const AuthContext = createContext();
 export const AuthProvider = ({children, navigation}) => {
   const [userInfo, setUserInfo] = useState({});
   // console.log(userInfo);
-  const [isLoading, setIsloading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [splashLoading, setSplashLoading] = useState(false);
   const [check, setCheck] = useState(false);
 
   const Register = (email, password, name, roleName) => {
-    setIsloading(true);
+    setIsLoading(true);
     axios
       .post(`${BASE_URL}/SignUp`, {
         email,
@@ -30,19 +30,19 @@ export const AuthProvider = ({children, navigation}) => {
           let userInfo = res.data;
           setUserInfo(userInfo);
           AsyncStorage.setItem('userInfo', JSON.stringify(userInfo));
-          setIsloading(false);
+          setIsLoading(false);
           setCheck(true);
         }, 2000);
       })
       .catch(e => {
         console.log(`Register error ${e}`);
-        setIsloading(false);
+        setIsLoading(false);
       });
   };
 
   const Login = async (email, password) => {
-    setIsloading(true);
-
+    setIsLoading(true);
+    setUserInfo({});
     axios
       .post(`${BASE_URL}/SignIn`, {
         email,
@@ -53,19 +53,24 @@ export const AuthProvider = ({children, navigation}) => {
           let userInfo = res.data;
           setUserInfo(userInfo);
           AsyncStorage.setItem('userInfo', JSON.stringify(userInfo));
-          setIsloading(false);
-          console.log(userInfo);
+          setIsLoading(false);
+          // console.log(userInfo);
           // navigation.navigate('HomeTabs');
         }, 2000);
       })
       .catch(e => {
         console.log(`login error ${e}`);
-        setIsloading(false);
+        setIsLoading(false);
       });
   };
 
+  const RemoveAccStorage = () => {
+    AsyncStorage.removeItem('userInfo');
+    setUserInfo({});
+  };
+
   const Logout = (email, password) => {
-    setIsloading(true);
+    setIsLoading(true);
 
     axios
       .post(
@@ -80,14 +85,14 @@ export const AuthProvider = ({children, navigation}) => {
           console.log(res.data);
           AsyncStorage.removeItem('userInfo');
           setUserInfo({});
-          setIsloading(false);
-          // console.log(userInfo);
+          setIsLoading(false);
+          console.log(userInfo);
           // navigation.navigate('HomeTabs');
         }, 2000);
       })
       .catch(e => {
         console.log(`login error ${e}`);
-        setIsloading(false);
+        setIsLoading(false);
       });
   };
 
@@ -123,6 +128,7 @@ export const AuthProvider = ({children, navigation}) => {
         Login,
         Logout,
         isLoggedIn,
+        RemoveAccStorage,
       }}>
       {children}
     </AuthContext.Provider>

@@ -73,7 +73,7 @@ const StatusCard = ({data, navigation}) => {
             style={{
               // paddingRight: 12,
               backgroundColor:
-                data.item.Status === 'Default' || data.item.Status === 'Default'
+                data.item.Status === 'Default' || data.item.Status === 'Online'
                   ? '#008000'
                   : '#C70039',
               borderRadius: 15,
