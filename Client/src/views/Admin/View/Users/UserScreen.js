@@ -343,10 +343,7 @@ const UserScreen = ({navigation}) => {
               // borderColor: 'green',
               // justifyContent: 'center',
             }}>
-            <TouchableOpacity
-              onPress={() => {
-                navigation.navigate('CreateHotelScreen');
-              }}
+            {/* <TouchableOpacity
               style={{
                 height: '100%',
                 width: '100%',
@@ -361,7 +358,7 @@ const UserScreen = ({navigation}) => {
                 }}
                 source={icons.AddIcon}
               />
-            </TouchableOpacity>
+            </TouchableOpacity> */}
           </View>
           {/* 2 */}
           <View
