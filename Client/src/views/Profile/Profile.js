@@ -1,5 +1,11 @@
 import React, {useContext, useState, useCallback, useEffect} from 'react';
-import {View, Text, Image, TouchableOpacity} from 'react-native';
+import {
+  View,
+  Text,
+  Image,
+  TouchableOpacity,
+  RefreshControl,
+} from 'react-native';
 import axios from 'axios';
 import {icons, images} from '../../constants/index';
 import {URL} from '../../context/config';
@@ -8,8 +14,13 @@ import {AuthContext} from '../../context/AuthContext';
 //------AuthContext-----//
 import Spinner from 'react-native-loading-spinner-overlay';
 
+const wait = timeout => {
+  return new Promise(resolve => setTimeout(resolve, timeout));
+};
+
 const Onboarding = ({navigation}) => {
   const [image, setImage] = useState('');
+  const [refreshing, setRefreshing] = React.useState(false);
   const {isLoading, Logout, userInfo} = useContext(AuthContext);
   // console.log(image);
 
@@ -22,8 +33,25 @@ const Onboarding = ({navigation}) => {
     getByIdUser();
   }, [getByIdUser]);
 
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    wait(1500).then(() => setRefreshing(false));
+  }, []);
+
+  useEffect(() => {
+    getByIdUser();
+    const focusHandler = navigation.addListener('focus', () => {
+      getByIdUser();
+    });
+    return focusHandler;
+  }, [navigation]);
+
   return (
-    <View style={{flex: 100, backgroundColor: 'white'}}>
+    <View
+      style={{flex: 100, backgroundColor: 'white'}}
+      refreshControl={
+        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+      }>
       <Spinner visible={isLoading} />
       {/* Header */}
       <View style={{flex: 20}}>

@@ -13,7 +13,6 @@ import {
   ImageBackground,
   Dimensions,
   FlatList,
-  TouchableHighlight,
   RefreshControl,
 } from 'react-native';
 import {AuthContext} from '../../../context/AuthContext';
@@ -81,6 +80,8 @@ const DetailsScreen2 = ({navigation, route}) => {
   const [transPort, setTransPort] = useState({});
   const [refreshing, setRefreshing] = React.useState(false);
   const {userInfo} = useContext(AuthContext);
+
+  // console.log(Description.length);
 
   // console.log('Status far:', typeof Status);
   let RatingStar, Comment, UserName, createAt;
@@ -193,6 +194,7 @@ const DetailsScreen2 = ({navigation, route}) => {
   const onRefresh = useCallback(() => {
     setRefreshing(true);
     getOneByTourUser();
+    getByIdTour();
     wait(500).then(() => setRefreshing(false));
   }, []);
 
@@ -431,7 +433,7 @@ const DetailsScreen2 = ({navigation, route}) => {
                       color: '#7A7A7A',
                       fontFamily: 'Inter-Medium',
                     }}>
-                    Total Time: 5 Days
+                    Total Time: {totalTime}
                   </Text>
                 </View>
                 <View

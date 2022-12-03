@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useContext, useCallback} from 'react';
 
 import {
   View,
@@ -16,9 +16,8 @@ import {
 } from 'react-native';
 
 import DeviceInfo from 'react-native-device-info';
-
+import axios from 'axios';
 import {AuthContext} from '../../context/AuthContext';
-
 import {URL} from '../../context/config';
 
 // import { places } from '../../constants/dataDummy';
@@ -49,7 +48,16 @@ const HomeScreen = ({navigation}) => {
   const [data, setData] = useState([]);
   const [dataTour, setDataTour] = useState([]);
   const [loading, setLoading] = useState(false);
-  const {userInfo} = React.useContext(AuthContext);
+  const {userInfo} = useContext(AuthContext);
+  const [image, setImage] = useState('');
+
+  // console.log(image);
+
+  // if (image == null) {
+  //   console.log('true');
+  // } else {
+  //   console.log('false');
+  // }
 
   const [refreshing, setRefreshing] = React.useState(false);
 
@@ -57,6 +65,7 @@ const HomeScreen = ({navigation}) => {
     setRefreshing(true);
     ListTransPort();
     ListTour();
+    getByIdUser();
     wait(1500).then(() => setRefreshing(false));
   }, []);
 
@@ -85,6 +94,15 @@ const HomeScreen = ({navigation}) => {
     ListTransPort();
     ListTour();
   }, []);
+
+  const getByIdUser = useCallback(async () => {
+    const getData = await axios.get(`${URL}/auth/GetOne/${userInfo.user.id}`);
+    setImage(getData.data.image);
+  }, [userInfo.user.id]);
+
+  useEffect(() => {
+    getByIdUser();
+  }, [getByIdUser]);
 
   const ListCategories = ({data}) => {
     // console.log(data);
@@ -320,9 +338,10 @@ const HomeScreen = ({navigation}) => {
               right: 0,
               borderColor: 'white',
               borderWidth: 2,
-              borderRadius: 20,
+              borderRadius: 25,
             }}
-            source={images.user}
+            // source={images.user}
+            source={image === null ? images.user : {uri: `${URL}/${image}`}}
           />
           <View
             style={{

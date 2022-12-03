@@ -23,6 +23,8 @@ const NewTransPortScreen = ({navigation}) => {
 
   const OKK = singleFile[0];
 
+  // console.log(OKK);
+
   const SelectedSingleFile = async () => {
     try {
       const results = await DocumentPicker.pick({

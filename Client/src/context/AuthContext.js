@@ -86,7 +86,7 @@ export const AuthProvider = ({children, navigation}) => {
           AsyncStorage.removeItem('userInfo');
           setUserInfo({});
           setIsLoading(false);
-          console.log(userInfo);
+          // console.log(userInfo);
           // navigation.navigate('HomeTabs');
         }, 2000);
       })

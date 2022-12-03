@@ -182,6 +182,7 @@ const NewTourScreen = ({navigation}) => {
 
   const onRefresh = useCallback(() => {
     setRefreshing(true);
+
     wait(500).then(() => setRefreshing(false));
   }, []);
 
